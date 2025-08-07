@@ -54,8 +54,23 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/dashboard",
+      url: "/",
       icon: Home,
+      isActive: true,
+      items: [
+        {
+          title: "Übersicht",
+          url: "/",
+        },
+        {
+          title: "Analytics",
+          url: "#",
+        },
+        {
+          title: "Reports",
+          url: "#",
+        },
+      ],
     },
     {
       title: "Depot",
