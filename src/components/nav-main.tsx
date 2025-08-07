@@ -40,21 +40,23 @@ export function NavMain({
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
-          const isCurrentPage = pathname === item.url || item.items?.some(subItem => pathname === subItem.url)
+          const hasActiveSubItem = item.items?.some(subItem => pathname === subItem.url)
+          const isMainItemActive = pathname === item.url
+          const shouldOpenCollapsible = isMainItemActive || hasActiveSubItem
           
           if (item.items && item.items.length > 0) {
             return (
               <Collapsible
                 key={item.title}
                 asChild
-                defaultOpen={isCurrentPage}
+                defaultOpen={shouldOpenCollapsible}
                 className="group/collapsible"
               >
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuButton 
                       tooltip={item.title}
-                      className={`violet-bloom-hover ${isCurrentPage ? 'violet-bloom-active' : ''}`}
+                      className={`violet-bloom-hover ${isMainItemActive ? 'violet-bloom-active' : ''}`}
                     >
                       {item.icon && <item.icon />}
                       <span>{item.title}</span>
@@ -86,7 +88,7 @@ export function NavMain({
                 <SidebarMenuButton 
                   asChild
                   tooltip={item.title}
-                  className={`violet-bloom-hover ${isCurrentPage ? 'violet-bloom-active' : ''}`}
+                  className={`violet-bloom-hover ${isMainItemActive ? 'violet-bloom-active' : ''}`}
                 >
                   <a href={item.url}>
                     {item.icon && <item.icon />}
