@@ -42,9 +42,9 @@ export function TeamSwitcher({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground violet-bloom-hover"
             >
-              <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+              <div className="bg-primary text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg shadow-sm shadow-primary/20">
                 <activeTeam.logo className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -69,7 +69,7 @@ export function TeamSwitcher({
                 onClick={() => setActiveTeam(team)}
                 className="gap-2 p-2"
               >
-                <div className="flex size-6 items-center justify-center rounded-md border">
+                <div className="flex size-6 items-center justify-center rounded-md border border-primary/30 bg-primary/10 text-primary">
                   <team.logo className="size-3.5 shrink-0" />
                 </div>
                 {team.name}
