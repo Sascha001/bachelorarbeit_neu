@@ -3,15 +3,16 @@
 import * as React from "react"
 import {
   AudioWaveform,
-  BookOpen,
-  Bot,
+  BarChart3,
+  Briefcase,
   Command,
   Frame,
   GalleryVerticalEnd,
+  Home,
   Map,
   PieChart,
   Settings2,
-  SquareTerminal,
+  Shield,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -35,7 +36,7 @@ const data = {
   },
   teams: [
     {
-      name: "Acme Inc",
+      name: "Uncertainty Visualization",
       logo: GalleryVerticalEnd,
       plan: "Enterprise",
     },
@@ -54,11 +55,11 @@ const data = {
     {
       title: "Dashboard",
       url: "/",
-      icon: SquareTerminal,
+      icon: Home,
       isActive: true,
       items: [
         {
-          title: "Overview",
+          title: "Übersicht",
           url: "/",
         },
         {
@@ -72,43 +73,46 @@ const data = {
       ],
     },
     {
-      title: "Models",
+      title: "Depot",
       url: "#",
-      icon: Bot,
+      icon: Briefcase,
       items: [
         {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
+          title: "Übersicht & Performance",
           url: "#",
         },
       ],
     },
     {
-      title: "Documentation",
+      title: "Statistik",
       url: "#",
-      icon: BookOpen,
+      icon: BarChart3,
       items: [
         {
-          title: "Introduction",
+          title: "Trading Statistik",
           url: "#",
         },
         {
-          title: "Get Started",
+          title: "Unsicherheits Analyse",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Überprüfung",
+      url: "#",
+      icon: Shield,
+      items: [
+        {
+          title: "Modell",
           url: "#",
         },
         {
-          title: "Tutorials",
+          title: "Daten",
           url: "#",
         },
         {
-          title: "Changelog",
+          title: "Mensch",
           url: "#",
         },
       ],
