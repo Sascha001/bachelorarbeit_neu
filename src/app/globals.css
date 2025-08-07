@@ -181,3 +181,25 @@
     letter-spacing: var(--tracking-normal);
   }
 }
+
+@layer components {
+  .violet-bloom-hover {
+    @apply transition-all duration-300 hover:bg-primary/10 hover:text-primary hover:border-primary/30;
+  }
+  
+  .violet-bloom-active {
+    @apply bg-primary/15 text-primary border-primary/40 shadow-sm shadow-primary/10;
+  }
+  
+  .violet-bloom-button {
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-200 hover:shadow-lg hover:shadow-primary/20 hover:scale-[1.02];
+  }
+  
+  .violet-bloom-card {
+    @apply border-primary/20 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300;
+  }
+  
+  .violet-bloom-glow {
+    @apply hover:shadow-lg hover:shadow-primary/20 transition-all duration-300;
+  }
+}
