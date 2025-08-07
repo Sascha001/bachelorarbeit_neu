@@ -51,10 +51,10 @@ export default function DepotPage() {
             <ThemeToggle />
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-6 p-6 pt-0">
+        <div className="flex flex-1 flex-col justify-center items-center p-6">
           <div className="text-center">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent mb-4">Depot Übersicht</h2>
-            <p className="text-muted-foreground text-lg">Portfolio Performance und Positionen</p>
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent mb-6">Depot Übersicht</h2>
+            <p className="text-muted-foreground text-xl">Portfolio Performance und Positionen</p>
           </div>
         </div>
       </SidebarInset>

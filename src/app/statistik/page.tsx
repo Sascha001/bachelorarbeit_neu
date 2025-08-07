@@ -25,49 +25,51 @@ function StatistikContent() {
   const stock = searchParams.get('stock')
 
   return (
-    <div className="flex flex-1 flex-col gap-6 p-6 pt-0">
+    <div className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-hidden">
       {stock ? (
-        <div className="space-y-6">
+        <div className="space-y-4 h-full flex flex-col">
           <div className="text-center">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent mb-4">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent mb-2">
               Unsicherheits Analyse - {stock}
             </h2>
-            <p className="text-muted-foreground text-lg">Detaillierte Unsicherheitsanalyse für {stock}</p>
+            <p className="text-muted-foreground text-base">Detaillierte Unsicherheitsanalyse für {stock}</p>
           </div>
           
-          <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-foreground">KI-Konfidenz Analyse</h3>
+          <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card flex-1 min-h-0">
+            <div className="h-full flex flex-col">
+              <div className="mb-3">
+                <h3 className="text-base font-semibold text-foreground">KI-Konfidenz Analyse</h3>
+              </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 bg-muted/50 rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-2">Modell-Konfidenz</p>
-                  <p className="text-2xl font-bold text-primary">85%</p>
-                  <div className="w-full h-2 bg-primary/20 rounded-full mt-2">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                <div className="p-3 bg-muted/50 rounded-lg">
+                  <p className="text-xs text-muted-foreground mb-1">Modell-Konfidenz</p>
+                  <p className="text-xl font-bold text-primary">85%</p>
+                  <div className="w-full h-1.5 bg-primary/20 rounded-full mt-1">
                     <div className="w-4/5 h-full bg-primary rounded-full"></div>
                   </div>
                 </div>
                 
-                <div className="p-4 bg-muted/50 rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-2">Daten-Qualität</p>
-                  <p className="text-2xl font-bold text-yellow-600">72%</p>
-                  <div className="w-full h-2 bg-yellow-500/20 rounded-full mt-2">
+                <div className="p-3 bg-muted/50 rounded-lg">
+                  <p className="text-xs text-muted-foreground mb-1">Daten-Qualität</p>
+                  <p className="text-xl font-bold text-yellow-600">72%</p>
+                  <div className="w-full h-1.5 bg-yellow-500/20 rounded-full mt-1">
                     <div className="w-3/4 h-full bg-yellow-500 rounded-full"></div>
                   </div>
                 </div>
                 
-                <div className="p-4 bg-muted/50 rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-2">Risiko-Score</p>
-                  <p className="text-2xl font-bold text-red-600">Medium</p>
-                  <div className="w-full h-2 bg-red-500/20 rounded-full mt-2">
+                <div className="p-3 bg-muted/50 rounded-lg">
+                  <p className="text-xs text-muted-foreground mb-1">Risiko-Score</p>
+                  <p className="text-xl font-bold text-red-600">Medium</p>
+                  <div className="w-full h-1.5 bg-red-500/20 rounded-full mt-1">
                     <div className="w-1/2 h-full bg-red-500 rounded-full"></div>
                   </div>
                 </div>
               </div>
               
-              <div className="mt-6 p-4 border border-border/50 rounded-lg">
-                <h4 className="font-medium mb-2">Unsicherheitsfaktoren für {stock}:</h4>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+              <div className="flex-1 p-3 border border-border/50 rounded-lg">
+                <h4 className="text-sm font-medium mb-2">Unsicherheitsfaktoren für {stock}:</h4>
+                <ul className="space-y-1 text-xs text-muted-foreground">
                   <li>• Marktvolatilität in der Technologiebranche</li>
                   <li>• Begrenzte historische Daten für ähnliche Marktbedingungen</li>
                   <li>• Externe Faktoren (Regulierung, Makroökonomie)</li>
@@ -78,10 +80,10 @@ function StatistikContent() {
           </div>
         </div>
       ) : (
-        <div className="text-center">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent mb-4">Trading Statistik</h2>
-          <p className="text-muted-foreground text-lg">Analyse und Unsicherheitsmetriken</p>
-          <p className="text-sm text-muted-foreground mt-4">Verwende die Suchleiste, um eine Unsicherheitsanalyse für ein bestimmtes Wertpapier zu erstellen.</p>
+        <div className="text-center flex flex-col justify-center flex-1">
+          <h2 className="text-4xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent mb-6">Trading Statistik</h2>
+          <p className="text-muted-foreground text-xl mb-4">Analyse und Unsicherheitsmetriken</p>
+          <p className="text-base text-muted-foreground">Verwende die Suchleiste, um eine Unsicherheitsanalyse für ein bestimmtes Wertpapier zu erstellen.</p>
         </div>
       )}
     </div>

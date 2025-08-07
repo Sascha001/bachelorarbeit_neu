@@ -51,14 +51,14 @@ export default function Home() {
             <ThemeToggle />
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-6 p-6 pt-0">
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-hidden">
           {/* Top 4 Metric Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
             {/* Portfolio Wert */}
-            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
-              <div className="space-y-2">
+            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card">
+              <div className="space-y-1">
                 <p className="text-sm text-muted-foreground">Portfolio Wert</p>
-                <p className="text-3xl font-bold text-foreground">€127.432,50</p>
+                <p className="text-2xl font-bold text-foreground">€127.432,50</p>
                 <div className="flex items-center gap-2">
                   <span className="text-xs bg-green-500/10 text-green-600 px-2 py-1 rounded-full">↗ +3.34%</span>
                 </div>
@@ -68,10 +68,10 @@ export default function Home() {
             </div>
 
             {/* Aktive Positionen */}
-            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
-              <div className="space-y-2">
+            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card">
+              <div className="space-y-1">
                 <p className="text-sm text-muted-foreground">Aktive Positionen</p>
-                <p className="text-3xl font-bold text-foreground">24</p>
+                <p className="text-2xl font-bold text-foreground">24</p>
                 <div className="flex items-center gap-2">
                   <span className="text-xs bg-blue-500/10 text-blue-600 px-2 py-1 rounded-full">+8 neu</span>
                 </div>
@@ -81,10 +81,10 @@ export default function Home() {
             </div>
 
             {/* KI Vertrauen */}
-            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
-              <div className="space-y-2">
+            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card">
+              <div className="space-y-1">
                 <p className="text-sm text-muted-foreground">KI Vertrauen</p>
-                <p className="text-3xl font-bold text-foreground">87%</p>
+                <p className="text-2xl font-bold text-foreground">87%</p>
                 <div className="flex items-center gap-2">
                   <span className="text-xs bg-blue-500/10 text-blue-600 px-2 py-1 rounded-full">🔒 Hoch</span>
                 </div>
@@ -94,10 +94,10 @@ export default function Home() {
             </div>
 
             {/* Unsicherheits-Score */}
-            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
-              <div className="space-y-2">
+            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card">
+              <div className="space-y-1">
                 <p className="text-sm text-muted-foreground">Unsicherheits-Score</p>
-                <p className="text-3xl font-bold text-foreground">Medium</p>
+                <p className="text-2xl font-bold text-foreground">Medium</p>
                 <div className="flex items-center gap-2">
                   <span className="text-xs bg-yellow-500/10 text-yellow-600 px-2 py-1 rounded-full">⚠ 3 Alerts</span>
                 </div>
@@ -108,24 +108,24 @@ export default function Home() {
           </div>
 
           {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1 min-h-0">
             {/* Aktuelle KI-Empfehlungen */}
-            <div className="lg:col-span-2 bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
-              <div className="space-y-4">
+            <div className="lg:col-span-2 bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card min-h-0">
+              <div className="space-y-3">
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-1">Aktuelle KI-Empfehlungen</h3>
-                  <p className="text-sm text-muted-foreground">Neueste Trading-Signale mit Unsicherheitsanalyse</p>
+                  <h3 className="text-base font-semibold text-foreground mb-1">Aktuelle KI-Empfehlungen</h3>
+                  <p className="text-xs text-muted-foreground">Neueste Trading-Signale mit Unsicherheitsanalyse</p>
                 </div>
                 
-                <div className="space-y-4">
+                <div className="space-y-2">
                   {/* AAPL */}
-                  <div className="flex items-center justify-between p-4 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
+                    <div className="flex items-center gap-2">
                       <span className="font-mono font-bold">AAPL</span>
                       <span className="bg-green-500/10 text-green-600 text-sm px-2 py-1 rounded">KAUFEN</span>
                       <span className="text-muted-foreground">$178.32</span>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
                       <div className="text-right">
                         <p className="text-sm font-medium">92% Konfidenz</p>
                         <p className="text-xs text-green-600">Niedrig Unsicherheit</p>
@@ -135,13 +135,13 @@ export default function Home() {
                   </div>
 
                   {/* TSLA */}
-                  <div className="flex items-center justify-between p-4 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
+                    <div className="flex items-center gap-2">
                       <span className="font-mono font-bold">TSLA</span>
                       <span className="bg-red-500/10 text-red-600 text-sm px-2 py-1 rounded">VERKAUFEN</span>
                       <span className="text-muted-foreground">$242.68</span>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
                       <div className="text-right">
                         <p className="text-sm font-medium">78% Konfidenz</p>
                         <p className="text-xs text-yellow-600">Mittel Unsicherheit</p>
@@ -151,13 +151,13 @@ export default function Home() {
                   </div>
 
                   {/* NVDA */}
-                  <div className="flex items-center justify-between p-4 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
+                    <div className="flex items-center gap-2">
                       <span className="font-mono font-bold">NVDA</span>
                       <span className="bg-blue-500/10 text-blue-600 text-sm px-2 py-1 rounded">HALTEN</span>
                       <span className="text-muted-foreground">$459.12</span>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
                       <div className="text-right">
                         <p className="text-sm font-medium">65% Konfidenz</p>
                         <p className="text-xs text-red-600">Hoch Unsicherheit</p>
@@ -170,51 +170,51 @@ export default function Home() {
             </div>
 
             {/* Unsicherheits-Quellen */}
-            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
-              <div className="space-y-4">
+            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card min-h-0">
+              <div className="space-y-3">
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-1">Unsicherheits-Quellen</h3>
-                  <p className="text-sm text-muted-foreground">Analyse der verschiedenen Unsicherheitsfaktoren</p>
+                  <h3 className="text-base font-semibold text-foreground mb-1">Unsicherheits-Quellen</h3>
+                  <p className="text-xs text-muted-foreground">Analyse der verschiedenen Unsicherheitsfaktoren</p>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                    <span className="text-sm font-medium">Modell-Unsicherheit</span>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <span className="text-xs font-medium">Modell-Unsicherheit</span>
                     <div className="ml-auto">
-                      <div className="w-16 h-2 bg-blue-500/20 rounded-full">
+                      <div className="w-12 h-1.5 bg-blue-500/20 rounded-full">
                         <div className="w-1/4 h-full bg-blue-500 rounded-full"></div>
                       </div>
                       <span className="text-xs text-muted-foreground">25%</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                    <span className="text-sm font-medium">Daten-Unsicherheit</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                    <span className="text-xs font-medium">Daten-Unsicherheit</span>
                     <div className="ml-auto">
-                      <div className="w-16 h-2 bg-yellow-500/20 rounded-full">
+                      <div className="w-12 h-1.5 bg-yellow-500/20 rounded-full">
                         <div className="w-1/3 h-full bg-yellow-500 rounded-full"></div>
                       </div>
                       <span className="text-xs text-muted-foreground">35%</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span className="text-sm font-medium">Experten-Einschätzung</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-xs font-medium">Experten-Einschätzung</span>
                     <div className="ml-auto">
-                      <div className="w-16 h-2 bg-green-500/20 rounded-full">
+                      <div className="w-12 h-1.5 bg-green-500/20 rounded-full">
                         <div className="w-2/12 h-full bg-green-500 rounded-full"></div>
                       </div>
                       <span className="text-xs text-muted-foreground">15%</span>
                     </div>
                   </div>
 
-                  <div className="mt-4 p-3 bg-muted/50 rounded-lg">
-                    <p className="text-sm font-medium mb-2">Gesamt-Unsicherheit</p>
-                    <div className="w-full h-3 bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 rounded-full"></div>
-                    <p className="text-center text-sm text-muted-foreground mt-1">Mittel</p>
+                  <div className="mt-2 p-2 bg-muted/50 rounded-lg">
+                    <p className="text-xs font-medium mb-1">Gesamt-Unsicherheit</p>
+                    <div className="w-full h-2 bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 rounded-full"></div>
+                    <p className="text-center text-xs text-muted-foreground mt-1">Mittel</p>
                   </div>
                 </div>
               </div>
@@ -222,36 +222,36 @@ export default function Home() {
           </div>
 
           {/* Bottom Row */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Risiko-Management */}
-            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
-              <div className="space-y-4">
+            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card">
+              <div className="space-y-3">
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-1">Risiko-Management</h3>
-                  <p className="text-sm text-muted-foreground">Aktuelle Warnungen und Empfehlungen</p>
+                  <h3 className="text-base font-semibold text-foreground mb-1">Risiko-Management</h3>
+                  <p className="text-xs text-muted-foreground">Aktuelle Warnungen und Empfehlungen</p>
                 </div>
 
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 bg-red-500/5 border border-red-500/20 rounded-lg">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 p-2 bg-red-500/5 border border-red-500/20 rounded-lg">
                     <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                     <div>
-                      <p className="text-sm font-medium">Hohe Volatilität erkannt</p>
+                      <p className="text-xs font-medium">Hohe Volatilität erkannt</p>
                       <p className="text-xs text-muted-foreground">TSLA zeigt ungewöhnliche Kursbewegungen</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 p-3 bg-yellow-500/5 border border-yellow-500/20 rounded-lg">
+                  <div className="flex items-center gap-2 p-2 bg-yellow-500/5 border border-yellow-500/20 rounded-lg">
                     <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
                     <div>
-                      <p className="text-sm font-medium">Datenqualität-Warnung</p>
+                      <p className="text-xs font-medium">Datenqualität-Warnung</p>
                       <p className="text-xs text-muted-foreground">Verzögerung bei Realtime-Daten für NVDA</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 p-3 bg-green-500/5 border border-green-500/20 rounded-lg">
+                  <div className="flex items-center gap-2 p-2 bg-green-500/5 border border-green-500/20 rounded-lg">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <div>
-                      <p className="text-sm font-medium">Portfolio ausbalanciert</p>
+                      <p className="text-xs font-medium">Portfolio ausbalanciert</p>
                       <p className="text-xs text-muted-foreground">Diversifikation innerhalb der Zielwerte</p>
                     </div>
                   </div>
@@ -260,42 +260,42 @@ export default function Home() {
             </div>
 
             {/* Aktivitäts-Feed */}
-            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
-              <div className="space-y-4">
+            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card">
+              <div className="space-y-3">
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-1">Aktivitäts-Feed</h3>
-                  <p className="text-sm text-muted-foreground">Letzte Trading-Aktivitäten und KI-Updates</p>
+                  <h3 className="text-base font-semibold text-foreground mb-1">Aktivitäts-Feed</h3>
+                  <p className="text-xs text-muted-foreground">Letzte Trading-Aktivitäten und KI-Updates</p>
                 </div>
 
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <div>
-                      <p className="text-sm font-medium">AAPL Position eröffnet</p>
+                      <p className="text-xs font-medium">AAPL Position eröffnet</p>
                       <p className="text-xs text-muted-foreground">vor 15 Minuten • Kauforder ausgeführt</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                     <div>
-                      <p className="text-sm font-medium">KI-Modell aktualisiert</p>
+                      <p className="text-xs font-medium">KI-Modell aktualisiert</p>
                       <p className="text-xs text-muted-foreground">vor 32 Minuten • Neue Gewichtungen aktiv</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
                     <div>
-                      <p className="text-sm font-medium">Markt-Anomalie erkannt</p>
+                      <p className="text-xs font-medium">Markt-Anomalie erkannt</p>
                       <p className="text-xs text-muted-foreground">vor 1 Stunde • Erhöhte Überwachung aktiv</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                     <div>
-                      <p className="text-sm font-medium">Stop-Loss ausgelöst</p>
+                      <p className="text-xs font-medium">Stop-Loss ausgelöst</p>
                       <p className="text-xs text-muted-foreground">vor 2 Stunden • META Position geschlossen</p>
                     </div>
                   </div>

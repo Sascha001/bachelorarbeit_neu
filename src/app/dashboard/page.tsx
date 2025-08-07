@@ -51,14 +51,14 @@ export default function Page() {
             <ThemeToggle />
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-6 p-6 pt-0">
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-hidden">
           {/* Top 4 Metric Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
             {/* Portfolio Wert */}
-            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
-              <div className="space-y-2">
+            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card">
+              <div className="space-y-1">
                 <p className="text-sm text-muted-foreground">Portfolio Wert</p>
-                <p className="text-3xl font-bold text-foreground">€127.432,50</p>
+                <p className="text-2xl font-bold text-foreground">€127.432,50</p>
                 <div className="flex items-center gap-2">
                   <span className="text-xs bg-green-500/10 text-green-600 px-2 py-1 rounded-full">↗ +3.34%</span>
                 </div>
@@ -68,10 +68,10 @@ export default function Page() {
             </div>
 
             {/* Aktive Positionen */}
-            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
-              <div className="space-y-2">
+            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card">
+              <div className="space-y-1">
                 <p className="text-sm text-muted-foreground">Aktive Positionen</p>
-                <p className="text-3xl font-bold text-foreground">24</p>
+                <p className="text-2xl font-bold text-foreground">24</p>
                 <div className="flex items-center gap-2">
                   <span className="text-xs bg-blue-500/10 text-blue-600 px-2 py-1 rounded-full">+8 neu</span>
                 </div>
@@ -81,10 +81,10 @@ export default function Page() {
             </div>
 
             {/* KI Vertrauen */}
-            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
-              <div className="space-y-2">
+            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card">
+              <div className="space-y-1">
                 <p className="text-sm text-muted-foreground">KI Vertrauen</p>
-                <p className="text-3xl font-bold text-foreground">87%</p>
+                <p className="text-2xl font-bold text-foreground">87%</p>
                 <div className="flex items-center gap-2">
                   <span className="text-xs bg-blue-500/10 text-blue-600 px-2 py-1 rounded-full">🔒 Hoch</span>
                 </div>
@@ -94,10 +94,10 @@ export default function Page() {
             </div>
 
             {/* Unsicherheits-Score */}
-            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
-              <div className="space-y-2">
+            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card">
+              <div className="space-y-1">
                 <p className="text-sm text-muted-foreground">Unsicherheits-Score</p>
-                <p className="text-3xl font-bold text-foreground">Medium</p>
+                <p className="text-2xl font-bold text-foreground">Medium</p>
                 <div className="flex items-center gap-2">
                   <span className="text-xs bg-yellow-500/10 text-yellow-600 px-2 py-1 rounded-full">⚠ 3 Alerts</span>
                 </div>
@@ -108,18 +108,18 @@ export default function Page() {
           </div>
 
           {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1 min-h-0">
             {/* Aktuelle KI-Empfehlungen */}
-            <div className="lg:col-span-2 bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
-              <div className="space-y-4">
+            <div className="lg:col-span-2 bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card min-h-0">
+              <div className="space-y-3">
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-1">Aktuelle KI-Empfehlungen</h3>
-                  <p className="text-sm text-muted-foreground">Neueste Trading-Signale mit Unsicherheitsanalyse</p>
+                  <h3 className="text-base font-semibold text-foreground mb-1">Aktuelle KI-Empfehlungen</h3>
+                  <p className="text-xs text-muted-foreground">Neueste Trading-Signale mit Unsicherheitsanalyse</p>
                 </div>
                 
-                <div className="space-y-4">
+                <div className="space-y-2">
                   {/* AAPL */}
-                  <div className="flex items-center justify-between p-4 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
+                  <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
                     <div className="flex items-center gap-3">
                       <span className="font-mono font-bold">AAPL</span>
                       <span className="bg-green-500/10 text-green-600 text-sm px-2 py-1 rounded">KAUFEN</span>
@@ -135,7 +135,7 @@ export default function Page() {
                   </div>
 
                   {/* TSLA */}
-                  <div className="flex items-center justify-between p-4 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
+                  <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
                     <div className="flex items-center gap-3">
                       <span className="font-mono font-bold">TSLA</span>
                       <span className="bg-red-500/10 text-red-600 text-sm px-2 py-1 rounded">VERKAUFEN</span>
@@ -151,7 +151,7 @@ export default function Page() {
                   </div>
 
                   {/* NVDA */}
-                  <div className="flex items-center justify-between p-4 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
+                  <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
                     <div className="flex items-center gap-3">
                       <span className="font-mono font-bold">NVDA</span>
                       <span className="bg-blue-500/10 text-blue-600 text-sm px-2 py-1 rounded">HALTEN</span>
@@ -222,7 +222,7 @@ export default function Page() {
           </div>
 
           {/* Bottom Row */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Risiko-Management */}
             <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
               <div className="space-y-4">
