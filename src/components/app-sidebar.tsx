@@ -2,8 +2,6 @@
 
 import * as React from "react"
 import {
-  Activity,
-  AlertTriangle,
   AudioWaveform,
   BarChart3,
   Briefcase,
@@ -97,28 +95,6 @@ const data = {
         {
           title: "Unsicherheits Analyse",
           url: "/statistik",
-        },
-      ],
-    },
-    {
-      title: "Risiko Management",
-      url: "/risiko",
-      icon: AlertTriangle,
-      items: [
-        {
-          title: "Risiko Übersicht",
-          url: "/risiko",
-        },
-      ],
-    },
-    {
-      title: "Aktivitäts Feed",
-      url: "/aktivitaet", 
-      icon: Activity,
-      items: [
-        {
-          title: "Trading Feed",
-          url: "/aktivitaet",
         },
       ],
     },
