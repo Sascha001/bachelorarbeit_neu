@@ -21,7 +21,7 @@ export default function Page() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 px-4 relative">
+        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 px-4">
           <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1" />
             <Separator
@@ -43,11 +43,11 @@ export default function Page() {
             </Breadcrumb>
           </div>
           
-          <div className="absolute left-1/2 transform -translate-x-1/2">
+          <div className="flex-1 flex justify-center">
             <StockSearch />
           </div>
           
-          <div className="ml-auto">
+          <div className="flex items-center">
             <ThemeToggle />
           </div>
         </header>
