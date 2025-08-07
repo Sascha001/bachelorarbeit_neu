@@ -93,7 +93,7 @@ export default function StatistikPage() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b border-border/50 px-4">
+        <header className="flex h-16 shrink-0 items-center transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b border-border/50 px-4 relative">
           <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1 violet-bloom-hover rounded-md p-2" />
             <Separator
@@ -115,11 +115,11 @@ export default function StatistikPage() {
             </Breadcrumb>
           </div>
           
-          <div className="flex-1 flex justify-center">
+          <div className="absolute left-1/2 transform -translate-x-1/2">
             <StockSearch />
           </div>
           
-          <div className="flex items-center">
+          <div className="ml-auto">
             <ThemeToggle />
           </div>
         </header>
