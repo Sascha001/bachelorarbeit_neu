@@ -13,14 +13,16 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { StockSearch } from "@/components/stock-search"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function UeberpruefungPage() {
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b border-border/50">
-          <div className="flex items-center gap-2 px-4">
+        <header className="flex h-16 shrink-0 items-center gap-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b border-border/50 px-4">
+          <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1 violet-bloom-hover rounded-md p-2" />
             <Separator
               orientation="vertical"
@@ -39,6 +41,14 @@ export default function UeberpruefungPage() {
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
+          </div>
+          
+          <div className="flex-1 flex justify-center">
+            <StockSearch />
+          </div>
+          
+          <div className="flex items-center">
+            <ThemeToggle />
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-6 p-6 pt-0">
