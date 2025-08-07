@@ -120,3 +120,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .gradient-card {
+    @apply bg-gradient-to-br from-primary/5 via-background to-secondary/5;
+  }
+  
+  .glass-effect {
+    @apply backdrop-blur-sm bg-background/80 border border-border/50;
+  }
+}
