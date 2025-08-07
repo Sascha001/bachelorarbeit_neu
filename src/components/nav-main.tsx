@@ -56,7 +56,7 @@ export function NavMain({
                   <CollapsibleTrigger asChild>
                     <SidebarMenuButton 
                       tooltip={item.title}
-                      className="violet-bloom-hover"
+                      className={`violet-bloom-hover ${hasActiveSubItem ? 'violet-bloom-active' : ''}`}
                     >
                       {item.icon && <item.icon />}
                       <span>{item.title}</span>
