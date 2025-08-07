@@ -74,46 +74,46 @@ const data = {
     },
     {
       title: "Depot",
-      url: "#",
+      url: "/depot",
       icon: Briefcase,
       items: [
         {
           title: "Übersicht & Performance",
-          url: "#",
+          url: "/depot",
         },
       ],
     },
     {
       title: "Statistik",
-      url: "#",
+      url: "/statistik",
       icon: BarChart3,
       items: [
         {
           title: "Trading Statistik",
-          url: "#",
+          url: "/statistik",
         },
         {
           title: "Unsicherheits Analyse",
-          url: "#",
+          url: "/statistik",
         },
       ],
     },
     {
       title: "Überprüfung",
-      url: "#",
+      url: "/ueberpruefung",
       icon: Shield,
       items: [
         {
           title: "Modell",
-          url: "#",
+          url: "/ueberpruefung",
         },
         {
           title: "Daten",
-          url: "#",
+          url: "/ueberpruefung",
         },
         {
           title: "Mensch",
-          url: "#",
+          url: "/ueberpruefung",
         },
       ],
     },
