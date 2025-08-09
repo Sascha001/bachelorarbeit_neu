@@ -19,6 +19,7 @@ export function useCoolScrollbar<T extends HTMLElement = HTMLDivElement>(
 
     // Apply violet bloom scrollbar styling
     element.classList.add('violet-bloom-scrollbar')
+    console.log('🎨 Violet Bloom Scrollbar applied to:', element)
 
     const startScrolling = () => {
       // Immediately show scrollbar at 100% opacity
