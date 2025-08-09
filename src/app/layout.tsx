@@ -40,13 +40,10 @@ export default function RootLayout({
             let isInitialized = false;
 
             function activateScrollbar() {
-              console.log('🟢 Showing scrollbar - adding show-scrollbar class');
-              console.log('Before:', document.body.classList.contains('show-scrollbar'));
+              console.log('🟢 Showing scrollbar - setting CSS variable to 1');
               
-              document.body.classList.add('show-scrollbar');
-              document.documentElement.classList.add('show-scrollbar');
-              
-              console.log('After:', document.body.classList.contains('show-scrollbar'));
+              // Use CSS variables instead of classes
+              document.documentElement.style.setProperty('--scrollbar-thumb-opacity', '1');
               
               // Clear existing timeout
               if (scrollTimeout) {
@@ -56,13 +53,8 @@ export default function RootLayout({
               
               // Hide after 1 second of no scrolling
               scrollTimeout = setTimeout(() => {
-                console.log('🔴 Hiding scrollbar - removing show-scrollbar class');
-                console.log('Before remove:', document.body.classList.contains('show-scrollbar'));
-                
-                document.body.classList.remove('show-scrollbar');
-                document.documentElement.classList.remove('show-scrollbar');
-                
-                console.log('After remove:', document.body.classList.contains('show-scrollbar'));
+                console.log('🔴 Hiding scrollbar - setting CSS variable to 0.2');
+                document.documentElement.style.setProperty('--scrollbar-thumb-opacity', '0.2');
               }, 1000);
             }
 

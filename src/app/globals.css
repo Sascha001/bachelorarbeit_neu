@@ -182,10 +182,15 @@
   }
 }
 
-/* Cool Auto-Hide Scrollbar with Opacity - Apply to ALL scrollbars */
+/* CSS Variables for Scrollbar Control */
+:root {
+  --scrollbar-thumb-opacity: 0.2;
+}
+
+/* Cool Auto-Hide Scrollbar with CSS Variables */
 * {
   scrollbar-width: thin !important;
-  scrollbar-color: #8b5cf6 #e2e8f0 !important;
+  scrollbar-color: rgba(139, 92, 246, var(--scrollbar-thumb-opacity)) #e2e8f0 !important;
 }
 
 *::-webkit-scrollbar {
@@ -204,21 +209,9 @@
   border: 2px solid #e2e8f0 !important;
   box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3) !important;
   
-  /* Standard: leicht sichtbar (20%) */
-  opacity: 0.2 !important;
+  /* Use CSS variable for opacity */
+  opacity: var(--scrollbar-thumb-opacity) !important;
   transition: opacity 0.3s ease !important;
-}
-
-/* Show full scrollbar when actively scrolling - ALL scrollbars */
-.show-scrollbar *::-webkit-scrollbar-thumb {
-  /* Beim Scrollen: volle Sichtbarkeit */
-  opacity: 1 !important;
-}
-
-/* CSS Test - should make scrollbar green when css-test class is added */
-.css-test *::-webkit-scrollbar-thumb {
-  background: green !important;
-  opacity: 1 !important;
 }
 
 /* Hover effect on scrollbar thumb */
