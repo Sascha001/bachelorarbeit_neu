@@ -182,11 +182,10 @@
   }
 }
 
-/* Cool Auto-Hide Scrollbar */
+/* Cool Auto-Hide Scrollbar with Opacity */
 * {
   scrollbar-width: thin !important;
-  scrollbar-color: rgba(139, 92, 246, 0.1) rgba(226, 232, 240, 0.05) !important;
-  transition: scrollbar-color 0.4s ease !important;
+  scrollbar-color: #8b5cf6 #e2e8f0 !important;
 }
 
 *::-webkit-scrollbar {
@@ -195,41 +194,31 @@
 }
 
 *::-webkit-scrollbar-track {
-  background: rgba(226, 232, 240, 0.05) !important;
+  background: #e2e8f0 !important;
   border-radius: 8px !important;
-  transition: all 0.4s ease !important;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.1) !important;
-  border-radius: 8px !important;
-  border: 2px solid rgba(226, 232, 240, 0.05) !important;
-  transition: all 0.4s ease !important;
-}
-
-/* Show colorful scrollbar only when actively scrolling */
-body.actively-scrolling *,
-html.actively-scrolling *,
-.actively-scrolling * {
-  scrollbar-color: #8b5cf6 #e2e8f0 !important;
-}
-
-body.actively-scrolling *::-webkit-scrollbar-track,
-html.actively-scrolling *::-webkit-scrollbar-track,
-.actively-scrolling *::-webkit-scrollbar-track {
-  background: #e2e8f0 !important;
-}
-
-body.actively-scrolling *::-webkit-scrollbar-thumb,
-html.actively-scrolling *::-webkit-scrollbar-thumb,
-.actively-scrolling *::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #8b5cf6 100%) !important;
-  border-color: #e2e8f0 !important;
+  border-radius: 8px !important;
+  border: 2px solid #e2e8f0 !important;
   box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3) !important;
+  
+  /* Standard: leicht sichtbar (20%) */
+  opacity: 0.2 !important;
+  transition: opacity 0.3s ease !important;
 }
 
-/* Hover effect on scrollbar thumb when visible */
-body.actively-scrolling *::-webkit-scrollbar-thumb:hover {
+/* Show full scrollbar when actively scrolling */
+body.show-scrollbar *::-webkit-scrollbar-thumb,
+html.show-scrollbar *::-webkit-scrollbar-thumb,
+.show-scrollbar *::-webkit-scrollbar-thumb {
+  /* Beim Scrollen: volle Sichtbarkeit */
+  opacity: 1 !important;
+}
+
+/* Hover effect on scrollbar thumb */
+*::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #7c3aed 100%) !important;
   transform: scale(1.1) !important;
   box-shadow: 0 4px 8px rgba(124, 58, 237, 0.4) !important;
