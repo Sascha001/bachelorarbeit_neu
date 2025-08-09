@@ -182,9 +182,9 @@
   }
 }
 
-/* Scrollbar completely hidden by default */
+/* Scrollbar transparent by default but still has width for fade effect */
 * {
-  scrollbar-width: none !important;
+  scrollbar-width: thin !important;
   scrollbar-color: transparent transparent !important;
 }
 
