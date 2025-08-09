@@ -182,16 +182,10 @@
   }
 }
 
-/* CSS Variables for Scrollbar Control */
-:root {
-  --scrollbar-thumb-opacity: 0.2;
-  --scrollbar-track-opacity: 0.3;
-}
-
-/* Cool Auto-Hide Scrollbar with CSS Variables */
+/* Cool Auto-Hide Scrollbar with Simple Transitions */
 * {
   scrollbar-width: thin !important;
-  scrollbar-color: rgba(139, 92, 246, var(--scrollbar-thumb-opacity)) #e2e8f0 !important;
+  scrollbar-color: #8b5cf6 #e2e8f0 !important;
 }
 
 *::-webkit-scrollbar {
@@ -200,9 +194,8 @@
 }
 
 *::-webkit-scrollbar-track {
-  background: rgba(226, 232, 240, var(--scrollbar-track-opacity)) !important;
+  background: #e2e8f0 !important;
   border-radius: 8px !important;
-  transition: background 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
 }
 
 *::-webkit-scrollbar-thumb {
@@ -211,9 +204,15 @@
   border: 2px solid #e2e8f0 !important;
   box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3) !important;
   
-  /* Use CSS variable for opacity with enhanced smooth transition */
-  opacity: var(--scrollbar-thumb-opacity) !important;
-  transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  /* Standard: leicht sichtbar (20%) */
+  opacity: 0.2 !important;
+  transition: opacity 0.3s ease !important;
+}
+
+/* Show full scrollbar when actively scrolling */
+.show-scrollbar *::-webkit-scrollbar-thumb {
+  /* Beim Scrollen: volle Sichtbarkeit */
+  opacity: 1 !important;
 }
 
 /* Hover effect on scrollbar thumb */
