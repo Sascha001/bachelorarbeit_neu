@@ -40,24 +40,23 @@ export default function RootLayout({
             let isInitialized = false;
 
             function activateScrollbar() {
-              console.log('🟢 Showing scrollbar - setting CSS variables for fade-in');
+              console.log('🟢 Smooth fade-in to active state');
               
-              // Use CSS variables for smooth fade effect
+              // Smooth transition to active state
               document.documentElement.style.setProperty('--scrollbar-thumb-opacity', '1');
-              document.documentElement.style.setProperty('--scrollbar-track-opacity', '0.8');
+              document.documentElement.style.setProperty('--scrollbar-track-opacity', '0.9');
               
               // Clear existing timeout
               if (scrollTimeout) {
-                console.log('⏰ Clearing existing timeout');
                 clearTimeout(scrollTimeout);
               }
               
-              // Hide after 1 second of no scrolling with fade-out
+              // Smooth fade-out after 1.2 seconds for better UX
               scrollTimeout = setTimeout(() => {
-                console.log('🔴 Hiding scrollbar - setting CSS variables for fade-out');
-                document.documentElement.style.setProperty('--scrollbar-thumb-opacity', '0.2');
-                document.documentElement.style.setProperty('--scrollbar-track-opacity', '0.3');
-              }, 1000);
+                console.log('🔴 Smooth fade-out to inactive state');
+                document.documentElement.style.setProperty('--scrollbar-thumb-opacity', '0.15');
+                document.documentElement.style.setProperty('--scrollbar-track-opacity', '0.25');
+              }, 1200);
             }
 
             function initScrollbarEvents() {
