@@ -202,4 +202,93 @@
   .violet-bloom-glow {
     @apply hover:shadow-lg hover:shadow-primary/20 transition-all duration-300;
   }
+
+  /* Cool Auto-Hide Scrollbar */
+  .cool-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color 0.3s ease;
+  }
+
+  .cool-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .cool-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+  }
+
+  .cool-scrollbar::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+
+  /* Scrollbar appears on scroll/hover */
+  .cool-scrollbar.scrolling {
+    scrollbar-color: hsl(var(--primary) / 0.8) hsl(var(--primary) / 0.1);
+  }
+
+  .cool-scrollbar.scrolling::-webkit-scrollbar-track {
+    background: hsl(var(--primary) / 0.1);
+  }
+
+  .cool-scrollbar.scrolling::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, 
+      hsl(var(--primary) / 0.9) 0%, 
+      hsl(var(--primary) / 0.7) 50%, 
+      hsl(var(--primary) / 0.9) 100%);
+    box-shadow: 0 2px 4px hsl(var(--primary) / 0.3);
+  }
+
+  .cool-scrollbar.scrolling::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, 
+      hsl(var(--primary)) 0%, 
+      hsl(var(--primary) / 0.8) 50%, 
+      hsl(var(--primary)) 100%);
+    box-shadow: 0 4px 8px hsl(var(--primary) / 0.4);
+    transform: scale(1.1);
+  }
+
+  /* Animation classes */
+  .cool-scrollbar.fade-in::-webkit-scrollbar-thumb {
+    animation: scrollbarFadeIn 0.3s ease-out forwards;
+  }
+
+  .cool-scrollbar.fade-out::-webkit-scrollbar-thumb {
+    animation: scrollbarFadeOut 0.3s ease-out forwards;
+  }
+
+  @keyframes scrollbarFadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes scrollbarFadeOut {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+
+  /* Dark mode support */
+  .dark .cool-scrollbar.scrolling {
+    scrollbar-color: hsl(var(--primary) / 0.9) hsl(var(--primary) / 0.15);
+  }
+
+  .dark .cool-scrollbar.scrolling::-webkit-scrollbar-track {
+    background: hsl(var(--primary) / 0.15);
+  }
 }
