@@ -182,11 +182,11 @@
   }
 }
 
-/* Scrollbar hidden by default, visible with .scrollbar-show class */
+/* CSS-Only Auto-Hide Scrollbar - No JavaScript needed */
 * {
   scrollbar-width: thin !important;
-  scrollbar-color: transparent transparent !important;
-  transition: scrollbar-color 0.4s ease !important;
+  scrollbar-color: rgba(139, 92, 246, 0.2) rgba(226, 232, 240, 0.1) !important;
+  transition: scrollbar-color 0.3s ease !important;
 }
 
 *::-webkit-scrollbar {
@@ -195,16 +195,35 @@
 }
 
 *::-webkit-scrollbar-track {
-  background: transparent !important;
+  background: rgba(226, 232, 240, 0.1) !important;
   border-radius: 8px !important;
-  transition: background 0.4s ease !important;
+  transition: all 0.3s ease !important;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: transparent !important;
+  background: rgba(139, 92, 246, 0.2) !important;
   border-radius: 8px !important;
-  border: 2px solid transparent !important;
-  transition: all 0.4s ease !important;
+  border: 2px solid rgba(226, 232, 240, 0.1) !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Show on hover - CSS only */
+*:hover {
+  scrollbar-color: #8b5cf6 #e2e8f0 !important;
+}
+
+*:hover::-webkit-scrollbar-track {
+  background: #e2e8f0 !important;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  background: #8b5cf6 !important;
+  border-color: #e2e8f0 !important;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #7c3aed !important;
+  transform: scale(1.1) !important;
 }
 
 /* Test: Show scrollbar when body has scrollbar-show class */
