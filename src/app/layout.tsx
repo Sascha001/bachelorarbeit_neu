@@ -38,33 +38,24 @@ export default function RootLayout({
           __html: `
             let scrollTimeout = null;
 
-            function showScrollbar() {
-              console.log('🟢 SHOWING scrollbar');
-              document.body.classList.add('scrolling');
+            function activateScrollbar() {
+              document.body.classList.add('actively-scrolling');
               
+              // Clear existing timeout
               if (scrollTimeout) {
                 clearTimeout(scrollTimeout);
               }
-            }
-
-            function hideScrollbar() {
+              
+              // Hide after 1 second of no scrolling
               scrollTimeout = setTimeout(() => {
-                console.log('🔴 HIDING scrollbar');
-                document.body.classList.remove('scrolling');
-              }, 2000);
+                document.body.classList.remove('actively-scrolling');
+              }, 1000);
             }
 
-            function handleScroll() {
-              console.log('📜 Scroll detected!');
-              showScrollbar();
-              hideScrollbar();
-            }
-
-            document.addEventListener('DOMContentLoaded', () => {
-              console.log('🚀 Scroll handler initialized!');
-              window.addEventListener('scroll', handleScroll, { passive: true });
-              document.addEventListener('scroll', handleScroll, { passive: true, capture: true });
-            });
+            // Simple, reliable scroll detection
+            window.addEventListener('scroll', activateScrollbar, { passive: true });
+            window.addEventListener('wheel', activateScrollbar, { passive: true });
+            document.addEventListener('scroll', activateScrollbar, { passive: true, capture: true });
           `
         }} />
       </body>

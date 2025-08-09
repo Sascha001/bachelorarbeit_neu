@@ -182,11 +182,11 @@
   }
 }
 
-/* CSS-Only Auto-Hide Scrollbar - No JavaScript needed */
+/* Cool Auto-Hide Scrollbar */
 * {
   scrollbar-width: thin !important;
-  scrollbar-color: rgba(139, 92, 246, 0.2) rgba(226, 232, 240, 0.1) !important;
-  transition: scrollbar-color 0.3s ease !important;
+  scrollbar-color: transparent transparent !important;
+  transition: scrollbar-color 0.4s ease !important;
 }
 
 *::-webkit-scrollbar {
@@ -195,103 +195,38 @@
 }
 
 *::-webkit-scrollbar-track {
-  background: rgba(226, 232, 240, 0.1) !important;
+  background: transparent !important;
   border-radius: 8px !important;
-  transition: all 0.3s ease !important;
+  transition: all 0.4s ease !important;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.2) !important;
+  background: transparent !important;
   border-radius: 8px !important;
-  border: 2px solid rgba(226, 232, 240, 0.1) !important;
-  transition: all 0.3s ease !important;
+  border: 2px solid transparent !important;
+  transition: all 0.4s ease !important;
 }
 
-/* Show on scroll - triggered by JavaScript */
-body.scrolling * {
+/* Show colorful scrollbar only when actively scrolling */
+body.actively-scrolling * {
   scrollbar-color: #8b5cf6 #e2e8f0 !important;
 }
 
-body.scrolling *::-webkit-scrollbar-track {
+body.actively-scrolling *::-webkit-scrollbar-track {
   background: #e2e8f0 !important;
 }
 
-body.scrolling *::-webkit-scrollbar-thumb {
-  background: #8b5cf6 !important;
+body.actively-scrolling *::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #8b5cf6 100%) !important;
   border-color: #e2e8f0 !important;
+  box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3) !important;
 }
 
-*::-webkit-scrollbar-thumb:hover {
-  background: #7c3aed !important;
+/* Hover effect on scrollbar thumb when visible */
+body.actively-scrolling *::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #7c3aed 100%) !important;
   transform: scale(1.1) !important;
-}
-
-/* Test: Show scrollbar when body has scrollbar-show class */
-body.scrollbar-show * {
-  scrollbar-color: #8b5cf6 #e2e8f0 !important;
-}
-
-body.scrollbar-show *::-webkit-scrollbar-track {
-  background: #e2e8f0 !important;
-}
-
-body.scrollbar-show *::-webkit-scrollbar-thumb {
-  background: #8b5cf6 !important;
-  border-color: #e2e8f0 !important;
-}
-
-body.scrollbar-show *::-webkit-scrollbar-thumb:hover {
-  background: #7c3aed !important;
-}
-
-/* Fade-in animations */
-@keyframes fadeInTrack {
-  from {
-    background: transparent !important;
-  }
-  to {
-    background: #e2e8f0 !important;
-  }
-}
-
-@keyframes fadeInThumb {
-  from {
-    background: transparent !important;
-    opacity: 0;
-  }
-  to {
-    background: #8b5cf6 !important;
-    opacity: 1;
-  }
-}
-
-/* Fade-out when removing class */
-:not(.scrollbar-show) *::-webkit-scrollbar-track {
-  animation: fadeOutTrack 0.4s ease forwards !important;
-}
-
-:not(.scrollbar-show) *::-webkit-scrollbar-thumb {
-  animation: fadeOutThumb 0.4s ease forwards !important;
-}
-
-@keyframes fadeOutTrack {
-  from {
-    background: #e2e8f0 !important;
-  }
-  to {
-    background: transparent !important;
-  }
-}
-
-@keyframes fadeOutThumb {
-  from {
-    background: #8b5cf6 !important;
-    opacity: 1;
-  }
-  to {
-    background: transparent !important;
-    opacity: 0;
-  }
+  box-shadow: 0 4px 8px rgba(124, 58, 237, 0.4) !important;
 }
 
 @layer components {
