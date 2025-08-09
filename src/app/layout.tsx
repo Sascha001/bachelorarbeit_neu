@@ -42,6 +42,7 @@ export default function RootLayout({
             function activateScrollbar() {
               console.log('🟢 Activating scrollbar');
               document.body.classList.add('actively-scrolling');
+              document.documentElement.classList.add('actively-scrolling');
               
               // Clear existing timeout
               if (scrollTimeout) {
@@ -52,6 +53,7 @@ export default function RootLayout({
               scrollTimeout = setTimeout(() => {
                 console.log('🔴 Deactivating scrollbar');
                 document.body.classList.remove('actively-scrolling');
+                document.documentElement.classList.remove('actively-scrolling');
               }, 1000);
             }
 
