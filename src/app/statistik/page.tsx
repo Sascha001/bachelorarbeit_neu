@@ -19,15 +19,13 @@ import { StockSearch } from "@/components/stock-search"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { useSearchParams } from "next/navigation"
 import { Suspense } from "react"
-import { useCoolScrollbar } from "@/hooks/use-cool-scrollbar"
 
 function StatistikContent() {
   const searchParams = useSearchParams()
   const stock = searchParams.get('stock')
-  const scrollRef = useCoolScrollbar()
 
   return (
-    <div ref={scrollRef} className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-auto cool-scrollbar">
+    <div className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-hidden">
       {stock ? (
         <div className="space-y-4 h-full flex flex-col">
           <div className="text-center">

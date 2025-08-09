@@ -20,7 +20,6 @@ import {
 import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronUp } from "lucide-react"
 import { useState } from "react"
-import { useCoolScrollbar } from "@/hooks/use-cool-scrollbar"
 
 // Dummy data that matches the dashboard numbers
 const portfolioData = {
@@ -127,7 +126,6 @@ export default function DepotPage() {
   const [selectedPeriod, setSelectedPeriod] = useState("3M")
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
   const [hoveredSlice, setHoveredSlice] = useState<string | null>(null)
-  const scrollRef = useCoolScrollbar()
 
   const periods = ["3M", "6M", "9M", "1Jahr", "3Jahre", "5Jahre", "Gesamtzeit"]
 
@@ -193,7 +191,7 @@ export default function DepotPage() {
             <ThemeToggle />
           </div>
         </header>
-        <div ref={scrollRef} className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-auto cool-scrollbar">
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-auto">
           {/* Portfolio Overview Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Gesamtes Portfolio */}
@@ -321,7 +319,7 @@ export default function DepotPage() {
                   <p className="text-xs text-muted-foreground">Aufschlüsselung nach Anlageklassen</p>
                 </div>
                 
-                <div className="flex-1 overflow-auto space-y-2 cool-scrollbar">
+                <div className="flex-1 overflow-auto space-y-2">
                   {allocationData.map((category) => (
                     <div key={category.name} className="border border-border/50 rounded-lg">
                       <button

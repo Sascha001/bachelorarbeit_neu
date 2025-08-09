@@ -1,7 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { StockSearch } from "@/components/stock-search"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { useCoolScrollbar } from "@/hooks/use-cool-scrollbar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,8 +17,6 @@ import {
 } from "@/components/ui/sidebar"
 
 export default function Page() {
-  const scrollRef = useCoolScrollbar()
-  
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -54,7 +51,7 @@ export default function Page() {
             <ThemeToggle />
           </div>
         </header>
-        <div ref={scrollRef} className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-auto cool-scrollbar">
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-hidden">
           {/* Top 4 Metric Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
             {/* Portfolio Wert */}
