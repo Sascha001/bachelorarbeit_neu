@@ -77,6 +77,19 @@ export default function RootLayout({
                 console.log('html scrollHeight:', document.documentElement.scrollHeight, 'clientHeight:', document.documentElement.clientHeight);
                 console.log('body overflow:', window.getComputedStyle(document.body).overflow);
                 console.log('html overflow:', window.getComputedStyle(document.documentElement).overflow);
+                
+                // Manual CSS test
+                console.log('🧪 Testing CSS manually...');
+                console.log('Current body classes:', document.body.className);
+                
+                // Force add class and test
+                document.body.classList.add('css-test');
+                console.log('Added css-test class');
+                
+                setTimeout(() => {
+                  document.body.classList.remove('css-test');  
+                  console.log('Removed css-test class');
+                }, 2000);
               }, 1000);
               
               // Multiple event strategies for maximum compatibility
