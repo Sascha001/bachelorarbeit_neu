@@ -209,10 +209,13 @@
   transition: opacity 0.3s ease !important;
 }
 
-/* Show full scrollbar when actively scrolling */
-body.show-scrollbar *::-webkit-scrollbar-thumb,
-html.show-scrollbar *::-webkit-scrollbar-thumb,
-.show-scrollbar *::-webkit-scrollbar-thumb {
+/* Show full scrollbar when actively scrolling - higher specificity */
+body.show-scrollbar *::-webkit-scrollbar-thumb {
+  /* Beim Scrollen: volle Sichtbarkeit */
+  opacity: 1 !important;
+}
+
+html.show-scrollbar *::-webkit-scrollbar-thumb {
   /* Beim Scrollen: volle Sichtbarkeit */
   opacity: 1 !important;
 }

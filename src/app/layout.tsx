@@ -40,20 +40,29 @@ export default function RootLayout({
             let isInitialized = false;
 
             function activateScrollbar() {
-              console.log('🟢 Showing scrollbar');
+              console.log('🟢 Showing scrollbar - adding show-scrollbar class');
+              console.log('Before:', document.body.classList.contains('show-scrollbar'));
+              
               document.body.classList.add('show-scrollbar');
               document.documentElement.classList.add('show-scrollbar');
               
+              console.log('After:', document.body.classList.contains('show-scrollbar'));
+              
               // Clear existing timeout
               if (scrollTimeout) {
+                console.log('⏰ Clearing existing timeout');
                 clearTimeout(scrollTimeout);
               }
               
               // Hide after 1 second of no scrolling
               scrollTimeout = setTimeout(() => {
-                console.log('🔴 Hiding scrollbar');
+                console.log('🔴 Hiding scrollbar - removing show-scrollbar class');
+                console.log('Before remove:', document.body.classList.contains('show-scrollbar'));
+                
                 document.body.classList.remove('show-scrollbar');
                 document.documentElement.classList.remove('show-scrollbar');
+                
+                console.log('After remove:', document.body.classList.contains('show-scrollbar'));
               }, 1000);
             }
 
