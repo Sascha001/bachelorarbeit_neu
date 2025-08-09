@@ -182,10 +182,10 @@
   }
 }
 
-/* Scrollbar transparent by default but still has width for fade effect */
+/* TEST: Force visible scrollbar to see if CSS works */
 * {
   scrollbar-width: thin !important;
-  scrollbar-color: transparent transparent !important;
+  scrollbar-color: #8b5cf6 #e2e8f0 !important;
 }
 
 *::-webkit-scrollbar {
@@ -194,14 +194,14 @@
 }
 
 *::-webkit-scrollbar-track {
-  background: transparent !important;
+  background: #e2e8f0 !important;
   border-radius: 8px !important;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: transparent !important;
+  background: #8b5cf6 !important;
   border-radius: 8px !important;
-  border: 2px solid transparent !important;
+  border: 2px solid #e2e8f0 !important;
 }
 
 /* Test: Show scrollbar when body has scrollbar-show class */
