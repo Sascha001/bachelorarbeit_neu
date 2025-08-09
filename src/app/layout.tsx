@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Lora, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import Script from "next/script";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -35,7 +34,39 @@ export default function RootLayout({
         className={`${plusJakartaSans.variable} ${lora.variable} ${ibmPlexMono.variable} font-sans antialiased`}
       >
         {children}
-        <Script src="/scroll-handler.js" strategy="afterInteractive" />
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            let scrollTimeout = null;
+
+            function showScrollbar() {
+              console.log('🟢 SHOWING scrollbar');
+              document.body.classList.add('scrolling');
+              
+              if (scrollTimeout) {
+                clearTimeout(scrollTimeout);
+              }
+            }
+
+            function hideScrollbar() {
+              scrollTimeout = setTimeout(() => {
+                console.log('🔴 HIDING scrollbar');
+                document.body.classList.remove('scrolling');
+              }, 2000);
+            }
+
+            function handleScroll() {
+              console.log('📜 Scroll detected!');
+              showScrollbar();
+              hideScrollbar();
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+              console.log('🚀 Scroll handler initialized!');
+              window.addEventListener('scroll', handleScroll, { passive: true });
+              document.addEventListener('scroll', handleScroll, { passive: true, capture: true });
+            });
+          `
+        }} />
       </body>
     </html>
   );
