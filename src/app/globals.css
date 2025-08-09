@@ -182,10 +182,11 @@
   }
 }
 
-/* Test: Always show scrollbar for debugging */
+/* Auto-hide scrollbar with opacity */
 * {
   scrollbar-width: thin !important;
-  scrollbar-color: #8b5cf6 #e2e8f0 !important;
+  scrollbar-color: rgba(139, 92, 246, 0.3) rgba(226, 232, 240, 0.3) !important;
+  transition: scrollbar-color 0.4s ease !important;
 }
 
 *::-webkit-scrollbar {
@@ -194,18 +195,34 @@
 }
 
 *::-webkit-scrollbar-track {
-  background: #e2e8f0 !important;
+  background: rgba(226, 232, 240, 0.3) !important;
   border-radius: 8px !important;
+  transition: background 0.4s ease !important;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: #8b5cf6 !important;
+  background: rgba(139, 92, 246, 0.3) !important;
   border-radius: 8px !important;
-  border: 2px solid #e2e8f0 !important;
+  border: 2px solid rgba(226, 232, 240, 0.3) !important;
+  transition: all 0.4s ease !important;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: #7c3aed !important;
+  background: rgba(124, 58, 237, 0.8) !important;
+}
+
+/* Show scrollbar on scroll/hover */
+body.scrollbar-show * {
+  scrollbar-color: #8b5cf6 #e2e8f0 !important;
+}
+
+body.scrollbar-show *::-webkit-scrollbar-track {
+  background: #e2e8f0 !important;
+}
+
+body.scrollbar-show *::-webkit-scrollbar-thumb {
+  background: #8b5cf6 !important;
+  border-color: #e2e8f0 !important;
 }
 
 @layer components {
