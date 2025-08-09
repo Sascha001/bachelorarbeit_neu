@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { 
-  TrendingUp, 
   Database, 
   Brain, 
   Users, 
@@ -13,8 +12,7 @@ import {
   CheckCircle,
   XCircle,
   Clock,
-  Activity,
-  LineChart
+  Activity
 } from "lucide-react"
 
 interface TechnicalAnalysisTabProps {
@@ -22,8 +20,34 @@ interface TechnicalAnalysisTabProps {
 }
 
 // Mock technical data
-const getTechnicalData = (stock: string) => {
-  const mockData: Record<string, any> = {
+interface FeatureImportance {
+  name: string;
+  weight: number;
+}
+
+interface TechnicalData {
+  dataValidation: {
+    fundamentalData: { score: number; status: string; issues: number };
+    newsReliability: { score: number; status: string; sources: number };
+    timeSeriesIntegrity: { score: number; status: string; gaps: number };
+    tradingVolume: { score: number; status: string; anomalies: number };
+  };
+  modelMetrics: {
+    trainingAccuracy: number;
+    validationLoss: number;
+    featureImportance: FeatureImportance[];
+    predictionInterval: string;
+  };
+  humanFactors: {
+    expertConsensus: number;
+    marketSentiment: number;
+    analystReliability: number;
+    behavioralBias: number;
+  };
+}
+
+const getTechnicalData = (stock: string): TechnicalData => {
+  const mockData: Record<string, TechnicalData> = {
     AAPL: {
       dataValidation: {
         fundamentalData: { score: 92, status: "excellent", issues: 0 },
@@ -258,7 +282,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                 Feature-Wichtigkeit
               </h4>
               <div className="space-y-3">
-                {data.modelMetrics.featureImportance.map((feature: any, index: number) => (
+                {data.modelMetrics.featureImportance.map((feature: FeatureImportance, index: number) => (
                   <div key={index} className="space-y-1">
                     <div className="flex justify-between text-sm">
                       <span>{feature.name}</span>

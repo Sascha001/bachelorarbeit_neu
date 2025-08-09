@@ -25,8 +25,7 @@ import {
   CheckCircle,
   MessageSquare,
   Star,
-  ThumbsUp,
-  ThumbsDown
+  ThumbsUp
 } from "lucide-react"
 import { useState } from "react"
 
@@ -35,8 +34,24 @@ interface PurchaseRecommendationProps {
 }
 
 // Mock purchase data
-const getPurchaseData = (stock: string) => {
-  const mockData: Record<string, any> = {
+interface PurchaseData {
+  currentPrice: number;
+  recommendation: string;
+  recommendedAmount: number;
+  minAmount: number;
+  maxAmount: number;
+  expectedReturn: number;
+  timeHorizon: string;
+  riskScore: number;
+  portfolioImpact: {
+    diversification: number;
+    riskReduction: number;
+    expectedContribution: number;
+  };
+}
+
+const getPurchaseData = (stock: string): PurchaseData => {
+  const mockData: Record<string, PurchaseData> = {
     AAPL: {
       currentPrice: 178.32,
       recommendation: "BUY",

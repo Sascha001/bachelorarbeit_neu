@@ -5,7 +5,6 @@ import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { 
   HelpCircle,
-  TrendingUp,
   Database,
   Brain,
   Users,
@@ -21,8 +20,23 @@ interface SimplifiedAnalysisTabProps {
 }
 
 // Mock simplified data
-const getSimplifiedData = (stock: string) => {
-  const mockData: Record<string, any> = {
+interface ConcernData {
+  category: string;
+  explanation: string;
+  impact: string;
+  userAction: string;
+}
+
+interface SimplifiedData {
+  overallMessage: string;
+  confidenceLevel: number;
+  mainConcerns: ConcernData[];
+  recommendations: string[];
+  riskLevel: string;
+}
+
+const getSimplifiedData = (stock: string): SimplifiedData => {
+  const mockData: Record<string, SimplifiedData> = {
     AAPL: {
       overallMessage: "Die KI-Empfehlung für Apple ist relativ verlässlich, aber es gibt einige Unsicherheiten zu beachten.",
       confidenceLevel: 73,
@@ -199,7 +213,7 @@ export function SimplifiedAnalysisTab({ selectedStock }: SimplifiedAnalysisTabPr
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            {data.mainConcerns.map((concern: any, index: number) => (
+            {data.mainConcerns.map((concern: ConcernData, index: number) => (
               <div key={index} className="border-l-4 border-primary/20 pl-4 space-y-3">
                 <div className="flex items-center gap-2">
                   {concern.category === "Datenqualität" && <Database className="h-5 w-5 text-blue-600" />}
