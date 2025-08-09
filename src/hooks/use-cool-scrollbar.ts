@@ -4,53 +4,40 @@ import { useEffect, useRef } from 'react'
 
 interface ScrollbarOptions {
   hideDelay?: number
-  className?: string
 }
 
 export function useCoolScrollbar<T extends HTMLElement = HTMLDivElement>(
   options: ScrollbarOptions = {}
 ) {
-  const { hideDelay = 2000, className = 'cool-scrollbar' } = options
+  const { hideDelay = 2000 } = options
   const elementRef = useRef<T>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const isScrollingRef = useRef(false)
+  const bodyTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     const element = elementRef.current
     if (!element) return
 
-    // Add base scrollbar class
-    element.classList.add(className)
-
     const showScrollbar = () => {
+      // Clear existing timeouts
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
+      if (bodyTimeoutRef.current) {
+        clearTimeout(bodyTimeoutRef.current)
+      }
       
-      element.classList.remove('fade-out')
-      element.classList.add('scrolling', 'fade-in')
-      isScrollingRef.current = true
-      
-      // Remove fade-in class after animation
-      setTimeout(() => {
-        element.classList.remove('fade-in')
-      }, 300)
+      // Show scrollbar on body (global)
+      document.body.classList.add('scrollbar-show')
     }
 
     const hideScrollbar = () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
+      if (bodyTimeoutRef.current) {
+        clearTimeout(bodyTimeoutRef.current)
       }
       
-      timeoutRef.current = setTimeout(() => {
-        element.classList.remove('fade-in')
-        element.classList.add('fade-out')
-        isScrollingRef.current = false
-        
-        // Remove scrolling class after fade-out animation
-        setTimeout(() => {
-          element.classList.remove('scrolling', 'fade-out')
-        }, 300)
+      bodyTimeoutRef.current = setTimeout(() => {
+        document.body.classList.remove('scrollbar-show')
       }, hideDelay)
     }
 
@@ -64,9 +51,7 @@ export function useCoolScrollbar<T extends HTMLElement = HTMLDivElement>(
     }
 
     const handleMouseLeave = () => {
-      if (isScrollingRef.current) {
-        hideScrollbar()
-      }
+      hideScrollbar()
     }
 
     // Add event listeners
@@ -74,7 +59,8 @@ export function useCoolScrollbar<T extends HTMLElement = HTMLDivElement>(
     element.addEventListener('mouseenter', handleMouseEnter)
     element.addEventListener('mouseleave', handleMouseLeave)
 
-    // Initial hide after short delay
+    // Show initially for 1 second
+    showScrollbar()
     setTimeout(() => {
       hideScrollbar()
     }, 1000)
@@ -87,8 +73,14 @@ export function useCoolScrollbar<T extends HTMLElement = HTMLDivElement>(
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
+      if (bodyTimeoutRef.current) {
+        clearTimeout(bodyTimeoutRef.current)
+      }
+      
+      // Clean up body class
+      document.body.classList.remove('scrollbar-show')
     }
-  }, [hideDelay, className])
+  }, [hideDelay])
 
   return elementRef
 }
