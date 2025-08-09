@@ -70,6 +70,15 @@ export default function RootLayout({
               if (isInitialized) return;
               console.log('🚀 Initializing scrollbar events');
               
+              // Debug: Check which elements have scrollbars
+              setTimeout(() => {
+                console.log('🔍 Debugging scrollable elements:');
+                console.log('body scrollHeight:', document.body.scrollHeight, 'clientHeight:', document.body.clientHeight);
+                console.log('html scrollHeight:', document.documentElement.scrollHeight, 'clientHeight:', document.documentElement.clientHeight);
+                console.log('body overflow:', window.getComputedStyle(document.body).overflow);
+                console.log('html overflow:', window.getComputedStyle(document.documentElement).overflow);
+              }, 1000);
+              
               // Multiple event strategies for maximum compatibility
               window.addEventListener('scroll', activateScrollbar, { passive: true });
               window.addEventListener('wheel', activateScrollbar, { passive: true });
