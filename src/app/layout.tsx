@@ -40,22 +40,20 @@ export default function RootLayout({
             let isInitialized = false;
 
             function activateScrollbar() {
-              console.log('🟢 Smooth fade-in to active state');
+              console.log('🟢 Smooth fade-in with class transition');
               
-              // Smooth transition to active state
-              document.documentElement.style.setProperty('--scrollbar-thumb-opacity', '1');
-              document.documentElement.style.setProperty('--scrollbar-track-opacity', '0.9');
+              // Use class-based transitions instead of CSS variables
+              document.body.classList.add('show-scrollbar');
               
               // Clear existing timeout
               if (scrollTimeout) {
                 clearTimeout(scrollTimeout);
               }
               
-              // Smooth fade-out after 1.2 seconds for better UX
+              // Smooth fade-out after 1.2 seconds
               scrollTimeout = setTimeout(() => {
-                console.log('🔴 Smooth fade-out to inactive state');
-                document.documentElement.style.setProperty('--scrollbar-thumb-opacity', '0.15');
-                document.documentElement.style.setProperty('--scrollbar-track-opacity', '0.25');
+                console.log('🔴 Smooth fade-out with class transition');
+                document.body.classList.remove('show-scrollbar');
               }, 1200);
             }
 
