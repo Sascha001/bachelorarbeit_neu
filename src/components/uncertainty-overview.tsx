@@ -11,7 +11,14 @@ interface UncertaintyOverviewProps {
 
 // Mock data - in real app this would come from API
 const getUncertaintyData = (stock: string) => {
-  const mockData: Record<string, any> = {
+  const mockData: Record<string, {
+    totalUncertainty: number;
+    dataUncertainty: number;
+    modelUncertainty: number;
+    humanUncertainty: number;
+    recommendation: string;
+    confidenceLevel: string;
+  }> = {
     AAPL: {
       totalUncertainty: 73,
       dataUncertainty: 50, // 50% of total uncertainty

@@ -11,6 +11,10 @@ interface Stock {
   change: number
 }
 
+interface StockSearchProps {
+  onStockSelect?: (stock: string) => void
+}
+
 const DUMMY_STOCKS: Stock[] = [
   { symbol: "AAPL", name: "Apple Inc.", price: 178.32, change: 2.1 },
   { symbol: "MSFT", name: "Microsoft Corp.", price: 415.26, change: -0.8 },
@@ -34,7 +38,7 @@ const DUMMY_STOCKS: Stock[] = [
   { symbol: "KO", name: "Coca-Cola Co.", price: 58.92, change: -0.3 }
 ]
 
-export function StockSearch() {
+export function StockSearch({ onStockSelect }: StockSearchProps = {}) {
   const [query, setQuery] = React.useState("")
   const [isOpen, setIsOpen] = React.useState(false)
   
@@ -49,7 +53,11 @@ export function StockSearch() {
   const handleStockClick = (stock: Stock) => {
     setQuery("")
     setIsOpen(false)
-    window.location.href = `/statistik?stock=${stock.symbol}`
+    if (onStockSelect) {
+      onStockSelect(stock.symbol)
+    } else {
+      window.location.href = `/statistik?stock=${stock.symbol}`
+    }
   }
 
   return (
