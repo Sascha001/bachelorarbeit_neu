@@ -202,4 +202,75 @@
   .violet-bloom-glow {
     @apply hover:shadow-lg hover:shadow-primary/20 transition-all duration-300;
   }
+
+  /* Auto-Hide Scrollbar with Fade Effects */
+  .cool-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color 0.3s ease;
+  }
+
+  /* Show scrollbar on hover or when scrolling class is applied */
+  .cool-scrollbar:hover,
+  .cool-scrollbar.scrolling {
+    scrollbar-color: oklch(0.5393 0.2713 286.7462 / 0.6) transparent;
+  }
+
+  .cool-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .cool-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
+  }
+
+  .cool-scrollbar::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+
+  /* Show scrollbar thumb on hover or when scrolling */
+  .cool-scrollbar:hover::-webkit-scrollbar-thumb,
+  .cool-scrollbar.scrolling::-webkit-scrollbar-thumb {
+    background: oklch(0.5393 0.2713 286.7462 / 0.6);
+    box-shadow: 0 0 6px oklch(0.5393 0.2713 286.7462 / 0.3);
+  }
+
+  .cool-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.5393 0.2713 286.7462 / 0.8) !important;
+    box-shadow: 0 0 8px oklch(0.5393 0.2713 286.7462 / 0.4) !important;
+  }
+
+  /* Active scrolling state */
+  @keyframes scrollbar-appear {
+    from {
+      opacity: 0;
+      transform: scaleX(0.5);
+    }
+    to {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+  }
+
+  .cool-scrollbar::-webkit-scrollbar-thumb:active {
+    background: oklch(0.5393 0.2713 286.7462 / 0.9) !important;
+    animation: scrollbar-appear 0.2s ease;
+  }
+
+  /* Fade out animation */
+  .cool-scrollbar.fade-out::-webkit-scrollbar-thumb {
+    background: transparent !important;
+    box-shadow: none !important;
+    transition: all 0.5s ease;
+  }
+
+  .cool-scrollbar.fade-out {
+    scrollbar-color: transparent transparent !important;
+    transition: scrollbar-color 0.5s ease;
+  }
 }
