@@ -182,11 +182,10 @@
   }
 }
 
-/* Auto-hide scrollbar with opacity */
+/* Scrollbar completely hidden by default */
 * {
-  scrollbar-width: thin !important;
-  scrollbar-color: rgba(139, 92, 246, 0.3) rgba(226, 232, 240, 0.3) !important;
-  transition: scrollbar-color 0.4s ease !important;
+  scrollbar-width: none !important;
+  scrollbar-color: transparent transparent !important;
 }
 
 *::-webkit-scrollbar {
@@ -195,34 +194,89 @@
 }
 
 *::-webkit-scrollbar-track {
-  background: rgba(226, 232, 240, 0.3) !important;
+  background: transparent !important;
   border-radius: 8px !important;
-  transition: background 0.4s ease !important;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.3) !important;
+  background: transparent !important;
   border-radius: 8px !important;
-  border: 2px solid rgba(226, 232, 240, 0.3) !important;
-  transition: all 0.4s ease !important;
+  border: 2px solid transparent !important;
 }
 
-*::-webkit-scrollbar-thumb:hover {
-  background: rgba(124, 58, 237, 0.8) !important;
-}
-
-/* Show scrollbar on scroll/hover */
+/* Show scrollbar with fade-in effect */
 body.scrollbar-show * {
+  scrollbar-width: thin !important;
   scrollbar-color: #8b5cf6 #e2e8f0 !important;
+  transition: scrollbar-color 0.4s ease !important;
 }
 
 body.scrollbar-show *::-webkit-scrollbar-track {
   background: #e2e8f0 !important;
+  transition: background 0.4s ease !important;
+  animation: fadeInTrack 0.4s ease !important;
 }
 
 body.scrollbar-show *::-webkit-scrollbar-thumb {
   background: #8b5cf6 !important;
   border-color: #e2e8f0 !important;
+  transition: all 0.4s ease !important;
+  animation: fadeInThumb 0.4s ease !important;
+}
+
+body.scrollbar-show *::-webkit-scrollbar-thumb:hover {
+  background: #7c3aed !important;
+  transform: scale(1.05) !important;
+}
+
+/* Fade-in animations */
+@keyframes fadeInTrack {
+  from {
+    background: transparent !important;
+  }
+  to {
+    background: #e2e8f0 !important;
+  }
+}
+
+@keyframes fadeInThumb {
+  from {
+    background: transparent !important;
+    opacity: 0;
+  }
+  to {
+    background: #8b5cf6 !important;
+    opacity: 1;
+  }
+}
+
+/* Fade-out when removing class */
+body:not(.scrollbar-show) *::-webkit-scrollbar-track {
+  animation: fadeOutTrack 0.4s ease forwards !important;
+}
+
+body:not(.scrollbar-show) *::-webkit-scrollbar-thumb {
+  animation: fadeOutThumb 0.4s ease forwards !important;
+}
+
+@keyframes fadeOutTrack {
+  from {
+    background: #e2e8f0 !important;
+  }
+  to {
+    background: transparent !important;
+  }
+}
+
+@keyframes fadeOutThumb {
+  from {
+    background: #8b5cf6 !important;
+    opacity: 1;
+  }
+  to {
+    background: transparent !important;
+    opacity: 0;
+  }
 }
 
 @layer components {
