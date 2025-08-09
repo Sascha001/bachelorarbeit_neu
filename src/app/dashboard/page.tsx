@@ -3,6 +3,7 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { StockSearch } from "@/components/stock-search"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { NotificationButton } from "@/components/notification-button"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -52,7 +53,8 @@ export default function Page() {
             <StockSearch />
           </div>
           
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
+            <NotificationButton />
             <ThemeToggle />
           </div>
         </header>

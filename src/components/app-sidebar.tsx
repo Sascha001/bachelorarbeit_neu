@@ -79,7 +79,11 @@ const data = {
         },
         {
           title: "Unsicherheits Analyse",
-          url: "/statistik",
+          url: "/statistik/unsicherheits-analyse",
+        },
+        {
+          title: "Validierung",
+          url: "/statistik/validierung",
         },
       ],
     },
