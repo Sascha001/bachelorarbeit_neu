@@ -182,16 +182,79 @@
   }
 }
 
-/* CSS Variables for Scrollbar Control */
-:root {
-  --scrollbar-thumb-opacity: 0.15;
-  --scrollbar-track-opacity: 0.25;
+/* Gradient Color Transition Keyframes */
+@keyframes scrollbarActivate {
+  0% {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(124, 58, 237, 0.15) 50%, rgba(139, 92, 246, 0.15) 100%);
+    opacity: 0.15;
+    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.045);
+  }
+  25% {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.4) 0%, rgba(124, 58, 237, 0.4) 50%, rgba(139, 92, 246, 0.4) 100%);
+    opacity: 0.4;
+    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.12);
+  }
+  50% {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.7) 0%, rgba(124, 58, 237, 0.7) 50%, rgba(139, 92, 246, 0.7) 100%);
+    opacity: 0.7;
+    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.21);
+  }
+  75% {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.85) 0%, rgba(124, 58, 237, 0.85) 50%, rgba(139, 92, 246, 0.85) 100%);
+    opacity: 0.85;
+    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.255);
+  }
+  100% {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #8b5cf6 100%);
+    opacity: 1;
+    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3);
+  }
 }
 
-/* Cool Auto-Hide Scrollbar with CSS Variables */
+@keyframes scrollbarDeactivate {
+  0% {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #8b5cf6 100%);
+    opacity: 1;
+    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3);
+  }
+  25% {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.85) 0%, rgba(124, 58, 237, 0.85) 50%, rgba(139, 92, 246, 0.85) 100%);
+    opacity: 0.85;
+    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.255);
+  }
+  50% {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.7) 0%, rgba(124, 58, 237, 0.7) 50%, rgba(139, 92, 246, 0.7) 100%);
+    opacity: 0.7;
+    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.21);
+  }
+  75% {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.4) 0%, rgba(124, 58, 237, 0.4) 50%, rgba(139, 92, 246, 0.4) 100%);
+    opacity: 0.4;
+    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.12);
+  }
+  100% {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(124, 58, 237, 0.15) 50%, rgba(139, 92, 246, 0.15) 100%);
+    opacity: 0.15;
+    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.045);
+  }
+}
+
+@keyframes scrollbarTrackActivate {
+  0% { background: rgba(226, 232, 240, 0.25); }
+  50% { background: rgba(226, 232, 240, 0.6); }
+  100% { background: rgba(226, 232, 240, 0.9); }
+}
+
+@keyframes scrollbarTrackDeactivate {
+  0% { background: rgba(226, 232, 240, 0.9); }
+  50% { background: rgba(226, 232, 240, 0.6); }
+  100% { background: rgba(226, 232, 240, 0.25); }
+}
+
+/* Cool Auto-Hide Scrollbar with Gradient Animations */
 * {
   scrollbar-width: thin !important;
-  scrollbar-color: rgba(139, 92, 246, var(--scrollbar-thumb-opacity)) #e2e8f0 !important;
+  scrollbar-color: rgba(139, 92, 246, 0.15) rgba(226, 232, 240, 0.25) !important;
 }
 
 *::-webkit-scrollbar {
@@ -200,20 +263,33 @@
 }
 
 *::-webkit-scrollbar-track {
-  background: rgba(226, 232, 240, var(--scrollbar-track-opacity)) !important;
+  background: rgba(226, 232, 240, 0.25) !important;
   border-radius: 8px !important;
-  transition: all 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #8b5cf6 100%) !important;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(124, 58, 237, 0.15) 50%, rgba(139, 92, 246, 0.15) 100%) !important;
   border-radius: 8px !important;
-  border: 2px solid rgba(226, 232, 240, var(--scrollbar-track-opacity)) !important;
-  box-shadow: 0 2px 4px rgba(139, 92, 246, calc(var(--scrollbar-thumb-opacity) * 0.3)) !important;
-  
-  /* Smooth transitions for all properties */
-  opacity: var(--scrollbar-thumb-opacity) !important;
-  transition: all 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
+  border: 2px solid rgba(226, 232, 240, 0.25) !important;
+  box-shadow: 0 2px 4px rgba(139, 92, 246, 0.045) !important;
+  opacity: 0.15 !important;
+}
+
+/* Animation classes applied by JavaScript */
+.gradient-fade-in *::-webkit-scrollbar-thumb {
+  animation: scrollbarActivate 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards !important;
+}
+
+.gradient-fade-out *::-webkit-scrollbar-thumb {
+  animation: scrollbarDeactivate 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards !important;
+}
+
+.gradient-fade-in *::-webkit-scrollbar-track {
+  animation: scrollbarTrackActivate 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards !important;
+}
+
+.gradient-fade-out *::-webkit-scrollbar-track {
+  animation: scrollbarTrackDeactivate 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards !important;
 }
 
 /* Hover effect on scrollbar thumb */
