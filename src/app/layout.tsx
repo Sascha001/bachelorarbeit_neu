@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Lora, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import Script from "next/script";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({
         className={`${plusJakartaSans.variable} ${lora.variable} ${ibmPlexMono.variable} font-sans antialiased`}
       >
         {children}
+        <Script src="/scroll-handler.js" strategy="afterInteractive" />
       </body>
     </html>
   );

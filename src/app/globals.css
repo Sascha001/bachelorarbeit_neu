@@ -207,16 +207,16 @@
   transition: all 0.3s ease !important;
 }
 
-/* Show on hover - CSS only */
-*:hover {
+/* Show on scroll - triggered by JavaScript */
+body.scrolling * {
   scrollbar-color: #8b5cf6 #e2e8f0 !important;
 }
 
-*:hover::-webkit-scrollbar-track {
+body.scrolling *::-webkit-scrollbar-track {
   background: #e2e8f0 !important;
 }
 
-*:hover::-webkit-scrollbar-thumb {
+body.scrolling *::-webkit-scrollbar-thumb {
   background: #8b5cf6 !important;
   border-color: #e2e8f0 !important;
 }
