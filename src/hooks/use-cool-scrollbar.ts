@@ -28,6 +28,7 @@ export function useCoolScrollbar<T extends HTMLElement = HTMLDivElement>(
       }
       
       // Show scrollbar on body (global)
+      console.log('Showing scrollbar')
       document.body.classList.add('scrollbar-show')
     }
 
@@ -37,6 +38,7 @@ export function useCoolScrollbar<T extends HTMLElement = HTMLDivElement>(
       }
       
       bodyTimeoutRef.current = setTimeout(() => {
+        console.log('Hiding scrollbar')
         document.body.classList.remove('scrollbar-show')
       }, hideDelay)
     }

@@ -182,11 +182,10 @@
   }
 }
 
-/* Global scrollbar - hidden by default */
+/* Test: Always show scrollbar for debugging */
 * {
   scrollbar-width: thin !important;
-  scrollbar-color: transparent transparent !important;
-  transition: scrollbar-color 0.4s ease !important;
+  scrollbar-color: #8b5cf6 #e2e8f0 !important;
 }
 
 *::-webkit-scrollbar {
@@ -195,33 +194,18 @@
 }
 
 *::-webkit-scrollbar-track {
-  background: transparent !important;
+  background: #e2e8f0 !important;
   border-radius: 8px !important;
-  transition: background 0.4s ease !important;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: transparent !important;
-  border-radius: 8px !important;
-  border: 2px solid transparent !important;
-  transition: all 0.4s ease !important;
-}
-
-/* Show scrollbar when scrolling or hovering */
-*.scrollbar-show, 
-*.scrollbar-show * {
-  scrollbar-color: #8b5cf6 #e2e8f0 !important;
-}
-
-*.scrollbar-show *::-webkit-scrollbar-track,
-*::-webkit-scrollbar-track:hover {
-  background: #e2e8f0 !important;
-}
-
-*.scrollbar-show *::-webkit-scrollbar-thumb,
-*::-webkit-scrollbar-thumb:hover {
   background: #8b5cf6 !important;
-  border-color: #e2e8f0 !important;
+  border-radius: 8px !important;
+  border: 2px solid #e2e8f0 !important;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #7c3aed !important;
 }
 
 @layer components {
