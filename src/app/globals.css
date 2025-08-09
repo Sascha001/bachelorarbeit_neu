@@ -204,29 +204,22 @@
   border: 2px solid transparent !important;
 }
 
-/* Show scrollbar with fade-in effect */
+/* Test: Show scrollbar when body has scrollbar-show class */
 body.scrollbar-show * {
-  scrollbar-width: thin !important;
   scrollbar-color: #8b5cf6 #e2e8f0 !important;
-  transition: scrollbar-color 0.4s ease !important;
 }
 
 body.scrollbar-show *::-webkit-scrollbar-track {
   background: #e2e8f0 !important;
-  transition: background 0.4s ease !important;
-  animation: fadeInTrack 0.4s ease !important;
 }
 
 body.scrollbar-show *::-webkit-scrollbar-thumb {
   background: #8b5cf6 !important;
   border-color: #e2e8f0 !important;
-  transition: all 0.4s ease !important;
-  animation: fadeInThumb 0.4s ease !important;
 }
 
 body.scrollbar-show *::-webkit-scrollbar-thumb:hover {
   background: #7c3aed !important;
-  transform: scale(1.05) !important;
 }
 
 /* Fade-in animations */
@@ -251,11 +244,11 @@ body.scrollbar-show *::-webkit-scrollbar-thumb:hover {
 }
 
 /* Fade-out when removing class */
-body:not(.scrollbar-show) *::-webkit-scrollbar-track {
+:not(.scrollbar-show) *::-webkit-scrollbar-track {
   animation: fadeOutTrack 0.4s ease forwards !important;
 }
 
-body:not(.scrollbar-show) *::-webkit-scrollbar-thumb {
+:not(.scrollbar-show) *::-webkit-scrollbar-thumb {
   animation: fadeOutThumb 0.4s ease forwards !important;
 }
 
