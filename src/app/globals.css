@@ -182,16 +182,47 @@
   }
 }
 
-/* CSS Variables for Scrollbar Control */
-:root {
-  --scrollbar-thumb-opacity: 0.2;
-  --scrollbar-track-opacity: 0.3;
+/* Keyframe Animations for Smooth Scrollbar Fade */
+@keyframes scrollbarFadeIn {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-/* Cool Auto-Hide Scrollbar with CSS Variables */
+@keyframes scrollbarFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.2;
+  }
+}
+
+@keyframes scrollbarTrackFadeIn {
+  from {
+    background: rgba(226, 232, 240, 0.3);
+  }
+  to {
+    background: rgba(226, 232, 240, 0.8);
+  }
+}
+
+@keyframes scrollbarTrackFadeOut {
+  from {
+    background: rgba(226, 232, 240, 0.8);
+  }
+  to {
+    background: rgba(226, 232, 240, 0.3);
+  }
+}
+
+/* Cool Auto-Hide Scrollbar with Keyframe Animations */
 * {
   scrollbar-width: thin !important;
-  scrollbar-color: rgba(139, 92, 246, var(--scrollbar-thumb-opacity)) #e2e8f0 !important;
+  scrollbar-color: rgba(139, 92, 246, 0.2) rgba(226, 232, 240, 0.3) !important;
 }
 
 *::-webkit-scrollbar {
@@ -200,20 +231,35 @@
 }
 
 *::-webkit-scrollbar-track {
-  background: rgba(226, 232, 240, var(--scrollbar-track-opacity)) !important;
+  background: rgba(226, 232, 240, 0.3) !important;
   border-radius: 8px !important;
-  transition: background 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
 }
 
 *::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #8b5cf6 100%) !important;
   border-radius: 8px !important;
-  border: 2px solid #e2e8f0 !important;
+  border: 2px solid rgba(226, 232, 240, 0.3) !important;
   box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3) !important;
   
-  /* Use CSS variable for opacity with enhanced smooth transition */
-  opacity: var(--scrollbar-thumb-opacity) !important;
-  transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  /* Default low opacity */
+  opacity: 0.2 !important;
+}
+
+/* Animation classes applied by JavaScript */
+.scrollbar-fade-in *::-webkit-scrollbar-thumb {
+  animation: scrollbarFadeIn 0.5s ease-out forwards !important;
+}
+
+.scrollbar-fade-out *::-webkit-scrollbar-thumb {
+  animation: scrollbarFadeOut 0.5s ease-out forwards !important;
+}
+
+.scrollbar-fade-in *::-webkit-scrollbar-track {
+  animation: scrollbarTrackFadeIn 0.5s ease-out forwards !important;
+}
+
+.scrollbar-fade-out *::-webkit-scrollbar-track {
+  animation: scrollbarTrackFadeOut 0.5s ease-out forwards !important;
 }
 
 /* Hover effect on scrollbar thumb */
