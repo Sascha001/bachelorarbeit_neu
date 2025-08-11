@@ -12,34 +12,25 @@ export interface Notification {
   tradeId?: string
 }
 
-// Mock notification data - in real app this would come from state management
+// Mock notification data - matches validation page pending items
 const mockNotifications: Notification[] = [
   {
     id: "1",
     type: "trade-validation",
     title: "Trade Validierung verfügbar",
-    description: "Ihr AAPL Trade vom 25.01.2025 kann jetzt bewertet werden",
+    description: "Ihr AAPL Trade vom 15.01.2024 kann jetzt bewertet werden",
     timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
     isRead: false,
-    tradeId: "trade_123"
+    tradeId: "1" // matches validation page id
   },
   {
     id: "2",
     type: "trade-validation", 
     title: "Trade Validierung verfügbar",
-    description: "Ihr MSFT Trade vom 20.01.2025 kann jetzt bewertet werden",
+    description: "Ihr MSFT Trade vom 10.01.2024 kann jetzt bewertet werden",
     timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
     isRead: false,
-    tradeId: "trade_456"
-  },
-  {
-    id: "3",
-    type: "trade-validation", 
-    title: "Trade Validierung verfügbar",
-    description: "Ihr NVDA Trade vom 18.01.2025 kann jetzt bewertet werden",
-    timestamp: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
-    isRead: false,
-    tradeId: "trade_789"
+    tradeId: "2" // matches validation page id
   }
 ]
 

@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/sidebar"
 import { StockSearch } from "@/components/stock-search"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { NotificationButton } from "@/components/notification-button"
 
 export default function Home() {
   return (
@@ -47,7 +48,8 @@ export default function Home() {
             <StockSearch />
           </div>
           
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
+            <NotificationButton />
             <ThemeToggle />
           </div>
         </header>
