@@ -18,6 +18,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import { Badge } from "@/components/ui/badge"
 
 export function NavMain({
   items,
@@ -30,6 +31,7 @@ export function NavMain({
     items?: {
       title: string
       url: string
+      notificationCount?: number
     }[]
   }[]
 }) {
@@ -70,9 +72,17 @@ export function NavMain({
                           <SidebarMenuSubButton asChild>
                             <a 
                               href={subItem.url} 
-                              className={`violet-bloom-hover ${pathname === subItem.url ? 'violet-bloom-active' : ''}`}
+                              className={`violet-bloom-hover ${pathname === subItem.url ? 'violet-bloom-active' : ''} flex items-center justify-between`}
                             >
                               <span>{subItem.title}</span>
+                              {subItem.notificationCount && subItem.notificationCount > 0 && (
+                                <Badge 
+                                  variant="destructive" 
+                                  className="h-5 w-5 p-0 flex items-center justify-center text-xs ml-2"
+                                >
+                                  {subItem.notificationCount > 9 ? '9+' : subItem.notificationCount}
+                                </Badge>
+                              )}
                             </a>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>

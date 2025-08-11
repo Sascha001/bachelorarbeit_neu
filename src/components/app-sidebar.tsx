@@ -26,6 +26,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { useNotifications } from "@/hooks/use-notifications"
 
 // This is sample data.
 const data = {
@@ -150,13 +151,34 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { unreadValidationCount } = useNotifications()
+
+  // Add notification count to Validierung menu item
+  const navMainWithNotifications = data.navMain.map(item => {
+    if (item.title === "Statistik" && item.items) {
+      return {
+        ...item,
+        items: item.items.map(subItem => {
+          if (subItem.title === "Validierung") {
+            return {
+              ...subItem,
+              notificationCount: unreadValidationCount
+            }
+          }
+          return subItem
+        })
+      }
+    }
+    return item
+  })
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navMainWithNotifications} />
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>

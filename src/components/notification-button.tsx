@@ -10,50 +10,12 @@ import {
 } from "@/components/ui/popover"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
-
-// Mock notification data - in real app this would come from state management
-interface Notification {
-  id: string
-  type: "trade-validation" | "general"
-  title: string
-  description: string
-  timestamp: Date
-  isRead: boolean
-  tradeId?: string
-}
-
-const mockNotifications: Notification[] = [
-  {
-    id: "1",
-    type: "trade-validation",
-    title: "Trade Validierung verfügbar",
-    description: "Ihr AAPL Trade vom 25.01.2025 kann jetzt bewertet werden",
-    timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-    isRead: false,
-    tradeId: "trade_123"
-  },
-  {
-    id: "2",
-    type: "trade-validation", 
-    title: "Trade Validierung verfügbar",
-    description: "Ihr MSFT Trade vom 20.01.2025 kann jetzt bewertet werden",
-    timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
-    isRead: false,
-    tradeId: "trade_456"
-  }
-]
+import { useNotifications, type Notification } from "@/hooks/use-notifications"
 
 export function NotificationButton() {
-  const [notifications, setNotifications] = React.useState<Notification[]>(mockNotifications)
+  const { notifications, unreadCount, markAsRead } = useNotifications()
   const [isOpen, setIsOpen] = React.useState(false)
 
-  const unreadCount = notifications.filter(n => !n.isRead).length
-
-  const markAsRead = (id: string) => {
-    setNotifications(prev => 
-      prev.map(n => n.id === id ? { ...n, isRead: true } : n)
-    )
-  }
 
   const handleNotificationClick = (notification: Notification) => {
     markAsRead(notification.id)
