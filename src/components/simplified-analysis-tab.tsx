@@ -340,7 +340,51 @@ export function SimplifiedAnalysisTab({ selectedStock }: SimplifiedAnalysisTabPr
             </div>
           </div>
         </CardContent>
-      </Card>
+          </Card>
+        </TabsContent>
+
+        {/* Model Explanation Tab */}
+        <TabsContent value="model" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Brain className="h-5 w-5 text-purple-600" />
+                KI-Modell Erklärung für {selectedStock}
+              </CardTitle>
+              <CardDescription>
+                Wie unser KI-System zu dieser Empfehlung kommt
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center text-muted-foreground p-8">
+                <Brain className="h-12 w-12 mx-auto mb-4 text-purple-600" />
+                <p>Modell-Erklärungen werden hier angezeigt...</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Human Factors Tab */}
+        <TabsContent value="human" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5 text-green-600" />
+                Menschliche Faktoren für {selectedStock}
+              </CardTitle>
+              <CardDescription>
+                Was Experten und der Markt über diese Aktie denken
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center text-muted-foreground p-8">
+                <Users className="h-12 w-12 mx-auto mb-4 text-green-600" />
+                <p>Menschliche Faktoren werden hier angezeigt...</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
