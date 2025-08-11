@@ -3,6 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { 
   HelpCircle,
   Database,
@@ -170,15 +171,35 @@ export function SimplifiedAnalysisTab({ selectedStock }: SimplifiedAnalysisTabPr
   const data = getSimplifiedData(selectedStock)
   
   return (
-    <div className="space-y-6">
-      {/* Overall Assessment */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="h-5 w-5 text-primary" />
-            Gesamteinschätzung für {selectedStock}
-          </CardTitle>
-        </CardHeader>
+    <div className="space-y-4">
+      <Tabs defaultValue="data" className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="data" className="flex items-center gap-2">
+            <Database className="h-4 w-4" />
+            Daten-Erklärung
+          </TabsTrigger>
+          <TabsTrigger value="model" className="flex items-center gap-2">
+            <Brain className="h-4 w-4" />
+            Modell-Erklärung
+          </TabsTrigger>
+          <TabsTrigger value="human" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            Menschliche Faktoren
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Data Explanation Tab */}
+        <TabsContent value="data" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Database className="h-5 w-5 text-blue-600" />
+                Datenqualität für {selectedStock}
+              </CardTitle>
+              <CardDescription>
+                Verständliche Erklärung der Datenqualität und deren Auswirkungen
+              </CardDescription>
+            </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="flex items-center justify-between">

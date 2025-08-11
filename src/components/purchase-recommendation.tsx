@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Dialog,
   DialogContent,
@@ -19,6 +20,7 @@ import {
 import { 
   ShoppingCart,
   TrendingUp,
+  TrendingDown,
   AlertTriangle,
   Euro,
   Calculator,
@@ -119,6 +121,8 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
   const [feedbackRating, setFeedbackRating] = useState(0)
   const [feedbackText, setFeedbackText] = useState("")
   const [transactionCompleted, setTransactionCompleted] = useState(false)
+  const [transactionType, setTransactionType] = useState<'BUY' | 'SELL'>('BUY')
+  const [scheduleForValidation, setScheduleForValidation] = useState(false)
 
   const calculateShares = () => {
     return Math.floor(purchaseAmount / data.currentPrice)
@@ -133,10 +137,23 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
   }
 
   const submitFeedback = () => {
-    console.log("Feedback submitted:", { rating: feedbackRating, text: feedbackText, stock: selectedStock })
+    console.log("Feedback submitted:", { 
+      rating: feedbackRating, 
+      text: feedbackText, 
+      stock: selectedStock,
+      scheduleForValidation: scheduleForValidation,
+      transactionType: transactionType
+    })
+    
+    if (scheduleForValidation) {
+      console.log(`📅 Trade ${selectedStock} ${transactionType} scheduled for validation in 2 weeks`)
+      // In real app: Create notification/reminder in backend
+    }
+    
     setIsFeedbackModalOpen(false)
     setFeedbackRating(0)
     setFeedbackText("")
+    setScheduleForValidation(false)
   }
 
   return (
@@ -258,24 +275,37 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
               </div>
             </div>
 
-            {/* Purchase Button */}
-            <div className="flex justify-center pt-4">
+            {/* Purchase/Sell Buttons */}
+            <div className="flex justify-center gap-4 pt-4">
               <Dialog open={isTransactionModalOpen} onOpenChange={setIsTransactionModalOpen}>
                 <DialogTrigger asChild>
                   <Button 
                     size="lg" 
-                    className="px-8"
-                    disabled={data.recommendation === "SELL" && purchaseAmount > 0}
+                    className="px-8 bg-green-600 hover:bg-green-700"
+                    onClick={() => setTransactionType('BUY')}
                   >
-                    <ShoppingCart className="h-4 w-4 mr-2" />
-                    {data.recommendation === "SELL" ? "Position schließen" : `${selectedStock} kaufen`}
+                    <TrendingUp className="h-4 w-4 mr-2" />
+                    {selectedStock} kaufen
+                  </Button>
+                </DialogTrigger>
+                <DialogTrigger asChild>
+                  <Button 
+                    size="lg" 
+                    variant="destructive"
+                    className="px-8"
+                    onClick={() => setTransactionType('SELL')}
+                  >
+                    <TrendingDown className="h-4 w-4 mr-2" />
+                    {selectedStock} verkaufen
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Transaktion bestätigen</DialogTitle>
+                    <DialogTitle>
+                      {transactionType === 'BUY' ? 'Kauf' : 'Verkauf'} bestätigen
+                    </DialogTitle>
                     <DialogDescription>
-                      Bitte überprüfen Sie Ihre Bestellung vor der Ausführung.
+                      Bitte überprüfen Sie Ihre {transactionType === 'BUY' ? 'Kauf-' : 'Verkaufs-'}Order vor der Ausführung.
                     </DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4 py-4">
@@ -308,9 +338,12 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                     <Button variant="outline" onClick={() => setIsTransactionModalOpen(false)}>
                       Abbrechen
                     </Button>
-                    <Button onClick={handlePurchase}>
+                    <Button 
+                      onClick={handlePurchase}
+                      className={transactionType === 'BUY' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}
+                    >
                       <CheckCircle className="h-4 w-4 mr-2" />
-                      Kaufen
+                      {transactionType === 'BUY' ? 'Kaufen' : 'Verkaufen'}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
@@ -373,6 +406,22 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                 className="mt-2"
               />
             </div>
+            
+            {/* Validation Checkbox */}
+            <div className="flex items-center space-x-2 p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+              <Checkbox 
+                id="schedule-validation" 
+                checked={scheduleForValidation}
+                onCheckedChange={(checked) => setScheduleForValidation(checked as boolean)}
+              />
+              <Label htmlFor="schedule-validation" className="text-sm font-medium leading-relaxed">
+                📅 Diesen Trade in 2 Wochen für Validierung vormerken
+                <p className="text-xs text-muted-foreground mt-1">
+                  Wir benachrichtigen Sie, um die tatsächliche Performance mit der Prognose zu vergleichen.
+                </p>
+              </Label>
+            </div>
+            
             <div className="text-sm text-muted-foreground">
               <p>📊 Ihr Feedback wird anonymisiert gespeichert und zur Verbesserung unseres Systems verwendet.</p>
             </div>

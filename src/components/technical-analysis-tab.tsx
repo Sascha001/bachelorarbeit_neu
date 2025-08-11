@@ -3,6 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { 
   Database, 
   Brain, 
@@ -155,16 +156,33 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
   const data = getTechnicalData(selectedStock)
   
   return (
-    <div className="space-y-6">
-      {/* Data Validation Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Database className="h-5 w-5 text-blue-600" />
-            Datenvalidierung & -qualität
-          </CardTitle>
-          <CardDescription>
-            Analyse der Eingangsdaten für die KI-Empfehlung
+    <div className="space-y-4">
+      <Tabs defaultValue="data" className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="data" className="flex items-center gap-2">
+            <Database className="h-4 w-4" />
+            Datenunsicherheit
+          </TabsTrigger>
+          <TabsTrigger value="model" className="flex items-center gap-2">
+            <Brain className="h-4 w-4" />
+            Modellunsicherheit
+          </TabsTrigger>
+          <TabsTrigger value="human" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            Menschliche Unsicherheit
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Data Uncertainty Tab */}
+        <TabsContent value="data" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Database className="h-5 w-5 text-blue-600" />
+                Datenvalidierung & -qualität
+              </CardTitle>
+              <CardDescription>
+                Analyse der Eingangsdaten für die KI-Empfehlung
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -238,19 +256,21 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
             </div>
           </div>
         </CardContent>
-      </Card>
+          </Card>
+        </TabsContent>
 
-      {/* Model Metrics Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Brain className="h-5 w-5 text-purple-600" />
-            Modell-Metriken & Performance
-          </CardTitle>
-          <CardDescription>
-            Technische Details zur KI-Modell-Performance
-          </CardDescription>
-        </CardHeader>
+        {/* Model Uncertainty Tab */}
+        <TabsContent value="model" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Brain className="h-5 w-5 text-purple-600" />
+                Modell-Metriken & Performance
+              </CardTitle>
+              <CardDescription>
+                Technische Details zur KI-Modell-Performance
+              </CardDescription>
+            </CardHeader>
         <CardContent>
           <div className="space-y-6">
             {/* Model Performance Metrics */}
@@ -295,19 +315,21 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
             </div>
           </div>
         </CardContent>
-      </Card>
+          </Card>
+        </TabsContent>
 
-      {/* Human Factors Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5 text-green-600" />
-            Menschliche Faktoren & Experteneinschätzung
-          </CardTitle>
-          <CardDescription>
-            Analyse der menschlichen Unsicherheitsfaktoren
-          </CardDescription>
-        </CardHeader>
+        {/* Human Uncertainty Tab */}
+        <TabsContent value="human" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5 text-green-600" />
+                Menschliche Faktoren & Experteneinschätzung
+              </CardTitle>
+              <CardDescription>
+                Analyse der menschlichen Unsicherheitsfaktoren
+              </CardDescription>
+            </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
@@ -349,56 +371,58 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
 
-      {/* Uncertainty Heatmap Visualization */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Activity className="h-5 w-5 text-orange-600" />
-            Unsicherheits-Heatmap
-          </CardTitle>
-          <CardDescription>
-            Visuelle Darstellung der Unsicherheitsquellen über Zeit
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-7 gap-1 text-xs">
-            {/* Heatmap simulation */}
-            <div className="text-center font-medium">Mo</div>
-            <div className="text-center font-medium">Di</div>
-            <div className="text-center font-medium">Mi</div>
-            <div className="text-center font-medium">Do</div>
-            <div className="text-center font-medium">Fr</div>
-            <div className="text-center font-medium">Sa</div>
-            <div className="text-center font-medium">So</div>
-            
-            {/* Week 1 */}
-            <div className="h-8 bg-green-500/30 rounded flex items-center justify-center">15%</div>
-            <div className="h-8 bg-yellow-500/40 rounded flex items-center justify-center">23%</div>
-            <div className="h-8 bg-green-500/20 rounded flex items-center justify-center">12%</div>
-            <div className="h-8 bg-yellow-500/50 rounded flex items-center justify-center">28%</div>
-            <div className="h-8 bg-red-500/30 rounded flex items-center justify-center">42%</div>
-            <div className="h-8 bg-green-500/25 rounded flex items-center justify-center">18%</div>
-            <div className="h-8 bg-green-500/15 rounded flex items-center justify-center">9%</div>
-            
-            {/* Week 2 */}
-            <div className="h-8 bg-yellow-500/35 rounded flex items-center justify-center">25%</div>
-            <div className="h-8 bg-green-500/30 rounded flex items-center justify-center">16%</div>
-            <div className="h-8 bg-red-500/40 rounded flex items-center justify-center">45%</div>
-            <div className="h-8 bg-yellow-500/45 rounded flex items-center justify-center">31%</div>
-            <div className="h-8 bg-green-500/20 rounded flex items-center justify-center">11%</div>
-            <div className="h-8 bg-yellow-500/30 rounded flex items-center justify-center">22%</div>
-            <div className="h-8 bg-green-500/25 rounded flex items-center justify-center">17%</div>
-          </div>
-          <div className="flex justify-between mt-4 text-xs text-muted-foreground">
-            <span>Niedrig (0-20%)</span>
-            <span>Mittel (21-40%)</span>
-            <span>Hoch (41%+)</span>
-          </div>
-        </CardContent>
-      </Card>
+          {/* Uncertainty Heatmap Visualization */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Activity className="h-5 w-5 text-orange-600" />
+                Unsicherheits-Heatmap
+              </CardTitle>
+              <CardDescription>
+                Visuelle Darstellung der Unsicherheitsquellen über Zeit
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-7 gap-1 text-xs">
+                {/* Heatmap simulation */}
+                <div className="text-center font-medium">Mo</div>
+                <div className="text-center font-medium">Di</div>
+                <div className="text-center font-medium">Mi</div>
+                <div className="text-center font-medium">Do</div>
+                <div className="text-center font-medium">Fr</div>
+                <div className="text-center font-medium">Sa</div>
+                <div className="text-center font-medium">So</div>
+                
+                {/* Week 1 */}
+                <div className="h-8 bg-green-500/30 rounded flex items-center justify-center">15%</div>
+                <div className="h-8 bg-yellow-500/40 rounded flex items-center justify-center">23%</div>
+                <div className="h-8 bg-green-500/20 rounded flex items-center justify-center">12%</div>
+                <div className="h-8 bg-yellow-500/50 rounded flex items-center justify-center">28%</div>
+                <div className="h-8 bg-red-500/30 rounded flex items-center justify-center">42%</div>
+                <div className="h-8 bg-green-500/25 rounded flex items-center justify-center">18%</div>
+                <div className="h-8 bg-green-500/15 rounded flex items-center justify-center">9%</div>
+                
+                {/* Week 2 */}
+                <div className="h-8 bg-yellow-500/35 rounded flex items-center justify-center">25%</div>
+                <div className="h-8 bg-green-500/30 rounded flex items-center justify-center">16%</div>
+                <div className="h-8 bg-red-500/40 rounded flex items-center justify-center">45%</div>
+                <div className="h-8 bg-yellow-500/45 rounded flex items-center justify-center">31%</div>
+                <div className="h-8 bg-green-500/20 rounded flex items-center justify-center">11%</div>
+                <div className="h-8 bg-yellow-500/30 rounded flex items-center justify-center">22%</div>
+                <div className="h-8 bg-green-500/25 rounded flex items-center justify-center">17%</div>
+              </div>
+              <div className="flex justify-between mt-4 text-xs text-muted-foreground">
+                <span>Niedrig (0-20%)</span>
+                <span>Mittel (21-40%)</span>
+                <span>Hoch (41%+)</span>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
