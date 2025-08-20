@@ -251,12 +251,48 @@ const getFundamentalDataParams = (stock: string): FundamentalDataParams => {
   return params[stock] || params.AAPL
 }
 
+// News Reliability Parameters Interface  
+interface NewsReliabilityParams {
+  sourceReliability: { value: number; totalSources: number; averageReliability: number };
+  reputationAccuracy: { value: number; totalNews: number; falseNews: number };
+  crossSourceConsensus: { value: number; totalNews: number; confirmedNews: number };
+  biasCheck: { value: number; biasIndex: number; maxBiasValue: number };
+}
+
 // Time Series Integrity Parameters Interface
 interface TimeSeriesIntegrityParams {
   completeness: { value: number; missingTimepoints: number; expectedTimepoints: number };
   outlierFreedom: { value: number; outliers: number; totalObservations: number };
   revisionStability: { value: number; revisedValues: number; totalValues: number };
   continuity: { value: number; gaps: number; totalIntervals: number };
+}
+
+const getNewsReliabilityParams = (stock: string): NewsReliabilityParams => {
+  const params: Record<string, NewsReliabilityParams> = {
+    // AAPL: Score should be 88% => (R + P + K + (1-B)) * weights = 0.88
+    // Weights: w1=0.3, w2=0.3, w3=0.25, w4=0.15
+    AAPL: {
+      sourceReliability: { value: 0.89, totalSources: 15, averageReliability: 0.89 },        // R = 0.89 (Reuters=0.98, Bloomberg=0.95, CNN=0.75, etc.)
+      reputationAccuracy: { value: 0.90, totalNews: 100, falseNews: 10 },                   // P = 1 - (10/100) = 0.90
+      crossSourceConsensus: { value: 0.85, totalNews: 10, confirmedNews: 8 },               // K = 8/10 = 0.85 (8 von 10 News bestätigt)
+      biasCheck: { value: 0.85, biasIndex: 0.15, maxBiasValue: 1.0 }                       // B = 0.15/1.0 = 0.15, so (1-B) = 0.85
+    },
+    // MSFT: Score should be 91% => (R + P + K + (1-B)) * weights = 0.91
+    MSFT: {
+      sourceReliability: { value: 0.93, totalSources: 12, averageReliability: 0.93 },       // R = 0.93 (mehr premium sources)
+      reputationAccuracy: { value: 0.92, totalNews: 100, falseNews: 8 },                    // P = 1 - (8/100) = 0.92
+      crossSourceConsensus: { value: 0.90, totalNews: 10, confirmedNews: 9 },               // K = 9/10 = 0.90
+      biasCheck: { value: 0.88, biasIndex: 0.12, maxBiasValue: 1.0 }                       // B = 0.12, so (1-B) = 0.88
+    },
+    // TSLA: Score should be 68% => (R + P + K + (1-B)) * weights = 0.68
+    TSLA: {
+      sourceReliability: { value: 0.70, totalSources: 8, averageReliability: 0.70 },        // R = 0.70 (mehr unreliable sources, Twitter hype)
+      reputationAccuracy: { value: 0.75, totalNews: 100, falseNews: 25 },                   // P = 1 - (25/100) = 0.75
+      crossSourceConsensus: { value: 0.60, totalNews: 10, confirmedNews: 6 },               // K = 6/10 = 0.60 (viel speculation)
+      biasCheck: { value: 0.65, biasIndex: 0.35, maxBiasValue: 1.0 }                       // B = 0.35 (high bias), so (1-B) = 0.65
+    }
+  }
+  return params[stock] || params.AAPL
 }
 
 const getTimeSeriesIntegrityParams = (stock: string): TimeSeriesIntegrityParams => {
@@ -295,7 +331,7 @@ const getInfoBoxContent = (metric: string) => {
     },
     newsReliability: {
       title: "Nachrichten-Verlässlichkeit Berechnung", 
-      content: "Detaillierte Informationen zur Berechnung der Nachrichten-Verlässlichkeit kommen hier..."
+      content: "Die Nachrichten-Verlässlichkeit evaluiert die Qualität und Glaubwürdigkeit von Marktinformationen durch vier zentrale Dimensionen: Source Reliability (Seriosität der Quelle), Reputation Accuracy (historische Trefferquote), Cross-Source Consensus (Bestätigung durch mehrere Quellen) und Bias Check (Verzerrungsanalyse). Diese Parameter werden gewichtet kombiniert, um die Gesamtverlässlichkeit der verwendeten Nachrichtenquellen zu bewerten."
     },
     timeSeriesIntegrity: {
       title: "Zeitreihen-Integrität Berechnung",
@@ -310,9 +346,10 @@ const getInfoBoxContent = (metric: string) => {
 }
 
 // Mathematical Formula Component for Tooltips
-const FormulaTooltip = ({ param, stock, type = "fundamental" }: { param: string; stock: string; type?: "fundamental" | "timeSeries" }) => {
+const FormulaTooltip = ({ param, stock, type = "fundamental" }: { param: string; stock: string; type?: "fundamental" | "timeSeries" | "newsReliability" }) => {
   const fundamentalData = getFundamentalDataParams(stock)
   const timeSeriesData = getTimeSeriesIntegrityParams(stock)
+  const newsReliabilityData = getNewsReliabilityParams(stock)
   
   const fundamentalFormulas = {
     completeness: {
@@ -383,7 +420,38 @@ const FormulaTooltip = ({ param, stock, type = "fundamental" }: { param: string;
     }
   }
 
-  const formulas = type === "timeSeries" ? timeSeriesFormulas : fundamentalFormulas
+  const newsReliabilityFormulas = {
+    sourceReliability: {
+      title: `Source Reliability (R = ${newsReliabilityData.sourceReliability.value})`,
+      description: "Gewichtete Zuverlässigkeit der Quellen (Reuters > privater Blog)",
+      formula: "R = \\frac{\\sum \\text{Gewichtete Zuverlässigkeit der Quellen}}{\\text{Anzahl Nachrichten}}",
+      calculation: `R = \\frac{\\text{Durchschnittliche Quellenreliabilität}}{1} = ${newsReliabilityData.sourceReliability.value}`,
+      impact: `${newsReliabilityData.sourceReliability.totalSources} Quellen mit durchschnittlicher Verlässlichkeit von ${(newsReliabilityData.sourceReliability.averageReliability * 100).toFixed(1)}%.`
+    },
+    reputationAccuracy: {
+      title: `Reputation Accuracy (P = ${newsReliabilityData.reputationAccuracy.value})`,
+      description: "Historische Trefferquote der Quellen gegen tatsächliche Marktereignisse",
+      formula: "P = 1 - \\frac{\\text{Anzahl widerlegter Nachrichten}}{\\text{Gesamtanzahl Nachrichten}}",
+      calculation: `P = 1 - \\frac{${newsReliabilityData.reputationAccuracy.falseNews}}{${newsReliabilityData.reputationAccuracy.totalNews}} = ${newsReliabilityData.reputationAccuracy.value}`,
+      impact: `${newsReliabilityData.reputationAccuracy.falseNews} von ${newsReliabilityData.reputationAccuracy.totalNews} Nachrichten erwiesen sich als falsch.`
+    },
+    crossSourceConsensus: {
+      title: `Cross-Source Consensus (K = ${newsReliabilityData.crossSourceConsensus.value})`,
+      description: "Anteil der von mehreren unabhängigen Quellen bestätigten Nachrichten",
+      formula: "K = \\frac{\\text{Anzahl bestätigter Nachrichten}}{\\text{Gesamtanzahl Nachrichten}}",
+      calculation: `K = \\frac{${newsReliabilityData.crossSourceConsensus.confirmedNews}}{${newsReliabilityData.crossSourceConsensus.totalNews}} = ${newsReliabilityData.crossSourceConsensus.value}`,
+      impact: `${newsReliabilityData.crossSourceConsensus.confirmedNews} von ${newsReliabilityData.crossSourceConsensus.totalNews} wichtigen News wurden von mind. 2 unabhängigen Quellen bestätigt.`
+    },
+    biasCheck: {
+      title: `Bias Check (1-B = ${newsReliabilityData.biasCheck.value})`,
+      description: "Einschätzung der Einseitigkeit durch NLP-Sentiment-Analyse",
+      formula: "B = \\frac{\\text{Bias-Index}}{\\text{Max-Bias-Wert}}, \\quad \\text{Score} = 1 - B",
+      calculation: `B = \\frac{${newsReliabilityData.biasCheck.biasIndex}}{${newsReliabilityData.biasCheck.maxBiasValue}} = ${1 - newsReliabilityData.biasCheck.value}, \\quad \\text{Score} = ${newsReliabilityData.biasCheck.value}`,
+      impact: `Bias-Index von ${newsReliabilityData.biasCheck.biasIndex} deutet auf ${newsReliabilityData.biasCheck.biasIndex > 0.3 ? 'starke' : newsReliabilityData.biasCheck.biasIndex > 0.15 ? 'moderate' : 'geringe'} Verzerrung hin.`
+    }
+  }
+
+  const formulas = type === "newsReliability" ? newsReliabilityFormulas : type === "timeSeries" ? timeSeriesFormulas : fundamentalFormulas
   
   const formula = formulas[param as keyof typeof formulas]
   if (!formula) return <div>Keine Informationen verfügbar.</div>
@@ -1074,8 +1142,155 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       )
                     })()}
                     
+                    {/* News Reliability Details */}
+                    {activeInfoBox === 'newsReliability' && (() => {
+                      const params = getNewsReliabilityParams(selectedStock)
+                      // Weighted calculation: w1=0.3, w2=0.3, w3=0.25, w4=0.15
+                      const w1 = 0.3, w2 = 0.3, w3 = 0.25, w4 = 0.15
+                      const overallScoreNum = (w1 * params.sourceReliability.value + w2 * params.reputationAccuracy.value + w3 * params.crossSourceConsensus.value + w4 * params.biasCheck.value) * 100
+                      const overallScore = overallScoreNum.toFixed(1)
+                      
+                      return (
+                        <>
+                          {/* Overall Score */}
+                          <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                            <h4 className="font-semibold mb-2 text-primary">Gesamtscore: {overallScore}%</h4>
+                            <p className="text-sm text-muted-foreground">
+                              Gewichteter Durchschnitt aller 4 Dimensionen für {selectedStock}
+                            </p>
+                          </div>
+
+                          {/* Parameter Details */}
+                          <div className="space-y-4">
+                            <h4 className="font-medium text-foreground">Detaillierte Parameter-Aufschlüsselung:</h4>
+                            
+                            {/* Source Reliability */}
+                            <div className="p-3 bg-muted/30 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="font-medium">1. Source Reliability (R)</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button className="p-1 rounded-full hover:bg-muted/50">
+                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-lg">
+                                    <FormulaTooltip param="sourceReliability" stock={selectedStock} type="newsReliability" />
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Badge className="ml-auto">{(params.sourceReliability.value * 100).toFixed(1)}%</Badge>
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                {params.sourceReliability.totalSources} Quellen analysiert, durchschnittliche Verlässlichkeit: {(params.sourceReliability.averageReliability * 100).toFixed(1)}%
+                              </div>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                Gewichtung: {w1 * 100}% (Reuters=0.98, Bloomberg=0.95, CNN=0.75)
+                              </div>
+                            </div>
+
+                            {/* Reputation Accuracy */}
+                            <div className="p-3 bg-muted/30 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="font-medium">2. Reputation Accuracy (P)</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button className="p-1 rounded-full hover:bg-muted/50">
+                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-lg">
+                                    <FormulaTooltip param="reputationAccuracy" stock={selectedStock} type="newsReliability" />
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Badge className="ml-auto">{(params.reputationAccuracy.value * 100).toFixed(1)}%</Badge>
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                {params.reputationAccuracy.falseNews} widerlegte Nachrichten von {params.reputationAccuracy.totalNews} geprüften
+                              </div>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                Gewichtung: {w2 * 100}% - Track Record gegen tatsächliche Marktereignisse
+                              </div>
+                            </div>
+
+                            {/* Cross-Source Consensus */}
+                            <div className="p-3 bg-muted/30 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="font-medium">3. Cross-Source Consensus (K)</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button className="p-1 rounded-full hover:bg-muted/50">
+                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-lg">
+                                    <FormulaTooltip param="crossSourceConsensus" stock={selectedStock} type="newsReliability" />
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Badge className="ml-auto">{(params.crossSourceConsensus.value * 100).toFixed(1)}%</Badge>
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                {params.crossSourceConsensus.confirmedNews} von {params.crossSourceConsensus.totalNews} wichtigen News wurden bestätigt
+                              </div>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                Gewichtung: {w3 * 100}% - Bestätigung durch mind. 2 unabhängige Quellen
+                              </div>
+                            </div>
+
+                            {/* Bias Check */}
+                            <div className="p-3 bg-muted/30 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="font-medium">4. Bias Check (1-B)</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button className="p-1 rounded-full hover:bg-muted/50">
+                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-lg">
+                                    <FormulaTooltip param="biasCheck" stock={selectedStock} type="newsReliability" />
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Badge className="ml-auto">{(params.biasCheck.value * 100).toFixed(1)}%</Badge>
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                Bias-Index: {params.biasCheck.biasIndex} (NLP-Sentiment-Analyse)
+                              </div>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                Gewichtung: {w4 * 100}% - Erkennung von Sensationalismus und Pump & Dump
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Formula Explanation */}
+                          <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                            <h4 className="font-medium mb-4 text-green-700">Gesamtformel Nachrichten-Verlässlichkeit</h4>
+                            
+                            <div className="space-y-4">
+                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
+                                <div className="flex items-center justify-center min-h-[70px]">
+                                  <BlockMath math="Q_{news} = w_1 \\cdot R + w_2 \\cdot P + w_3 \\cdot K + w_4 \\cdot (1-B)" />
+                                </div>
+                              </div>
+                              
+                              <div className="text-xs text-muted-foreground space-y-1">
+                                <p><strong>R</strong> = Source Reliability, <strong>P</strong> = Reputation Accuracy</p>
+                                <p><strong>K</strong> = Cross-Source Consensus, <strong>B</strong> = Bias-Score</p>
+                                <p><strong>Gewichte:</strong> w₁={w1}, w₂={w2}, w₃={w3}, w₄={w4}</p>
+                              </div>
+                              
+                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
+                                <div className="flex items-center justify-center min-h-[60px]">
+                                  <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${params.sourceReliability.value} + ${w2} \\cdot ${params.reputationAccuracy.value} + ${w3} \\cdot ${params.crossSourceConsensus.value} + ${w4} \\cdot ${params.biasCheck.value} = ${(overallScoreNum/100).toFixed(3)}`} />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )
+                    })()}
+                    
                     {/* Other metrics placeholder */}
-                    {activeInfoBox !== 'fundamentalData' && activeInfoBox !== 'timeSeriesIntegrity' && (
+                    {activeInfoBox !== 'fundamentalData' && activeInfoBox !== 'timeSeriesIntegrity' && activeInfoBox !== 'newsReliability' && (
                       <>
                         <div className="mt-8 p-4 bg-muted/30 rounded-lg">
                           <h4 className="font-medium mb-2 text-foreground">Berechnungsdetails</h4>
