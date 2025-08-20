@@ -4,6 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { useState } from "react"
 import { 
   Database, 
   Brain, 
@@ -13,7 +15,9 @@ import {
   CheckCircle,
   XCircle,
   Clock,
-  Activity
+  Activity,
+  Info,
+  X
 } from "lucide-react"
 
 interface TechnicalAnalysisTabProps {
@@ -152,12 +156,45 @@ const getStatusIcon = (status: string) => {
   }
 }
 
+// Info box content mapping
+const getInfoBoxContent = (metric: string) => {
+  const infoContent: Record<string, { title: string; content: string }> = {
+    fundamentalData: {
+      title: "Fundamentaldaten-Berechnung",
+      content: "Detaillierte Informationen zur Berechnung der Fundamentaldaten kommen hier..."
+    },
+    newsReliability: {
+      title: "Nachrichten-Verlässlichkeit Berechnung", 
+      content: "Detaillierte Informationen zur Berechnung der Nachrichten-Verlässlichkeit kommen hier..."
+    },
+    timeSeriesIntegrity: {
+      title: "Zeitreihen-Integrität Berechnung",
+      content: "Detaillierte Informationen zur Berechnung der Zeitreihen-Integrität kommen hier..."
+    },
+    tradingVolume: {
+      title: "Handelsvolumen-Verteilung Berechnung",
+      content: "Detaillierte Informationen zur Berechnung der Handelsvolumen-Verteilung kommen hier..."
+    }
+  }
+  return infoContent[metric] || { title: "Information", content: "Keine Informationen verfügbar." }
+}
+
 export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProps) {
   const data = getTechnicalData(selectedStock)
+  const [activeInfoBox, setActiveInfoBox] = useState<string | null>(null)
+  
+  const handleInfoClick = (metric: string) => {
+    setActiveInfoBox(activeInfoBox === metric ? null : metric)
+  }
+
+  const closeInfoBox = () => {
+    setActiveInfoBox(null)
+  }
   
   return (
-    <div className="space-y-4">
-      <Tabs defaultValue="data" className="w-full">
+    <TooltipProvider>
+      <div className="relative space-y-4">
+        <Tabs defaultValue="data" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="data" className="flex items-center gap-2">
             <Database className="h-4 w-4" />
@@ -193,6 +230,19 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                 <div className="flex items-center gap-2">
                   {getStatusIcon(data.dataValidation.fundamentalData.status)}
                   <span className="font-medium">Fundamentaldaten</span>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button 
+                        onClick={() => handleInfoClick('fundamentalData')}
+                        className="ml-1 p-1 rounded-full hover:bg-muted/50 transition-colors"
+                      >
+                        <Info className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Für nähere Information klicken Sie auf das Icon</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
                 <Badge className={getStatusColor(data.dataValidation.fundamentalData.status)}>
                   {data.dataValidation.fundamentalData.score}%
@@ -210,6 +260,19 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                 <div className="flex items-center gap-2">
                   {getStatusIcon(data.dataValidation.newsReliability.status)}
                   <span className="font-medium">Nachrichten-Verlässlichkeit</span>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button 
+                        onClick={() => handleInfoClick('newsReliability')}
+                        className="ml-1 p-1 rounded-full hover:bg-muted/50 transition-colors"
+                      >
+                        <Info className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Für nähere Information klicken Sie auf das Icon</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
                 <Badge className={getStatusColor(data.dataValidation.newsReliability.status)}>
                   {data.dataValidation.newsReliability.score}%
@@ -227,6 +290,19 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                 <div className="flex items-center gap-2">
                   {getStatusIcon(data.dataValidation.timeSeriesIntegrity.status)}
                   <span className="font-medium">Zeitreihen-Integrität</span>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button 
+                        onClick={() => handleInfoClick('timeSeriesIntegrity')}
+                        className="ml-1 p-1 rounded-full hover:bg-muted/50 transition-colors"
+                      >
+                        <Info className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Für nähere Information klicken Sie auf das Icon</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
                 <Badge className={getStatusColor(data.dataValidation.timeSeriesIntegrity.status)}>
                   {data.dataValidation.timeSeriesIntegrity.score}%
@@ -244,6 +320,19 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                 <div className="flex items-center gap-2">
                   {getStatusIcon(data.dataValidation.tradingVolume.status)}
                   <span className="font-medium">Handelsvolumen-Verteilung</span>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button 
+                        onClick={() => handleInfoClick('tradingVolume')}
+                        className="ml-1 p-1 rounded-full hover:bg-muted/50 transition-colors"
+                      >
+                        <Info className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Für nähere Information klicken Sie auf das Icon</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
                 <Badge className={getStatusColor(data.dataValidation.tradingVolume.status)}>
                   {data.dataValidation.tradingVolume.score}%
@@ -422,7 +511,75 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
             </CardContent>
           </Card>
         </TabsContent>
-      </Tabs>
-    </div>
+        </Tabs>
+
+        {/* Slide-in Info Box */}
+        {activeInfoBox && (
+          <>
+            {/* Backdrop Overlay */}
+            <div 
+              className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
+              onClick={closeInfoBox}
+            />
+            
+            {/* Info Box sliding from right */}
+            <div className="fixed right-0 top-0 h-full w-96 bg-background border-l shadow-2xl z-50 transform transition-transform duration-300 ease-in-out">
+              <div className="p-6 h-full flex flex-col">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-6 pb-4 border-b">
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {getInfoBoxContent(activeInfoBox).title}
+                  </h3>
+                  <button 
+                    onClick={closeInfoBox}
+                    className="p-2 rounded-full hover:bg-muted/50 transition-colors"
+                  >
+                    <X className="h-5 w-5 text-muted-foreground hover:text-foreground" />
+                  </button>
+                </div>
+                
+                {/* Content */}
+                <div className="flex-1 overflow-y-auto">
+                  <div className="space-y-4">
+                    <p className="text-muted-foreground leading-relaxed">
+                      {getInfoBoxContent(activeInfoBox).content}
+                    </p>
+                    
+                    {/* Placeholder for future detailed content */}
+                    <div className="mt-8 p-4 bg-muted/30 rounded-lg">
+                      <h4 className="font-medium mb-2 text-foreground">Berechnungsdetails</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Hier werden später detaillierte Informationen zur Berechnung dieser Metrik angezeigt.
+                      </p>
+                    </div>
+                    
+                    <div className="mt-4 p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                      <h4 className="font-medium mb-2 text-blue-700">Wichtige Faktoren</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Diese Sektion wird später mit spezifischen Faktoren befüllt, die diese Metrik beeinflussen.
+                      </p>
+                    </div>
+                    
+                    <div className="mt-4 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                      <h4 className="font-medium mb-2 text-green-700">Interpretation</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Anleitung zur Interpretation der Werte und deren Auswirkung auf die Gesamteinschätzung.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Footer */}
+                <div className="pt-4 mt-4 border-t">
+                  <p className="text-xs text-muted-foreground text-center">
+                    Detaillierte Berechnungsinformationen für {selectedStock}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </TooltipProvider>
   )
 }
