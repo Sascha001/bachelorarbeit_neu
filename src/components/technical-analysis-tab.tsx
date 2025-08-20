@@ -451,9 +451,16 @@ const FormulaTooltip = ({ param, stock, type = "fundamental" }: { param: string;
     }
   }
 
-  const formulas = type === "newsReliability" ? newsReliabilityFormulas : type === "timeSeries" ? timeSeriesFormulas : fundamentalFormulas
+  let formula: { title: string; description: string; formula: string; calculation: string; impact: string } | undefined
   
-  const formula = formulas[param as keyof typeof formulas]
+  if (type === "newsReliability") {
+    formula = newsReliabilityFormulas[param as keyof typeof newsReliabilityFormulas]
+  } else if (type === "timeSeries") {
+    formula = timeSeriesFormulas[param as keyof typeof timeSeriesFormulas]
+  } else {
+    formula = fundamentalFormulas[param as keyof typeof fundamentalFormulas]
+  }
+  
   if (!formula) return <div>Keine Informationen verfügbar.</div>
   
   return (
