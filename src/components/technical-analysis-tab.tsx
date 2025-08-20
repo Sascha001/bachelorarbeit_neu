@@ -218,19 +218,19 @@ const getInfoBoxContent = (metric: string, stock?: string) => {
   return infoContent[metric] || { title: "Information", content: "Keine Informationen verfügbar." }
 }
 
-// Tooltip content for individual parameters
+// Tooltip content for individual parameters with mathematical formatting
 const getParameterTooltip = (param: string, stock: string) => {
   const data = getFundamentalDataParams(stock)
   const tooltips: Record<string, string> = {
-    completeness: `**Vollständigkeit (C = ${data.completeness.value})**\n\nIdee: Sind alle Pflichtfelder verfügbar?\n\nBerechnung: C = 1 - (Fehlende Werte / Gesamte Werte)\nAktuell: C = 1 - (${data.completeness.missingValues} / ${data.completeness.totalValues}) = ${data.completeness.value}\n\nAuswirkung: ${data.completeness.missingValues} fehlende Werte reduzieren die Datenqualität um ${((1 - data.completeness.value) * 100).toFixed(1)}%.`,
+    completeness: `**Vollständigkeit (C = ${data.completeness.value})**\n\nIdee: Sind alle Pflichtfelder verfügbar?\n\nFormel:\n                    Fehlende Werte\nC = 1 − ─────────────────────────\n            Gesamte erwartete Werte\n\nAktuell:\n              ${data.completeness.missingValues}\nC = 1 − ──── = ${data.completeness.value}\n             ${data.completeness.totalValues}\n\nAuswirkung: ${data.completeness.missingValues} fehlende Werte reduzieren die Datenqualität um ${((1 - data.completeness.value) * 100).toFixed(1)}%.`,
     
-    timeliness: `**Aktualität (T = ${data.timeliness.value})**\n\nIdee: Wie zeitnah sind die Daten verfügbar?\n\nBerechnung: T = max(0, 1 - (Verzögerung / Maximaltoleranz))\nAktuell: T = max(0, 1 - (${data.timeliness.delayDays} / ${data.timeliness.maxTolerance})) = ${data.timeliness.value}\n\nAuswirkung: ${data.timeliness.delayDays} Tage Verzögerung reduzieren die Aktualität um ${((1 - data.timeliness.value) * 100).toFixed(1)}%.`,
+    timeliness: `**Aktualität (T = ${data.timeliness.value})**\n\nIdee: Wie zeitnah sind die Daten verfügbar?\n\nFormel:\n                          Verzögerung in Tagen\nT = max(0, 1 − ─────────────────────────)\n                            Maximaltoleranz\n\nAktuell:\n                    ${data.timeliness.delayDays}\nT = max(0, 1 − ────) = ${data.timeliness.value}\n                   ${data.timeliness.maxTolerance}\n\nAuswirkung: ${data.timeliness.delayDays} Tage Verzögerung reduzieren die Aktualität um ${((1 - data.timeliness.value) * 100).toFixed(1)}%.`,
     
-    consistency: `**Konsistenz (K = ${data.consistency.value})**\n\nIdee: Stimmen Daten über verschiedene Quellen überein?\n\nBerechnung: K = 1 - (Durchschn. Abweichung / Referenzwert)\nAktuell: K = 1 - (${data.consistency.avgDeviation} / ${data.consistency.referenceValue}) = ${data.consistency.value}\n\nAuswirkung: Geringe Abweichung zwischen Quellen sorgt für hohe Verlässlichkeit.`,
+    consistency: `**Konsistenz (K = ${data.consistency.value})**\n\nIdee: Stimmen Daten über verschiedene Quellen überein?\n\nFormel:\n                    Durchschnittliche Abweichung\nK = 1 − ──────────────────────────────────\n                           Referenzwert\n\nAktuell:\n              ${data.consistency.avgDeviation}\nK = 1 − ──────── = ${data.consistency.value}\n             ${data.consistency.referenceValue}\n\nAuswirkung: Geringe Abweichung zwischen Quellen sorgt für hohe Verlässlichkeit.`,
     
-    accuracy: `**Genauigkeit (A = ${data.accuracy.value})**\n\nIdee: Stimmen Daten mit offiziellen Quellen überein?\n\nBerechnung: A = 1 - (Abweichung / Offizieller Wert)\nAktuell: A = 1 - (${data.accuracy.deviation} / ${data.accuracy.officialValue}) = ${data.accuracy.value}\n\nAuswirkung: ${((1 - data.accuracy.value) * 100).toFixed(1)}% Abweichung von SEC-Filings bedeutet moderate Ungenauigkeit.`,
+    accuracy: `**Genauigkeit (A = ${data.accuracy.value})**\n\nIdee: Stimmen Daten mit offiziellen Quellen überein?\n\nFormel:\n                  Abweichung von offizieller Quelle\nA = 1 − ─────────────────────────────────────\n                          Referenzwert\n\nAktuell:\n              ${data.accuracy.deviation}\nA = 1 − ──────── = ${data.accuracy.value}\n             ${data.accuracy.officialValue}\n\nAuswirkung: ${((1 - data.accuracy.value) * 100).toFixed(1)}% Abweichung von SEC-Filings bedeutet moderate Ungenauigkeit.`,
     
-    stability: `**Stabilität (S = ${data.stability.value})**\n\nIdee: Werden Daten häufig nachträglich korrigiert?\n\nBerechnung: S = 1 - (Revisionen / Gesamte Datenpunkte)\nAktuell: S = 1 - (${data.stability.revisions} / ${data.stability.totalDataPoints}) = ${data.stability.value}\n\nAuswirkung: ${data.stability.revisions} nachträgliche Korrekturen reduzieren die Verlässlichkeit um ${((1 - data.stability.value) * 100).toFixed(1)}%.`
+    stability: `**Stabilität (S = ${data.stability.value})**\n\nIdee: Werden Daten häufig nachträglich korrigiert?\n\nFormel:\n                     Anzahl Revisionen\nS = 1 − ────────────────────────────────\n              Gesamte Anzahl Datenpunkte\n\nAktuell:\n              ${data.stability.revisions}\nS = 1 − ────── = ${data.stability.value}\n             ${data.stability.totalDataPoints}\n\nAuswirkung: ${data.stability.revisions} nachträgliche Korrekturen reduzieren die Verlässlichkeit um ${((1 - data.stability.value) * 100).toFixed(1)}%.`
   }
   return tooltips[param] || "Keine Informationen verfügbar."
 }
@@ -750,9 +750,24 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                           {/* Formula Explanation */}
                           <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
                             <h4 className="font-medium mb-2 text-green-700">Gesamtberechnung</h4>
-                            <div className="text-sm text-muted-foreground space-y-1">
-                              <p><strong>Fundamentaldaten-Score = (C + T + K + A + S) / 5</strong></p>
-                              <p>Aktuell: ({(params.completeness.value * 100).toFixed(1)} + {(params.timeliness.value * 100).toFixed(1)} + {(params.consistency.value * 100).toFixed(1)} + {(params.accuracy.value * 100).toFixed(1)} + {(params.stability.value * 100).toFixed(1)}) / 5 = <strong>{overallScore}%</strong></p>
+                            <div className="text-sm text-muted-foreground space-y-3 font-mono">
+                              <div className="text-center">
+                                <div className="text-base font-medium">
+                                                    C + T + K + A + S
+                                </div>
+                                <div className="border-t border-gray-400 mt-1 mb-1">
+                                                          5
+                                </div>
+                              </div>
+                              <div className="text-center text-xs">
+                                <div>
+                                  {(params.completeness.value * 100).toFixed(1)} + {(params.timeliness.value * 100).toFixed(1)} + {(params.consistency.value * 100).toFixed(1)} + {(params.accuracy.value * 100).toFixed(1)} + {(params.stability.value * 100).toFixed(1)}
+                                </div>
+                                <div className="border-t border-gray-400 mt-1 mb-1">
+                                                                    5
+                                </div>
+                                <div className="text-base font-bold text-green-700">= {overallScore}%</div>
+                              </div>
                             </div>
                           </div>
                         </>
