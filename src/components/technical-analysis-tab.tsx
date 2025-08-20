@@ -1059,16 +1059,15 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                           </div>
 
                           {/* Overall Formula */}
-                          <div className="mt-6 p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
-                            <h4 className="font-semibold mb-3 text-blue-700">Gesamtformel Zeitreihen-Integrität</h4>
-                            <div className="formula-container-large text-black">
-                              <BlockMath>
-                                {`Q_{time} = w_1 \\cdot C + w_2 \\cdot O + w_3 \\cdot R + w_4 \\cdot K`}
-                              </BlockMath>
-                            </div>
-                            <div className="mt-3 space-y-1 text-sm text-muted-foreground">
-                              <p>Mit gleichen Gewichten: w₁ = w₂ = w₃ = w₄ = 0.25</p>
-                              <p>Berechnung: Q_time = (0.25×{params.completeness.value} + 0.25×{params.outlierFreedom.value} + 0.25×{params.revisionStability.value} + 0.25×{params.continuity.value}) = {(overallScoreNum/100).toFixed(3)} = {overallScore}%</p>
+                          <div className="mt-6 p-4 bg-muted/30 rounded-lg">
+                            <h4 className="font-medium mb-2 text-foreground">Berechnung des Gesamtscores</h4>
+                            <p className="text-sm text-muted-foreground mb-3">
+                              Durchschnitt aller 4 Parameter mit gleicher Gewichtung:
+                            </p>
+                            <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
+                              <div className="flex items-center justify-center min-h-[60px]">
+                                <BlockMath math={`\\text{Aktuell} = \\frac{${(params.completeness.value * 100).toFixed(1)} + ${(params.outlierFreedom.value * 100).toFixed(1)} + ${(params.revisionStability.value * 100).toFixed(1)} + ${(params.continuity.value * 100).toFixed(1)}}{4} = ${overallScore}\\%`} />
+                              </div>
                             </div>
                           </div>
                         </>
