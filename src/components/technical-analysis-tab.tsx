@@ -3,7 +3,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import React, { useState } from "react"
@@ -977,108 +976,84 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             {/* Completeness */}
                             <div className="p-3 bg-muted/30 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button variant="ghost" size="sm" className="h-auto p-1 text-primary hover:text-primary">
-                                        <span className="font-medium">C</span>
-                                      </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent side="left" className="max-w-md p-0 border-0 bg-transparent shadow-none">
-                                      <div className="bg-popover border rounded-lg shadow-lg p-4 text-black">
-                                        <FormulaTooltip param="completeness" stock={selectedStock} type="timeSeries" />
-                                      </div>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                                <span className="text-sm font-medium">Vollständigkeit</span>
-                                <Badge variant="secondary" className="text-xs">{(params.completeness.value * 100).toFixed(1)}%</Badge>
+                                <span className="font-medium">1. Vollständigkeit (C)</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button className="p-1 rounded-full hover:bg-muted/50">
+                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-lg">
+                                    <FormulaTooltip param="completeness" stock={selectedStock} type="timeSeries" />
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Badge className="ml-auto">{(params.completeness.value * 100).toFixed(1)}%</Badge>
                               </div>
-                              <div className="formula-container text-black">
-                                <BlockMath>
-                                  {`C = 1 - \\frac{${params.completeness.missingTimepoints}}{${params.completeness.expectedTimepoints}} = ${params.completeness.value}`}
-                                </BlockMath>
+                              <div className="text-sm text-muted-foreground">
+                                {params.completeness.expectedTimepoints - params.completeness.missingTimepoints} von {params.completeness.expectedTimepoints} Zeitpunkten verfügbar
                               </div>
                             </div>
 
                             {/* Outlier Freedom */}
                             <div className="p-3 bg-muted/30 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button variant="ghost" size="sm" className="h-auto p-1 text-primary hover:text-primary">
-                                        <span className="font-medium">O</span>
-                                      </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent side="left" className="max-w-md p-0 border-0 bg-transparent shadow-none">
-                                      <div className="bg-popover border rounded-lg shadow-lg p-4 text-black">
-                                        <FormulaTooltip param="outlierFreedom" stock={selectedStock} type="timeSeries" />
-                                      </div>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                                <span className="text-sm font-medium">Ausreißer-Freiheit</span>
-                                <Badge variant="secondary" className="text-xs">{(params.outlierFreedom.value * 100).toFixed(1)}%</Badge>
+                                <span className="font-medium">2. Ausreißer-Freiheit (O)</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button className="p-1 rounded-full hover:bg-muted/50">
+                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-lg">
+                                    <FormulaTooltip param="outlierFreedom" stock={selectedStock} type="timeSeries" />
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Badge className="ml-auto">{(params.outlierFreedom.value * 100).toFixed(1)}%</Badge>
                               </div>
-                              <div className="formula-container text-black">
-                                <BlockMath>
-                                  {`O = 1 - \\frac{${params.outlierFreedom.outliers}}{${params.outlierFreedom.totalObservations}} = ${params.outlierFreedom.value}`}
-                                </BlockMath>
+                              <div className="text-sm text-muted-foreground">
+                                {params.outlierFreedom.totalObservations - params.outlierFreedom.outliers} von {params.outlierFreedom.totalObservations} Beobachtungen ohne Ausreißer
                               </div>
                             </div>
 
                             {/* Revision Stability */}
                             <div className="p-3 bg-muted/30 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button variant="ghost" size="sm" className="h-auto p-1 text-primary hover:text-primary">
-                                        <span className="font-medium">R</span>
-                                      </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent side="left" className="max-w-md p-0 border-0 bg-transparent shadow-none">
-                                      <div className="bg-popover border rounded-lg shadow-lg p-4 text-black">
-                                        <FormulaTooltip param="revisionStability" stock={selectedStock} type="timeSeries" />
-                                      </div>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                                <span className="text-sm font-medium">Revision-Stabilität</span>
-                                <Badge variant="secondary" className="text-xs">{(params.revisionStability.value * 100).toFixed(1)}%</Badge>
+                                <span className="font-medium">3. Revision-Stabilität (R)</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button className="p-1 rounded-full hover:bg-muted/50">
+                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-lg">
+                                    <FormulaTooltip param="revisionStability" stock={selectedStock} type="timeSeries" />
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Badge className="ml-auto">{(params.revisionStability.value * 100).toFixed(1)}%</Badge>
                               </div>
-                              <div className="formula-container text-black">
-                                <BlockMath>
-                                  {`R = 1 - \\frac{${params.revisionStability.revisedValues}}{${params.revisionStability.totalValues}} = ${params.revisionStability.value}`}
-                                </BlockMath>
+                              <div className="text-sm text-muted-foreground">
+                                {params.revisionStability.totalValues - params.revisionStability.revisedValues} von {params.revisionStability.totalValues} Werten ohne Revision
                               </div>
                             </div>
 
                             {/* Continuity */}
                             <div className="p-3 bg-muted/30 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button variant="ghost" size="sm" className="h-auto p-1 text-primary hover:text-primary">
-                                        <span className="font-medium">K</span>
-                                      </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent side="left" className="max-w-md p-0 border-0 bg-transparent shadow-none">
-                                      <div className="bg-popover border rounded-lg shadow-lg p-4 text-black">
-                                        <FormulaTooltip param="continuity" stock={selectedStock} type="timeSeries" />
-                                      </div>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                                <span className="text-sm font-medium">Kontinuität</span>
-                                <Badge variant="secondary" className="text-xs">{(params.continuity.value * 100).toFixed(1)}%</Badge>
+                                <span className="font-medium">4. Kontinuität (K)</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button className="p-1 rounded-full hover:bg-muted/50">
+                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-lg">
+                                    <FormulaTooltip param="continuity" stock={selectedStock} type="timeSeries" />
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Badge className="ml-auto">{(params.continuity.value * 100).toFixed(1)}%</Badge>
                               </div>
-                              <div className="formula-container text-black">
-                                <BlockMath>
-                                  {`K = 1 - \\frac{${params.continuity.gaps}}{${params.continuity.totalIntervals}} = ${params.continuity.value}`}
-                                </BlockMath>
+                              <div className="text-sm text-muted-foreground">
+                                {params.continuity.totalIntervals - params.continuity.gaps} von {params.continuity.totalIntervals} Intervallen ohne Gaps
                               </div>
                             </div>
                           </div>
