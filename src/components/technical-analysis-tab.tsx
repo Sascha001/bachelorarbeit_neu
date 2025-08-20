@@ -156,12 +156,51 @@ const getStatusIcon = (status: string) => {
   }
 }
 
+// Fundamentaldaten parameters with calculated values
+interface FundamentalDataParams {
+  completeness: { value: number; missingValues: number; totalValues: number };
+  timeliness: { value: number; delayDays: number; maxTolerance: number };
+  consistency: { value: number; avgDeviation: number; referenceValue: number };
+  accuracy: { value: number; deviation: number; officialValue: number };
+  stability: { value: number; revisions: number; totalDataPoints: number };
+}
+
+const getFundamentalDataParams = (stock: string): FundamentalDataParams => {
+  const params: Record<string, FundamentalDataParams> = {
+    // AAPL: Score should be 92% => (C + T + K + A + S) / 5 = 0.92
+    AAPL: {
+      completeness: { value: 0.95, missingValues: 5, totalValues: 100 },        // C = 1 - (5/100) = 0.95
+      timeliness: { value: 0.90, delayDays: 3, maxTolerance: 30 },             // T = max(0, 1 - (3/30)) = 0.90  
+      consistency: { value: 0.92, avgDeviation: 0.097, referenceValue: 1.21 },  // K = 1 - (0.097/1.21) = 0.92
+      accuracy: { value: 0.92, deviation: 0.096, officialValue: 1.20 },        // A = 1 - (0.096/1.20) = 0.92
+      stability: { value: 0.91, revisions: 9, totalDataPoints: 100 }           // S = 1 - (9/100) = 0.91
+    },
+    // MSFT: Score should be 96% => (C + T + K + A + S) / 5 = 0.96  
+    MSFT: {
+      completeness: { value: 0.98, missingValues: 2, totalValues: 100 },        // C = 1 - (2/100) = 0.98
+      timeliness: { value: 0.93, delayDays: 2, maxTolerance: 30 },             // T = max(0, 1 - (2/30)) = 0.93
+      consistency: { value: 0.96, avgDeviation: 0.098, referenceValue: 2.45 }, // K = 1 - (0.098/2.45) = 0.96
+      accuracy: { value: 0.975, deviation: 0.06, officialValue: 2.40 },        // A = 1 - (0.06/2.40) = 0.975
+      stability: { value: 0.965, revisions: 3.5, totalDataPoints: 100 }        // S = 1 - (3.5/100) = 0.965
+    },
+    // TSLA: Score should be 75% => (C + T + K + A + S) / 5 = 0.75
+    TSLA: {
+      completeness: { value: 0.85, missingValues: 15, totalValues: 100 },       // C = 1 - (15/100) = 0.85
+      timeliness: { value: 0.70, delayDays: 9, maxTolerance: 30 },             // T = max(0, 1 - (9/30)) = 0.70
+      consistency: { value: 0.72, avgDeviation: 0.518, referenceValue: 1.85 }, // K = 1 - (0.518/1.85) = 0.72
+      accuracy: { value: 0.70, deviation: 0.546, officialValue: 1.82 },        // A = 1 - (0.546/1.82) = 0.70
+      stability: { value: 0.73, revisions: 27, totalDataPoints: 100 }          // S = 1 - (27/100) = 0.73
+    }
+  }
+  return params[stock] || params.AAPL
+}
+
 // Info box content mapping
-const getInfoBoxContent = (metric: string) => {
+const getInfoBoxContent = (metric: string, stock?: string) => {
   const infoContent: Record<string, { title: string; content: string }> = {
     fundamentalData: {
-      title: "Fundamentaldaten-Berechnung",
-      content: "Detaillierte Informationen zur Berechnung der Fundamentaldaten kommen hier..."
+      title: "Fundamentaldaten-Qualität – Technische Dimensionen",
+      content: "Die Fundamentaldaten-Qualität wird aus 5 kritischen Parametern berechnet, die direkt die Zuverlässigkeit Ihrer Trading-Entscheidungen beeinflussen."
     },
     newsReliability: {
       title: "Nachrichten-Verlässlichkeit Berechnung", 
@@ -177,6 +216,23 @@ const getInfoBoxContent = (metric: string) => {
     }
   }
   return infoContent[metric] || { title: "Information", content: "Keine Informationen verfügbar." }
+}
+
+// Tooltip content for individual parameters
+const getParameterTooltip = (param: string, stock: string) => {
+  const data = getFundamentalDataParams(stock)
+  const tooltips: Record<string, string> = {
+    completeness: `**Vollständigkeit (C = ${data.completeness.value})**\n\nIdee: Sind alle Pflichtfelder verfügbar?\n\nBerechnung: C = 1 - (Fehlende Werte / Gesamte Werte)\nAktuell: C = 1 - (${data.completeness.missingValues} / ${data.completeness.totalValues}) = ${data.completeness.value}\n\nAuswirkung: ${data.completeness.missingValues} fehlende Werte reduzieren die Datenqualität um ${((1 - data.completeness.value) * 100).toFixed(1)}%.`,
+    
+    timeliness: `**Aktualität (T = ${data.timeliness.value})**\n\nIdee: Wie zeitnah sind die Daten verfügbar?\n\nBerechnung: T = max(0, 1 - (Verzögerung / Maximaltoleranz))\nAktuell: T = max(0, 1 - (${data.timeliness.delayDays} / ${data.timeliness.maxTolerance})) = ${data.timeliness.value}\n\nAuswirkung: ${data.timeliness.delayDays} Tage Verzögerung reduzieren die Aktualität um ${((1 - data.timeliness.value) * 100).toFixed(1)}%.`,
+    
+    consistency: `**Konsistenz (K = ${data.consistency.value})**\n\nIdee: Stimmen Daten über verschiedene Quellen überein?\n\nBerechnung: K = 1 - (Durchschn. Abweichung / Referenzwert)\nAktuell: K = 1 - (${data.consistency.avgDeviation} / ${data.consistency.referenceValue}) = ${data.consistency.value}\n\nAuswirkung: Geringe Abweichung zwischen Quellen sorgt für hohe Verlässlichkeit.`,
+    
+    accuracy: `**Genauigkeit (A = ${data.accuracy.value})**\n\nIdee: Stimmen Daten mit offiziellen Quellen überein?\n\nBerechnung: A = 1 - (Abweichung / Offizieller Wert)\nAktuell: A = 1 - (${data.accuracy.deviation} / ${data.accuracy.officialValue}) = ${data.accuracy.value}\n\nAuswirkung: ${((1 - data.accuracy.value) * 100).toFixed(1)}% Abweichung von SEC-Filings bedeutet moderate Ungenauigkeit.`,
+    
+    stability: `**Stabilität (S = ${data.stability.value})**\n\nIdee: Werden Daten häufig nachträglich korrigiert?\n\nBerechnung: S = 1 - (Revisionen / Gesamte Datenpunkte)\nAktuell: S = 1 - (${data.stability.revisions} / ${data.stability.totalDataPoints}) = ${data.stability.value}\n\nAuswirkung: ${data.stability.revisions} nachträgliche Korrekturen reduzieren die Verlässlichkeit um ${((1 - data.stability.value) * 100).toFixed(1)}%.`
+  }
+  return tooltips[param] || "Keine Informationen verfügbar."
 }
 
 export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProps) {
@@ -539,7 +595,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6 pb-4 border-b">
                   <h3 className="text-lg font-semibold text-foreground">
-                    {getInfoBoxContent(activeInfoBox).title}
+                    {getInfoBoxContent(activeInfoBox, selectedStock).title}
                   </h3>
                   <button 
                     onClick={closeInfoBox}
@@ -553,30 +609,181 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                 <div className="flex-1 overflow-y-auto">
                   <div className="space-y-4">
                     <p className="text-muted-foreground leading-relaxed">
-                      {getInfoBoxContent(activeInfoBox).content}
+                      {getInfoBoxContent(activeInfoBox, selectedStock).content}
                     </p>
                     
-                    {/* Placeholder for future detailed content */}
-                    <div className="mt-8 p-4 bg-muted/30 rounded-lg">
-                      <h4 className="font-medium mb-2 text-foreground">Berechnungsdetails</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Hier werden später detaillierte Informationen zur Berechnung dieser Metrik angezeigt.
-                      </p>
-                    </div>
+                    {/* Fundamentaldaten detailed parameters */}
+                    {activeInfoBox === 'fundamentalData' && (() => {
+                      const params = getFundamentalDataParams(selectedStock)
+                      const overallScore = ((params.completeness.value + params.timeliness.value + params.consistency.value + params.accuracy.value + params.stability.value) / 5 * 100).toFixed(1)
+                      
+                      return (
+                        <>
+                          {/* Overall Score */}
+                          <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                            <h4 className="font-semibold mb-2 text-primary">Gesamtscore: {overallScore}%</h4>
+                            <p className="text-sm text-muted-foreground">
+                              Durchschnitt aller 5 Dimensionen für {selectedStock}
+                            </p>
+                          </div>
+
+                          {/* Parameter Details */}
+                          <div className="space-y-4">
+                            <h4 className="font-medium text-foreground">Detaillierte Parameter-Aufschlüsselung:</h4>
+                            
+                            {/* Completeness */}
+                            <div className="p-3 bg-muted/30 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="font-medium">1. Vollständigkeit (C)</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button className="p-1 rounded-full hover:bg-muted/50">
+                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-sm">
+                                    <div className="whitespace-pre-line text-sm">
+                                      {getParameterTooltip('completeness', selectedStock)}
+                                    </div>
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Badge className="ml-auto">{(params.completeness.value * 100).toFixed(1)}%</Badge>
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                {params.completeness.totalValues - params.completeness.missingValues} von {params.completeness.totalValues} Feldern verfügbar
+                              </div>
+                            </div>
+
+                            {/* Timeliness */}
+                            <div className="p-3 bg-muted/30 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="font-medium">2. Aktualität (T)</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button className="p-1 rounded-full hover:bg-muted/50">
+                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-sm">
+                                    <div className="whitespace-pre-line text-sm">
+                                      {getParameterTooltip('timeliness', selectedStock)}
+                                    </div>
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Badge className="ml-auto">{(params.timeliness.value * 100).toFixed(1)}%</Badge>
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                Durchschnittlich {params.timeliness.delayDays} Tage Verzögerung
+                              </div>
+                            </div>
+
+                            {/* Consistency */}
+                            <div className="p-3 bg-muted/30 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="font-medium">3. Konsistenz (K)</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button className="p-1 rounded-full hover:bg-muted/50">
+                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-sm">
+                                    <div className="whitespace-pre-line text-sm">
+                                      {getParameterTooltip('consistency', selectedStock)}
+                                    </div>
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Badge className="ml-auto">{(params.consistency.value * 100).toFixed(1)}%</Badge>
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                Durchschnittliche Abweichung zwischen Quellen: {params.consistency.avgDeviation}
+                              </div>
+                            </div>
+
+                            {/* Accuracy */}
+                            <div className="p-3 bg-muted/30 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="font-medium">4. Genauigkeit (A)</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button className="p-1 rounded-full hover:bg-muted/50">
+                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-sm">
+                                    <div className="whitespace-pre-line text-sm">
+                                      {getParameterTooltip('accuracy', selectedStock)}
+                                    </div>
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Badge className="ml-auto">{(params.accuracy.value * 100).toFixed(1)}%</Badge>
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                Abweichung von SEC-Filings: {params.accuracy.deviation}
+                              </div>
+                            </div>
+
+                            {/* Stability */}
+                            <div className="p-3 bg-muted/30 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="font-medium">5. Stabilität (S)</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button className="p-1 rounded-full hover:bg-muted/50">
+                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-sm">
+                                    <div className="whitespace-pre-line text-sm">
+                                      {getParameterTooltip('stability', selectedStock)}
+                                    </div>
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Badge className="ml-auto">{(params.stability.value * 100).toFixed(1)}%</Badge>
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                {params.stability.revisions} von {params.stability.totalDataPoints} Datenpunkten revidiert
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Formula Explanation */}
+                          <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                            <h4 className="font-medium mb-2 text-green-700">Gesamtberechnung</h4>
+                            <div className="text-sm text-muted-foreground space-y-1">
+                              <p><strong>Fundamentaldaten-Score = (C + T + K + A + S) / 5</strong></p>
+                              <p>Aktuell: ({(params.completeness.value * 100).toFixed(1)} + {(params.timeliness.value * 100).toFixed(1)} + {(params.consistency.value * 100).toFixed(1)} + {(params.accuracy.value * 100).toFixed(1)} + {(params.stability.value * 100).toFixed(1)}) / 5 = <strong>{overallScore}%</strong></p>
+                            </div>
+                          </div>
+                        </>
+                      )
+                    })()}
                     
-                    <div className="mt-4 p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
-                      <h4 className="font-medium mb-2 text-blue-700">Wichtige Faktoren</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Diese Sektion wird später mit spezifischen Faktoren befüllt, die diese Metrik beeinflussen.
-                      </p>
-                    </div>
-                    
-                    <div className="mt-4 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                      <h4 className="font-medium mb-2 text-green-700">Interpretation</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Anleitung zur Interpretation der Werte und deren Auswirkung auf die Gesamteinschätzung.
-                      </p>
-                    </div>
+                    {/* Other metrics placeholder */}
+                    {activeInfoBox !== 'fundamentalData' && (
+                      <>
+                        <div className="mt-8 p-4 bg-muted/30 rounded-lg">
+                          <h4 className="font-medium mb-2 text-foreground">Berechnungsdetails</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Hier werden später detaillierte Informationen zur Berechnung dieser Metrik angezeigt.
+                          </p>
+                        </div>
+                        
+                        <div className="mt-4 p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                          <h4 className="font-medium mb-2 text-blue-700">Wichtige Faktoren</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Diese Sektion wird später mit spezifischen Faktoren befüllt, die diese Metrik beeinflussen.
+                          </p>
+                        </div>
+                        
+                        <div className="mt-4 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                          <h4 className="font-medium mb-2 text-green-700">Interpretation</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Anleitung zur Interpretation der Werte und deren Auswirkung auf die Gesamteinschätzung.
+                          </p>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
                 
