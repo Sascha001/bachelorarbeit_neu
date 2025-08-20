@@ -200,146 +200,77 @@ export function SimplifiedAnalysisTab({ selectedStock }: SimplifiedAnalysisTabPr
                 Verständliche Erklärung der Datenqualität und deren Auswirkungen
               </CardDescription>
             </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-base leading-relaxed">{data.overallMessage}</p>
-              </div>
-              <div className="text-center ml-6">
-                <div className="text-3xl font-bold text-primary mb-1">
-                  {100 - data.confidenceLevel}%
-                </div>
-                <p className="text-sm text-muted-foreground">Vertrauen</p>
-                <Badge className={getRiskColor(data.riskLevel)} variant="outline">
-                  {data.riskLevel} Risiko
-                </Badge>
-              </div>
-            </div>
-            <Progress value={100 - data.confidenceLevel} className="w-full h-3" />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Main Concerns */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Lightbulb className="h-5 w-5 text-yellow-600" />
-            Was Sie wissen sollten
-          </CardTitle>
-          <CardDescription>
-            Die wichtigsten Unsicherheitsfaktoren in einfachen Worten erklärt
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            {data.mainConcerns.map((concern: ConcernData, index: number) => (
-              <div key={index} className="border-l-4 border-primary/20 pl-4 space-y-3">
-                <div className="flex items-center gap-2">
-                  {concern.category === "Datenqualität" && <Database className="h-5 w-5 text-blue-600" />}
-                  {concern.category === "KI-Modell" && <Brain className="h-5 w-5 text-purple-600" />}
-                  {concern.category === "Marktmeinung" && <Users className="h-5 w-5 text-green-600" />}
-                  <h4 className="font-semibold text-lg">{concern.category}</h4>
-                  <div className="flex items-center gap-1">
-                    {getImpactIcon(concern.impact)}
-                    <span className={`text-sm font-medium ${getImpactColor(concern.impact)}`}>
-                      {concern.impact} Auswirkung
-                    </span>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <p className="text-base leading-relaxed">{data.overallMessage}</p>
+                  </div>
+                  <div className="text-center ml-6">
+                    <div className="text-3xl font-bold text-primary mb-1">
+                      {100 - data.confidenceLevel}%
+                    </div>
+                    <p className="text-sm text-muted-foreground">Vertrauen</p>
+                    <Badge className={getRiskColor(data.riskLevel)} variant="outline">
+                      {data.riskLevel} Risiko
+                    </Badge>
                   </div>
                 </div>
-                
-                <div className="space-y-3">
-                  <div>
-                    <h5 className="font-medium text-foreground mb-2">Was bedeutet das?</h5>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {concern.explanation}
-                    </p>
-                  </div>
-                  
-                  <div className="bg-muted/50 p-3 rounded-lg">
-                    <h5 className="font-medium text-foreground mb-2 flex items-center gap-2">
-                      <Target className="h-4 w-4" />
-                      Was können Sie tun?
-                    </h5>
-                    <p className="text-sm text-muted-foreground">
-                      {concern.userAction}
-                    </p>
-                  </div>
-                </div>
+                <Progress value={100 - data.confidenceLevel} className="w-full h-3" />
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
 
-      {/* Practical Recommendations */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CheckCircle className="h-5 w-5 text-green-600" />
-            Praktische Empfehlungen
-          </CardTitle>
-          <CardDescription>
-            Konkrete Handlungsempfehlungen für Ihre Investitionsentscheidung
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {data.recommendations.map((recommendation: string, index: number) => (
-              <div key={index} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
-                <div className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center mt-0.5">
-                  <span className="text-xs font-bold text-primary">{index + 1}</span>
-                </div>
-                <p className="text-sm leading-relaxed text-foreground">
-                  {recommendation}
-                </p>
+          {/* Data Quality Concerns */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Lightbulb className="h-5 w-5 text-yellow-600" />
+                Datenqualität-Aspekte
+              </CardTitle>
+              <CardDescription>
+                Alles über die Qualität und Verfügbarkeit der Daten für {selectedStock}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {data.mainConcerns
+                  .filter((concern: ConcernData) => concern.category === "Datenqualität")
+                  .map((concern: ConcernData, index: number) => (
+                  <div key={index} className="border-l-4 border-blue-500/30 pl-4 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Database className="h-5 w-5 text-blue-600" />
+                      <h4 className="font-semibold text-lg">{concern.category}</h4>
+                      <div className="flex items-center gap-1">
+                        {getImpactIcon(concern.impact)}
+                        <span className={`text-sm font-medium ${getImpactColor(concern.impact)}`}>
+                          {concern.impact} Auswirkung
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div>
+                        <h5 className="font-medium text-foreground mb-2">Was bedeutet das?</h5>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {concern.explanation}
+                        </p>
+                      </div>
+                      
+                      <div className="bg-muted/50 p-3 rounded-lg">
+                        <h5 className="font-medium text-foreground mb-2 flex items-center gap-2">
+                          <Target className="h-4 w-4" />
+                          Was können Sie tun?
+                        </h5>
+                        <p className="text-sm text-muted-foreground">
+                          {concern.userAction}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Risk Assessment Summary */}
-      <Card className="border-l-4 border-l-primary">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-orange-600" />
-            Risiko-Einschätzung Zusammenfassung
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="font-medium">Gesamtrisiko für {selectedStock}:</span>
-              <Badge className={getRiskColor(data.riskLevel)} variant="outline">
-                {data.riskLevel}
-              </Badge>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-              <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                <div className="text-sm font-medium text-green-600">Niedrig-Mittel</div>
-                <p className="text-xs text-muted-foreground mt-1">Für konservative Anleger geeignet</p>
-              </div>
-              <div className="p-4 bg-yellow-500/5 border border-yellow-500/20 rounded-lg">
-                <div className="text-sm font-medium text-yellow-600">Mittel-Hoch</div>
-                <p className="text-xs text-muted-foreground mt-1">Erfordert aktive Überwachung</p>
-              </div>
-              <div className="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
-                <div className="text-sm font-medium text-red-600">Sehr Hoch</div>
-                <p className="text-xs text-muted-foreground mt-1">Nur für erfahrene Trader</p>
-              </div>
-            </div>
-            
-            <div className="text-center text-sm text-muted-foreground">
-              <p>
-                Investieren Sie nur Geld, dessen Verlust Sie verschmerzen können. 
-                Diversifizieren Sie immer Ihr Portfolio.
-              </p>
-            </div>
-          </div>
-        </CardContent>
+            </CardContent>
           </Card>
         </TabsContent>
 
@@ -356,9 +287,69 @@ export function SimplifiedAnalysisTab({ selectedStock }: SimplifiedAnalysisTabPr
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center text-muted-foreground p-8">
-                <Brain className="h-12 w-12 mx-auto mb-4 text-purple-600" />
-                <p>Modell-Erklärungen werden hier angezeigt...</p>
+              <div className="space-y-6">
+                {data.mainConcerns
+                  .filter((concern: ConcernData) => concern.category === "KI-Modell")
+                  .map((concern: ConcernData, index: number) => (
+                  <div key={index} className="border-l-4 border-purple-500/30 pl-4 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Brain className="h-5 w-5 text-purple-600" />
+                      <h4 className="font-semibold text-lg">{concern.category}</h4>
+                      <div className="flex items-center gap-1">
+                        {getImpactIcon(concern.impact)}
+                        <span className={`text-sm font-medium ${getImpactColor(concern.impact)}`}>
+                          {concern.impact} Auswirkung
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div>
+                        <h5 className="font-medium text-foreground mb-2">Was bedeutet das?</h5>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {concern.explanation}
+                        </p>
+                      </div>
+                      
+                      <div className="bg-muted/50 p-3 rounded-lg">
+                        <h5 className="font-medium text-foreground mb-2 flex items-center gap-2">
+                          <Target className="h-4 w-4" />
+                          Was können Sie tun?
+                        </h5>
+                        <p className="text-sm text-muted-foreground">
+                          {concern.userAction}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Practical Recommendations for Model */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-green-600" />
+                Praktische Empfehlungen
+              </CardTitle>
+              <CardDescription>
+                Konkrete Handlungsempfehlungen für Ihre Investitionsentscheidung
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {data.recommendations.map((recommendation: string, index: number) => (
+                  <div key={index} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
+                    <div className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center mt-0.5">
+                      <span className="text-xs font-bold text-primary">{index + 1}</span>
+                    </div>
+                    <p className="text-sm leading-relaxed text-foreground">
+                      {recommendation}
+                    </p>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
@@ -377,9 +368,84 @@ export function SimplifiedAnalysisTab({ selectedStock }: SimplifiedAnalysisTabPr
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center text-muted-foreground p-8">
-                <Users className="h-12 w-12 mx-auto mb-4 text-green-600" />
-                <p>Menschliche Faktoren werden hier angezeigt...</p>
+              <div className="space-y-6">
+                {data.mainConcerns
+                  .filter((concern: ConcernData) => concern.category === "Marktmeinung")
+                  .map((concern: ConcernData, index: number) => (
+                  <div key={index} className="border-l-4 border-green-500/30 pl-4 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Users className="h-5 w-5 text-green-600" />
+                      <h4 className="font-semibold text-lg">{concern.category}</h4>
+                      <div className="flex items-center gap-1">
+                        {getImpactIcon(concern.impact)}
+                        <span className={`text-sm font-medium ${getImpactColor(concern.impact)}`}>
+                          {concern.impact} Auswirkung
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div>
+                        <h5 className="font-medium text-foreground mb-2">Was bedeutet das?</h5>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {concern.explanation}
+                        </p>
+                      </div>
+                      
+                      <div className="bg-muted/50 p-3 rounded-lg">
+                        <h5 className="font-medium text-foreground mb-2 flex items-center gap-2">
+                          <Target className="h-4 w-4" />
+                          Was können Sie tun?
+                        </h5>
+                        <p className="text-sm text-muted-foreground">
+                          {concern.userAction}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Risk Assessment Summary */}
+          <Card className="border-l-4 border-l-primary">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5 text-orange-600" />
+                Risiko-Einschätzung Zusammenfassung
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="font-medium">Gesamtrisiko für {selectedStock}:</span>
+                  <Badge className={getRiskColor(data.riskLevel)} variant="outline">
+                    {data.riskLevel}
+                  </Badge>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                  <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                    <div className="text-sm font-medium text-green-600">Niedrig-Mittel</div>
+                    <p className="text-xs text-muted-foreground mt-1">Für konservative Anleger geeignet</p>
+                  </div>
+                  <div className="p-4 bg-yellow-500/5 border border-yellow-500/20 rounded-lg">
+                    <div className="text-sm font-medium text-yellow-600">Mittel-Hoch</div>
+                    <p className="text-xs text-muted-foreground mt-1">Erfordert aktive Überwachung</p>
+                  </div>
+                  <div className="p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+                    <div className="text-sm font-medium text-red-600">Sehr Hoch</div>
+                    <p className="text-xs text-muted-foreground mt-1">Nur für erfahrene Trader</p>
+                  </div>
+                </div>
+                
+                <div className="text-center text-sm text-muted-foreground">
+                  <p>
+                    Investieren Sie nur Geld, dessen Verlust Sie verschmerzen können. 
+                    Diversifizieren Sie immer Ihr Portfolio.
+                  </p>
+                </div>
               </div>
             </CardContent>
           </Card>
