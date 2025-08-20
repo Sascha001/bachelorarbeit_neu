@@ -45,7 +45,7 @@ export default function RootLayout({
                 clearTimeout(scrollTimer);
                 scrollTimer = setTimeout(() => {
                   document.documentElement.classList.remove('scrolling');
-                }, 1500);
+                }, 1200);
               }
               
               window.addEventListener('scroll', handleScroll, { passive: true });
