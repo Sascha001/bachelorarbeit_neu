@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useState, useEffect } from "react"
+import 'katex/dist/katex.min.css'
+import { InlineMath, BlockMath } from 'react-katex'
 import { 
   Database, 
   Brain, 
@@ -218,21 +220,75 @@ const getInfoBoxContent = (metric: string, stock?: string) => {
   return infoContent[metric] || { title: "Information", content: "Keine Informationen verfügbar." }
 }
 
-// Tooltip content for individual parameters with mathematical formatting
-const getParameterTooltip = (param: string, stock: string) => {
+// Mathematical Formula Component for Tooltips
+const FormulaTooltip = ({ param, stock }: { param: string; stock: string }) => {
   const data = getFundamentalDataParams(stock)
-  const tooltips: Record<string, string> = {
-    completeness: `**Vollständigkeit (C = ${data.completeness.value})**\n\nIdee: Sind alle Pflichtfelder verfügbar?\n\nFormel:\n                    Fehlende Werte\nC = 1 − ─────────────────────────\n            Gesamte erwartete Werte\n\nAktuell:\n              ${data.completeness.missingValues}\nC = 1 − ──── = ${data.completeness.value}\n             ${data.completeness.totalValues}\n\nAuswirkung: ${data.completeness.missingValues} fehlende Werte reduzieren die Datenqualität um ${((1 - data.completeness.value) * 100).toFixed(1)}%.`,
-    
-    timeliness: `**Aktualität (T = ${data.timeliness.value})**\n\nIdee: Wie zeitnah sind die Daten verfügbar?\n\nFormel:\n                          Verzögerung in Tagen\nT = max(0, 1 − ─────────────────────────)\n                            Maximaltoleranz\n\nAktuell:\n                    ${data.timeliness.delayDays}\nT = max(0, 1 − ────) = ${data.timeliness.value}\n                   ${data.timeliness.maxTolerance}\n\nAuswirkung: ${data.timeliness.delayDays} Tage Verzögerung reduzieren die Aktualität um ${((1 - data.timeliness.value) * 100).toFixed(1)}%.`,
-    
-    consistency: `**Konsistenz (K = ${data.consistency.value})**\n\nIdee: Stimmen Daten über verschiedene Quellen überein?\n\nFormel:\n                    Durchschnittliche Abweichung\nK = 1 − ──────────────────────────────────\n                           Referenzwert\n\nAktuell:\n              ${data.consistency.avgDeviation}\nK = 1 − ──────── = ${data.consistency.value}\n             ${data.consistency.referenceValue}\n\nAuswirkung: Geringe Abweichung zwischen Quellen sorgt für hohe Verlässlichkeit.`,
-    
-    accuracy: `**Genauigkeit (A = ${data.accuracy.value})**\n\nIdee: Stimmen Daten mit offiziellen Quellen überein?\n\nFormel:\n                  Abweichung von offizieller Quelle\nA = 1 − ─────────────────────────────────────\n                          Referenzwert\n\nAktuell:\n              ${data.accuracy.deviation}\nA = 1 − ──────── = ${data.accuracy.value}\n             ${data.accuracy.officialValue}\n\nAuswirkung: ${((1 - data.accuracy.value) * 100).toFixed(1)}% Abweichung von SEC-Filings bedeutet moderate Ungenauigkeit.`,
-    
-    stability: `**Stabilität (S = ${data.stability.value})**\n\nIdee: Werden Daten häufig nachträglich korrigiert?\n\nFormel:\n                     Anzahl Revisionen\nS = 1 − ────────────────────────────────\n              Gesamte Anzahl Datenpunkte\n\nAktuell:\n              ${data.stability.revisions}\nS = 1 − ────── = ${data.stability.value}\n             ${data.stability.totalDataPoints}\n\nAuswirkung: ${data.stability.revisions} nachträgliche Korrekturen reduzieren die Verlässlichkeit um ${((1 - data.stability.value) * 100).toFixed(1)}%.`
+  
+  const formulas = {
+    completeness: {
+      title: `Vollständigkeit (C = ${data.completeness.value})`,
+      description: "Sind alle Pflichtfelder verfügbar?",
+      formula: "C = 1 - \\frac{\\text{Fehlende Werte}}{\\text{Gesamte erwartete Werte}}",
+      calculation: `C = 1 - \\frac{${data.completeness.missingValues}}{${data.completeness.totalValues}} = ${data.completeness.value}`,
+      impact: `${data.completeness.missingValues} fehlende Werte reduzieren die Datenqualität um ${((1 - data.completeness.value) * 100).toFixed(1)}%.`
+    },
+    timeliness: {
+      title: `Aktualität (T = ${data.timeliness.value})`,
+      description: "Wie zeitnah sind die Daten verfügbar?",
+      formula: "T = \\max\\left(0, 1 - \\frac{\\text{Verzögerung in Tagen}}{\\text{Maximaltoleranz}}\\right)",
+      calculation: `T = \\max\\left(0, 1 - \\frac{${data.timeliness.delayDays}}{${data.timeliness.maxTolerance}}\\right) = ${data.timeliness.value}`,
+      impact: `${data.timeliness.delayDays} Tage Verzögerung reduzieren die Aktualität um ${((1 - data.timeliness.value) * 100).toFixed(1)}%.`
+    },
+    consistency: {
+      title: `Konsistenz (K = ${data.consistency.value})`,
+      description: "Stimmen Daten über verschiedene Quellen überein?",
+      formula: "K = 1 - \\frac{\\text{Durchschnittliche Abweichung}}{\\text{Referenzwert}}",
+      calculation: `K = 1 - \\frac{${data.consistency.avgDeviation}}{${data.consistency.referenceValue}} = ${data.consistency.value}`,
+      impact: "Geringe Abweichung zwischen Quellen sorgt für hohe Verlässlichkeit."
+    },
+    accuracy: {
+      title: `Genauigkeit (A = ${data.accuracy.value})`,
+      description: "Stimmen Daten mit offiziellen Quellen überein?",
+      formula: "A = 1 - \\frac{\\text{Abweichung von offizieller Quelle}}{\\text{Referenzwert}}",
+      calculation: `A = 1 - \\frac{${data.accuracy.deviation}}{${data.accuracy.officialValue}} = ${data.accuracy.value}`,
+      impact: `${((1 - data.accuracy.value) * 100).toFixed(1)}% Abweichung von SEC-Filings bedeutet moderate Ungenauigkeit.`
+    },
+    stability: {
+      title: `Stabilität (S = ${data.stability.value})`,
+      description: "Werden Daten häufig nachträglich korrigiert?",
+      formula: "S = 1 - \\frac{\\text{Anzahl Revisionen}}{\\text{Gesamte Anzahl Datenpunkte}}",
+      calculation: `S = 1 - \\frac{${data.stability.revisions}}{${data.stability.totalDataPoints}} = ${data.stability.value}`,
+      impact: `${data.stability.revisions} nachträgliche Korrekturen reduzieren die Verlässlichkeit um ${((1 - data.stability.value) * 100).toFixed(1)}%.`
+    }
   }
-  return tooltips[param] || "Keine Informationen verfügbar."
+  
+  const formula = formulas[param as keyof typeof formulas]
+  if (!formula) return <div>Keine Informationen verfügbar.</div>
+  
+  return (
+    <div className="space-y-3 max-w-sm">
+      <div className="font-semibold text-sm">{formula.title}</div>
+      <div className="text-xs text-muted-foreground">{formula.description}</div>
+      
+      <div className="space-y-2">
+        <div className="text-xs font-medium">Formel:</div>
+        <div className="bg-white p-2 rounded border">
+          <BlockMath math={formula.formula} />
+        </div>
+      </div>
+      
+      <div className="space-y-2">
+        <div className="text-xs font-medium">Aktuell:</div>
+        <div className="bg-white p-2 rounded border">
+          <BlockMath math={formula.calculation} />
+        </div>
+      </div>
+      
+      <div className="text-xs text-muted-foreground border-t pt-2">
+        <strong>Auswirkung:</strong> {formula.impact}
+      </div>
+    </div>
+  )
 }
 
 export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProps) {
@@ -641,10 +697,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <Info className="h-4 w-4 text-muted-foreground" />
                                     </button>
                                   </TooltipTrigger>
-                                  <TooltipContent className="max-w-sm">
-                                    <div className="whitespace-pre-line text-sm">
-                                      {getParameterTooltip('completeness', selectedStock)}
-                                    </div>
+                                  <TooltipContent className="max-w-lg">
+                                    <FormulaTooltip param="completeness" stock={selectedStock} />
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(params.completeness.value * 100).toFixed(1)}%</Badge>
@@ -664,10 +718,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <Info className="h-4 w-4 text-muted-foreground" />
                                     </button>
                                   </TooltipTrigger>
-                                  <TooltipContent className="max-w-sm">
-                                    <div className="whitespace-pre-line text-sm">
-                                      {getParameterTooltip('timeliness', selectedStock)}
-                                    </div>
+                                  <TooltipContent className="max-w-lg">
+                                    <FormulaTooltip param="timeliness" stock={selectedStock} />
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(params.timeliness.value * 100).toFixed(1)}%</Badge>
@@ -687,10 +739,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <Info className="h-4 w-4 text-muted-foreground" />
                                     </button>
                                   </TooltipTrigger>
-                                  <TooltipContent className="max-w-sm">
-                                    <div className="whitespace-pre-line text-sm">
-                                      {getParameterTooltip('consistency', selectedStock)}
-                                    </div>
+                                  <TooltipContent className="max-w-lg">
+                                    <FormulaTooltip param="consistency" stock={selectedStock} />
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(params.consistency.value * 100).toFixed(1)}%</Badge>
@@ -710,10 +760,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <Info className="h-4 w-4 text-muted-foreground" />
                                     </button>
                                   </TooltipTrigger>
-                                  <TooltipContent className="max-w-sm">
-                                    <div className="whitespace-pre-line text-sm">
-                                      {getParameterTooltip('accuracy', selectedStock)}
-                                    </div>
+                                  <TooltipContent className="max-w-lg">
+                                    <FormulaTooltip param="accuracy" stock={selectedStock} />
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(params.accuracy.value * 100).toFixed(1)}%</Badge>
@@ -733,10 +781,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <Info className="h-4 w-4 text-muted-foreground" />
                                     </button>
                                   </TooltipTrigger>
-                                  <TooltipContent className="max-w-sm">
-                                    <div className="whitespace-pre-line text-sm">
-                                      {getParameterTooltip('stability', selectedStock)}
-                                    </div>
+                                  <TooltipContent className="max-w-lg">
+                                    <FormulaTooltip param="stability" stock={selectedStock} />
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(params.stability.value * 100).toFixed(1)}%</Badge>
@@ -749,24 +795,19 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
 
                           {/* Formula Explanation */}
                           <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                            <h4 className="font-medium mb-2 text-green-700">Gesamtberechnung</h4>
-                            <div className="text-sm text-muted-foreground space-y-3 font-mono">
-                              <div className="text-center">
-                                <div className="text-base font-medium">
-                                                    C + T + K + A + S
-                                </div>
-                                <div className="border-t border-gray-400 mt-1 mb-1">
-                                                          5
+                            <h4 className="font-medium mb-4 text-green-700">Gesamtberechnung</h4>
+                            
+                            <div className="space-y-4">
+                              <div className="bg-white p-3 rounded border">
+                                <div className="text-center">
+                                  <BlockMath math="\\text{Fundamentaldaten-Score} = \\frac{C + T + K + A + S}{5}" />
                                 </div>
                               </div>
-                              <div className="text-center text-xs">
-                                <div>
-                                  {(params.completeness.value * 100).toFixed(1)} + {(params.timeliness.value * 100).toFixed(1)} + {(params.consistency.value * 100).toFixed(1)} + {(params.accuracy.value * 100).toFixed(1)} + {(params.stability.value * 100).toFixed(1)}
+                              
+                              <div className="bg-white p-3 rounded border">
+                                <div className="text-center">
+                                  <BlockMath math={`\\text{Aktuell} = \\frac{${(params.completeness.value * 100).toFixed(1)} + ${(params.timeliness.value * 100).toFixed(1)} + ${(params.consistency.value * 100).toFixed(1)} + ${(params.accuracy.value * 100).toFixed(1)} + ${(params.stability.value * 100).toFixed(1)}}{5} = ${overallScore}\\%`} />
                                 </div>
-                                <div className="border-t border-gray-400 mt-1 mb-1">
-                                                                    5
-                                </div>
-                                <div className="text-base font-bold text-green-700">= {overallScore}%</div>
                               </div>
                             </div>
                           </div>
