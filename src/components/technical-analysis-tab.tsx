@@ -5,8 +5,24 @@ import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { useState } from "react"
+import React, { useState } from "react"
 import 'katex/dist/katex.min.css'
+
+// Custom CSS for formula scaling
+const formulaStyles = `
+  .formula-container .katex {
+    font-size: 0.9rem !important;
+  }
+  .formula-container .katex .frac-line {
+    border-bottom-width: 0.08em !important;
+  }
+  .formula-container-small .katex {
+    font-size: 0.8rem !important;
+  }
+  .formula-container-large .katex {
+    font-size: 1rem !important;
+  }
+`
 import { BlockMath } from 'react-katex'
 import { 
   Database, 
@@ -272,15 +288,19 @@ const FormulaTooltip = ({ param, stock }: { param: string; stock: string }) => {
       
       <div className="space-y-2">
         <div className="text-xs font-medium">Formel:</div>
-        <div className="bg-white p-2 rounded border text-black">
-          <BlockMath math={formula.formula} />
+        <div className="bg-white p-2 rounded border text-black overflow-hidden formula-container">
+          <div className="flex items-center justify-center min-h-[60px]">
+            <BlockMath math={formula.formula} />
+          </div>
         </div>
       </div>
       
       <div className="space-y-2">
         <div className="text-xs font-medium">Aktuell:</div>
-        <div className="bg-white p-2 rounded border text-black">
-          <BlockMath math={formula.calculation} />
+        <div className="bg-white p-2 rounded border text-black overflow-hidden formula-container-small">
+          <div className="flex items-center justify-center min-h-[50px]">
+            <BlockMath math={formula.calculation} />
+          </div>
         </div>
       </div>
       
@@ -295,6 +315,17 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
   const data = getTechnicalData(selectedStock)
   const [activeInfoBox, setActiveInfoBox] = useState<string | null>(null)
   const [isInfoBoxVisible, setIsInfoBoxVisible] = useState(false)
+
+  // Inject custom CSS for formula scaling
+  React.useEffect(() => {
+    const styleElement = document.createElement('style')
+    styleElement.textContent = formulaStyles
+    document.head.appendChild(styleElement)
+    
+    return () => {
+      document.head.removeChild(styleElement)
+    }
+  }, [])
   
   const handleInfoClick = (metric: string) => {
     if (activeInfoBox === metric) {
@@ -798,14 +829,14 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             <h4 className="font-medium mb-4 text-green-700">Gesamtberechnung</h4>
                             
                             <div className="space-y-4">
-                              <div className="bg-white p-3 rounded border text-black">
-                                <div className="text-center">
+                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
+                                <div className="flex items-center justify-center min-h-[70px]">
                                   <BlockMath math="\\text{Fundamentaldaten-Score} = \\frac{C + T + K + A + S}{5}" />
                                 </div>
                               </div>
                               
-                              <div className="bg-white p-3 rounded border text-black">
-                                <div className="text-center">
+                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
+                                <div className="flex items-center justify-center min-h-[60px]">
                                   <BlockMath math={`\\text{Aktuell} = \\frac{${(params.completeness.value * 100).toFixed(1)} + ${(params.timeliness.value * 100).toFixed(1)} + ${(params.consistency.value * 100).toFixed(1)} + ${(params.accuracy.value * 100).toFixed(1)} + ${(params.stability.value * 100).toFixed(1)}}{5} = ${overallScore}\\%`} />
                                 </div>
                               </div>
