@@ -5,9 +5,9 @@ import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import 'katex/dist/katex.min.css'
-import { InlineMath, BlockMath } from 'react-katex'
+import { BlockMath } from 'react-katex'
 import { 
   Database, 
   Brain, 
@@ -198,7 +198,7 @@ const getFundamentalDataParams = (stock: string): FundamentalDataParams => {
 }
 
 // Info box content mapping
-const getInfoBoxContent = (metric: string, stock?: string) => {
+const getInfoBoxContent = (metric: string) => {
   const infoContent: Record<string, { title: string; content: string }> = {
     fundamentalData: {
       title: "Fundamentaldaten-Qualität – Technische Dimensionen",
@@ -651,7 +651,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6 pb-4 border-b">
                   <h3 className="text-lg font-semibold text-foreground">
-                    {getInfoBoxContent(activeInfoBox, selectedStock).title}
+                    {getInfoBoxContent(activeInfoBox).title}
                   </h3>
                   <button 
                     onClick={closeInfoBox}
@@ -665,7 +665,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                 <div className="flex-1 overflow-y-auto">
                   <div className="space-y-4">
                     <p className="text-muted-foreground leading-relaxed">
-                      {getInfoBoxContent(activeInfoBox, selectedStock).content}
+                      {getInfoBoxContent(activeInfoBox).content}
                     </p>
                     
                     {/* Fundamentaldaten detailed parameters */}
