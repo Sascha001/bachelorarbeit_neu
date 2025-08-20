@@ -34,6 +34,24 @@ export default function RootLayout({
         className={`${plusJakartaSans.variable} ${lora.variable} ${ibmPlexMono.variable} font-sans antialiased`}
       >
         {children}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              let scrollTimer = null;
+              
+              function handleScroll() {
+                document.documentElement.classList.add('scrolling');
+                
+                clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(() => {
+                  document.documentElement.classList.remove('scrolling');
+                }, 1500);
+              }
+              
+              window.addEventListener('scroll', handleScroll, { passive: true });
+            `,
+          }}
+        />
       </body>
     </html>
   );
