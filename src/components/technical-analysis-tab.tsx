@@ -3,6 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import React, { useState } from "react"
@@ -299,8 +300,7 @@ const getInfoBoxContent = (metric: string) => {
     },
     timeSeriesIntegrity: {
       title: "Zeitreihen-Integrität Berechnung",
-      content: "Die Zeitreihen-Integrität bewertet die Qualität und Vollständigkeit von Kursdaten über die Zeit. Sie berücksichtigt vier Hauptdimensionen: Vollständigkeit (ob alle Zeitpunkte vorhanden sind), Ausreißer-Freiheit (Erkennung von Datenfehlern), Revision-Stabilität (Konsistenz historischer Korrekturen) und Kontinuität (gleichmäßige Zeitverteilung ohne Gaps).",
-      parameters: ["C", "O", "R", "K"]
+      content: "Die Zeitreihen-Integrität bewertet die Qualität und Vollständigkeit von Kursdaten über die Zeit. Sie berücksichtigt vier Hauptdimensionen: Vollständigkeit (ob alle Zeitpunkte vorhanden sind), Ausreißer-Freiheit (Erkennung von Datenfehlern), Revision-Stabilität (Konsistenz historischer Korrekturen) und Kontinuität (gleichmäßige Zeitverteilung ohne Gaps)."
     },
     tradingVolume: {
       title: "Handelsvolumen-Verteilung Berechnung",
@@ -957,7 +957,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     {/* Time Series Integrity Details */}
                     {activeInfoBox === 'timeSeriesIntegrity' && (() => {
                       const params = getTimeSeriesIntegrityParams(selectedStock)
-                      const overallScore = ((params.completeness.value + params.outlierFreedom.value + params.revisionStability.value + params.continuity.value) / 4 * 100).toFixed(1)
+                      const overallScoreNum = (params.completeness.value + params.outlierFreedom.value + params.revisionStability.value + params.continuity.value) / 4 * 100
+                      const overallScore = overallScoreNum.toFixed(1)
                       
                       return (
                         <>
@@ -1092,7 +1093,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
                             <div className="mt-3 space-y-1 text-sm text-muted-foreground">
                               <p>Mit gleichen Gewichten: w₁ = w₂ = w₃ = w₄ = 0.25</p>
-                              <p>Berechnung: Q_time = (0.25×{params.completeness.value} + 0.25×{params.outlierFreedom.value} + 0.25×{params.revisionStability.value} + 0.25×{params.continuity.value}) = {(overallScore/100).toFixed(3)} = {overallScore}%</p>
+                              <p>Berechnung: Q_time = (0.25×{params.completeness.value} + 0.25×{params.outlierFreedom.value} + 0.25×{params.revisionStability.value} + 0.25×{params.continuity.value}) = {(overallScoreNum/100).toFixed(3)} = {overallScore}%</p>
                             </div>
                           </div>
                         </>
