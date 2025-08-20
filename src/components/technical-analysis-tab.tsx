@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { 
   Database, 
   Brain, 
@@ -182,13 +182,22 @@ const getInfoBoxContent = (metric: string) => {
 export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProps) {
   const data = getTechnicalData(selectedStock)
   const [activeInfoBox, setActiveInfoBox] = useState<string | null>(null)
+  const [isInfoBoxVisible, setIsInfoBoxVisible] = useState(false)
   
   const handleInfoClick = (metric: string) => {
-    setActiveInfoBox(activeInfoBox === metric ? null : metric)
+    if (activeInfoBox === metric) {
+      setIsInfoBoxVisible(false)
+      setTimeout(() => setActiveInfoBox(null), 300) // Wait for animation
+    } else {
+      setActiveInfoBox(metric)
+      // Small delay to ensure DOM update before animation
+      setTimeout(() => setIsInfoBoxVisible(true), 10)
+    }
   }
 
   const closeInfoBox = () => {
-    setActiveInfoBox(null)
+    setIsInfoBoxVisible(false)
+    setTimeout(() => setActiveInfoBox(null), 300) // Wait for animation
   }
   
   return (
@@ -523,7 +532,9 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
             />
             
             {/* Info Box sliding from right */}
-            <div className="fixed right-0 top-0 h-full w-96 bg-background border-l shadow-2xl z-50 transform transition-transform duration-300 ease-in-out">
+            <div className={`fixed right-0 top-0 h-full w-96 bg-background border-l shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
+              isInfoBoxVisible ? 'translate-x-0' : 'translate-x-full'
+            }`}>
               <div className="p-6 h-full flex flex-col">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6 pb-4 border-b">
