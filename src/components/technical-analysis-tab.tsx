@@ -251,6 +251,41 @@ const getFundamentalDataParams = (stock: string): FundamentalDataParams => {
   return params[stock] || params.AAPL
 }
 
+// Time Series Integrity Parameters Interface
+interface TimeSeriesIntegrityParams {
+  completeness: { value: number; missingTimepoints: number; expectedTimepoints: number };
+  outlierFreedom: { value: number; outliers: number; totalObservations: number };
+  revisionStability: { value: number; revisedValues: number; totalValues: number };
+  continuity: { value: number; gaps: number; totalIntervals: number };
+}
+
+const getTimeSeriesIntegrityParams = (stock: string): TimeSeriesIntegrityParams => {
+  const params: Record<string, TimeSeriesIntegrityParams> = {
+    // AAPL: Score should be 95% => (C + O + R + K) / 4 = 0.95
+    AAPL: {
+      completeness: { value: 0.98, missingTimepoints: 5, expectedTimepoints: 250 },     // C = 1 - (5/250) = 0.98
+      outlierFreedom: { value: 0.988, outliers: 3, totalObservations: 250 },          // O = 1 - (3/250) = 0.988
+      revisionStability: { value: 0.992, revisedValues: 2, totalValues: 250 },        // R = 1 - (2/250) = 0.992
+      continuity: { value: 1.0, gaps: 0, totalIntervals: 250 }                        // K = 1 - (0/250) = 1.0
+    },
+    // MSFT: Score should be 89% => (C + O + R + K) / 4 = 0.89  
+    MSFT: {
+      completeness: { value: 0.96, missingTimepoints: 10, expectedTimepoints: 250 },   // C = 1 - (10/250) = 0.96
+      outlierFreedom: { value: 0.92, outliers: 20, totalObservations: 250 },          // O = 1 - (20/250) = 0.92
+      revisionStability: { value: 0.896, revisedValues: 26, totalValues: 250 },       // R = 1 - (26/250) = 0.896
+      continuity: { value: 0.784, gaps: 54, totalIntervals: 250 }                     // K = 1 - (54/250) = 0.784
+    },
+    // TSLA: Score should be 82% => (C + O + R + K) / 4 = 0.82
+    TSLA: {
+      completeness: { value: 0.88, missingTimepoints: 30, expectedTimepoints: 250 },   // C = 1 - (30/250) = 0.88
+      outlierFreedom: { value: 0.84, outliers: 40, totalObservations: 250 },          // O = 1 - (40/250) = 0.84
+      revisionStability: { value: 0.78, revisedValues: 55, totalValues: 250 },        // R = 1 - (55/250) = 0.78
+      continuity: { value: 0.78, gaps: 55, totalIntervals: 250 }                      // K = 1 - (55/250) = 0.78
+    }
+  }
+  return params[stock] || params.AAPL
+}
+
 // Info box content mapping
 const getInfoBoxContent = (metric: string) => {
   const infoContent: Record<string, { title: string; content: string }> = {
@@ -264,7 +299,8 @@ const getInfoBoxContent = (metric: string) => {
     },
     timeSeriesIntegrity: {
       title: "Zeitreihen-Integrität Berechnung",
-      content: "Detaillierte Informationen zur Berechnung der Zeitreihen-Integrität kommen hier..."
+      content: "Die Zeitreihen-Integrität bewertet die Qualität und Vollständigkeit von Kursdaten über die Zeit. Sie berücksichtigt vier Hauptdimensionen: Vollständigkeit (ob alle Zeitpunkte vorhanden sind), Ausreißer-Freiheit (Erkennung von Datenfehlern), Revision-Stabilität (Konsistenz historischer Korrekturen) und Kontinuität (gleichmäßige Zeitverteilung ohne Gaps).",
+      parameters: ["C", "O", "R", "K"]
     },
     tradingVolume: {
       title: "Handelsvolumen-Verteilung Berechnung",
@@ -275,46 +311,80 @@ const getInfoBoxContent = (metric: string) => {
 }
 
 // Mathematical Formula Component for Tooltips
-const FormulaTooltip = ({ param, stock }: { param: string; stock: string }) => {
-  const data = getFundamentalDataParams(stock)
+const FormulaTooltip = ({ param, stock, type = "fundamental" }: { param: string; stock: string; type?: "fundamental" | "timeSeries" }) => {
+  const fundamentalData = getFundamentalDataParams(stock)
+  const timeSeriesData = getTimeSeriesIntegrityParams(stock)
   
-  const formulas = {
+  const fundamentalFormulas = {
     completeness: {
-      title: `Vollständigkeit (C = ${data.completeness.value})`,
+      title: `Vollständigkeit (C = ${fundamentalData.completeness.value})`,
       description: "Sind alle Pflichtfelder verfügbar?",
       formula: "C = 1 - \\frac{\\text{Fehlende Werte}}{\\text{Gesamte erwartete Werte}}",
-      calculation: `C = 1 - \\frac{${data.completeness.missingValues}}{${data.completeness.totalValues}} = ${data.completeness.value}`,
-      impact: `${data.completeness.missingValues} fehlende Werte reduzieren die Datenqualität um ${((1 - data.completeness.value) * 100).toFixed(1)}%.`
+      calculation: `C = 1 - \\frac{${fundamentalData.completeness.missingValues}}{${fundamentalData.completeness.totalValues}} = ${fundamentalData.completeness.value}`,
+      impact: `${fundamentalData.completeness.missingValues} fehlende Werte reduzieren die Datenqualität um ${((1 - fundamentalData.completeness.value) * 100).toFixed(1)}%.`
     },
     timeliness: {
-      title: `Aktualität (T = ${data.timeliness.value})`,
+      title: `Aktualität (T = ${fundamentalData.timeliness.value})`,
       description: "Wie zeitnah sind die Daten verfügbar?",
       formula: "T = \\max\\left(0, 1 - \\frac{\\text{Verzögerung in Tagen}}{\\text{Maximaltoleranz}}\\right)",
-      calculation: `T = \\max\\left(0, 1 - \\frac{${data.timeliness.delayDays}}{${data.timeliness.maxTolerance}}\\right) = ${data.timeliness.value}`,
-      impact: `${data.timeliness.delayDays} Tage Verzögerung reduzieren die Aktualität um ${((1 - data.timeliness.value) * 100).toFixed(1)}%.`
+      calculation: `T = \\max\\left(0, 1 - \\frac{${fundamentalData.timeliness.delayDays}}{${fundamentalData.timeliness.maxTolerance}}\\right) = ${fundamentalData.timeliness.value}`,
+      impact: `${fundamentalData.timeliness.delayDays} Tage Verzögerung reduzieren die Aktualität um ${((1 - fundamentalData.timeliness.value) * 100).toFixed(1)}%.`
     },
     consistency: {
-      title: `Konsistenz (K = ${data.consistency.value})`,
+      title: `Konsistenz (K = ${fundamentalData.consistency.value})`,
       description: "Stimmen Daten über verschiedene Quellen überein?",
       formula: "K = 1 - \\frac{\\text{Durchschnittliche Abweichung}}{\\text{Referenzwert}}",
-      calculation: `K = 1 - \\frac{${data.consistency.avgDeviation}}{${data.consistency.referenceValue}} = ${data.consistency.value}`,
+      calculation: `K = 1 - \\frac{${fundamentalData.consistency.avgDeviation}}{${fundamentalData.consistency.referenceValue}} = ${fundamentalData.consistency.value}`,
       impact: "Geringe Abweichung zwischen Quellen sorgt für hohe Verlässlichkeit."
     },
     accuracy: {
-      title: `Genauigkeit (A = ${data.accuracy.value})`,
+      title: `Genauigkeit (A = ${fundamentalData.accuracy.value})`,
       description: "Stimmen Daten mit offiziellen Quellen überein?",
       formula: "A = 1 - \\frac{\\text{Abweichung von offizieller Quelle}}{\\text{Referenzwert}}",
-      calculation: `A = 1 - \\frac{${data.accuracy.deviation}}{${data.accuracy.officialValue}} = ${data.accuracy.value}`,
-      impact: `${((1 - data.accuracy.value) * 100).toFixed(1)}% Abweichung von SEC-Filings bedeutet moderate Ungenauigkeit.`
+      calculation: `A = 1 - \\frac{${fundamentalData.accuracy.deviation}}{${fundamentalData.accuracy.officialValue}} = ${fundamentalData.accuracy.value}`,
+      impact: `${((1 - fundamentalData.accuracy.value) * 100).toFixed(1)}% Abweichung von SEC-Filings bedeutet moderate Ungenauigkeit.`
     },
     stability: {
-      title: `Stabilität (S = ${data.stability.value})`,
+      title: `Stabilität (S = ${fundamentalData.stability.value})`,
       description: "Werden Daten häufig nachträglich korrigiert?",
       formula: "S = 1 - \\frac{\\text{Anzahl Revisionen}}{\\text{Gesamte Anzahl Datenpunkte}}",
-      calculation: `S = 1 - \\frac{${data.stability.revisions}}{${data.stability.totalDataPoints}} = ${data.stability.value}`,
-      impact: `${data.stability.revisions} nachträgliche Korrekturen reduzieren die Verlässlichkeit um ${((1 - data.stability.value) * 100).toFixed(1)}%.`
+      calculation: `S = 1 - \\frac{${fundamentalData.stability.revisions}}{${fundamentalData.stability.totalDataPoints}} = ${fundamentalData.stability.value}`,
+      impact: `${fundamentalData.stability.revisions} nachträgliche Korrekturen reduzieren die Verlässlichkeit um ${((1 - fundamentalData.stability.value) * 100).toFixed(1)}%.`
     }
   }
+
+  const timeSeriesFormulas = {
+    completeness: {
+      title: `Vollständigkeit (C = ${timeSeriesData.completeness.value})`,
+      description: "Sind alle erwarteten Zeitpunkte vorhanden?",
+      formula: "C = 1 - \\frac{\\text{fehlende Zeitpunkte}}{\\text{gesamte erwartete Zeitpunkte}}",
+      calculation: `C = 1 - \\frac{${timeSeriesData.completeness.missingTimepoints}}{${timeSeriesData.completeness.expectedTimepoints}} = ${timeSeriesData.completeness.value}`,
+      impact: `${timeSeriesData.completeness.missingTimepoints} fehlende Handelstage von ${timeSeriesData.completeness.expectedTimepoints} reduzieren die Vollständigkeit um ${((1 - timeSeriesData.completeness.value) * 100).toFixed(1)}%.`
+    },
+    outlierFreedom: {
+      title: `Ausreißer-Freiheit (O = ${timeSeriesData.outlierFreedom.value})`,
+      description: "Gibt es unplausible Sprünge oder Werte?",
+      formula: "O = 1 - \\frac{\\text{Anzahl Ausreißer}}{\\text{Gesamtanzahl Beobachtungen}}",
+      calculation: `O = 1 - \\frac{${timeSeriesData.outlierFreedom.outliers}}{${timeSeriesData.outlierFreedom.totalObservations}} = ${timeSeriesData.outlierFreedom.value}`,
+      impact: `${timeSeriesData.outlierFreedom.outliers} Ausreißer bei ${timeSeriesData.outlierFreedom.totalObservations} Handelstagen deuten auf Datenfeed-Fehler hin.`
+    },
+    revisionStability: {
+      title: `Revision-Stabilität (R = ${timeSeriesData.revisionStability.value})`,
+      description: "Werden historische Zeitreihen später korrigiert?",
+      formula: "R = 1 - \\frac{\\text{revidierte Werte}}{\\text{gesamte Werte}}",
+      calculation: `R = 1 - \\frac{${timeSeriesData.revisionStability.revisedValues}}{${timeSeriesData.revisionStability.totalValues}} = ${timeSeriesData.revisionStability.value}`,
+      impact: `${timeSeriesData.revisionStability.revisedValues} nachträgliche Korrekturen von ${timeSeriesData.revisionStability.totalValues} Werten zeigen Instabilität der Datenquelle.`
+    },
+    continuity: {
+      title: `Kontinuität (K = ${timeSeriesData.continuity.value})`,
+      description: "Ist die Serie gleichmäßig über die Zeit verteilt?",
+      formula: "K = 1 - \\frac{\\text{Anzahl an Gaps > Intervall}}{\\text{Gesamtanzahl Intervalle}}",
+      calculation: `K = 1 - \\frac{${timeSeriesData.continuity.gaps}}{${timeSeriesData.continuity.totalIntervals}} = ${timeSeriesData.continuity.value}`,
+      impact: `${timeSeriesData.continuity.gaps} Gaps in der Zeitreihe unterbrechen die Kontinuität der Datenversorgung.`
+    }
+  }
+
+  const formulas = type === "timeSeries" ? timeSeriesFormulas : fundamentalFormulas
   
   const formula = formulas[param as keyof typeof formulas]
   if (!formula) return <div>Keine Informationen verfügbar.</div>
@@ -884,8 +954,153 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       )
                     })()}
                     
+                    {/* Time Series Integrity Details */}
+                    {activeInfoBox === 'timeSeriesIntegrity' && (() => {
+                      const params = getTimeSeriesIntegrityParams(selectedStock)
+                      const overallScore = ((params.completeness.value + params.outlierFreedom.value + params.revisionStability.value + params.continuity.value) / 4 * 100).toFixed(1)
+                      
+                      return (
+                        <>
+                          {/* Overall Score */}
+                          <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                            <h4 className="font-semibold mb-2 text-primary">Gesamtscore: {overallScore}%</h4>
+                            <p className="text-sm text-muted-foreground">
+                              Durchschnitt aller 4 Dimensionen für {selectedStock}
+                            </p>
+                          </div>
+
+                          {/* Parameter Details */}
+                          <div className="space-y-4">
+                            <h4 className="font-medium text-foreground">Detaillierte Parameter-Aufschlüsselung:</h4>
+                            
+                            {/* Completeness */}
+                            <div className="p-3 bg-muted/30 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button variant="ghost" size="sm" className="h-auto p-1 text-primary hover:text-primary">
+                                        <span className="font-medium">C</span>
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="left" className="max-w-md p-0 border-0 bg-transparent shadow-none">
+                                      <div className="bg-popover border rounded-lg shadow-lg p-4 text-black">
+                                        <FormulaTooltip param="completeness" stock={selectedStock} type="timeSeries" />
+                                      </div>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                                <span className="text-sm font-medium">Vollständigkeit</span>
+                                <Badge variant="secondary" className="text-xs">{(params.completeness.value * 100).toFixed(1)}%</Badge>
+                              </div>
+                              <div className="formula-container text-black">
+                                <BlockMath>
+                                  {`C = 1 - \\frac{${params.completeness.missingTimepoints}}{${params.completeness.expectedTimepoints}} = ${params.completeness.value}`}
+                                </BlockMath>
+                              </div>
+                            </div>
+
+                            {/* Outlier Freedom */}
+                            <div className="p-3 bg-muted/30 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button variant="ghost" size="sm" className="h-auto p-1 text-primary hover:text-primary">
+                                        <span className="font-medium">O</span>
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="left" className="max-w-md p-0 border-0 bg-transparent shadow-none">
+                                      <div className="bg-popover border rounded-lg shadow-lg p-4 text-black">
+                                        <FormulaTooltip param="outlierFreedom" stock={selectedStock} type="timeSeries" />
+                                      </div>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                                <span className="text-sm font-medium">Ausreißer-Freiheit</span>
+                                <Badge variant="secondary" className="text-xs">{(params.outlierFreedom.value * 100).toFixed(1)}%</Badge>
+                              </div>
+                              <div className="formula-container text-black">
+                                <BlockMath>
+                                  {`O = 1 - \\frac{${params.outlierFreedom.outliers}}{${params.outlierFreedom.totalObservations}} = ${params.outlierFreedom.value}`}
+                                </BlockMath>
+                              </div>
+                            </div>
+
+                            {/* Revision Stability */}
+                            <div className="p-3 bg-muted/30 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button variant="ghost" size="sm" className="h-auto p-1 text-primary hover:text-primary">
+                                        <span className="font-medium">R</span>
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="left" className="max-w-md p-0 border-0 bg-transparent shadow-none">
+                                      <div className="bg-popover border rounded-lg shadow-lg p-4 text-black">
+                                        <FormulaTooltip param="revisionStability" stock={selectedStock} type="timeSeries" />
+                                      </div>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                                <span className="text-sm font-medium">Revision-Stabilität</span>
+                                <Badge variant="secondary" className="text-xs">{(params.revisionStability.value * 100).toFixed(1)}%</Badge>
+                              </div>
+                              <div className="formula-container text-black">
+                                <BlockMath>
+                                  {`R = 1 - \\frac{${params.revisionStability.revisedValues}}{${params.revisionStability.totalValues}} = ${params.revisionStability.value}`}
+                                </BlockMath>
+                              </div>
+                            </div>
+
+                            {/* Continuity */}
+                            <div className="p-3 bg-muted/30 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button variant="ghost" size="sm" className="h-auto p-1 text-primary hover:text-primary">
+                                        <span className="font-medium">K</span>
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="left" className="max-w-md p-0 border-0 bg-transparent shadow-none">
+                                      <div className="bg-popover border rounded-lg shadow-lg p-4 text-black">
+                                        <FormulaTooltip param="continuity" stock={selectedStock} type="timeSeries" />
+                                      </div>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                                <span className="text-sm font-medium">Kontinuität</span>
+                                <Badge variant="secondary" className="text-xs">{(params.continuity.value * 100).toFixed(1)}%</Badge>
+                              </div>
+                              <div className="formula-container text-black">
+                                <BlockMath>
+                                  {`K = 1 - \\frac{${params.continuity.gaps}}{${params.continuity.totalIntervals}} = ${params.continuity.value}`}
+                                </BlockMath>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Overall Formula */}
+                          <div className="mt-6 p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                            <h4 className="font-semibold mb-3 text-blue-700">Gesamtformel Zeitreihen-Integrität</h4>
+                            <div className="formula-container-large text-black">
+                              <BlockMath>
+                                {`Q_{time} = w_1 \\cdot C + w_2 \\cdot O + w_3 \\cdot R + w_4 \\cdot K`}
+                              </BlockMath>
+                            </div>
+                            <div className="mt-3 space-y-1 text-sm text-muted-foreground">
+                              <p>Mit gleichen Gewichten: w₁ = w₂ = w₃ = w₄ = 0.25</p>
+                              <p>Berechnung: Q_time = (0.25×{params.completeness.value} + 0.25×{params.outlierFreedom.value} + 0.25×{params.revisionStability.value} + 0.25×{params.continuity.value}) = {(overallScore/100).toFixed(3)} = {overallScore}%</p>
+                            </div>
+                          </div>
+                        </>
+                      )
+                    })()}
+                    
                     {/* Other metrics placeholder */}
-                    {activeInfoBox !== 'fundamentalData' && (
+                    {activeInfoBox !== 'fundamentalData' && activeInfoBox !== 'timeSeriesIntegrity' && (
                       <>
                         <div className="mt-8 p-4 bg-muted/30 rounded-lg">
                           <h4 className="font-medium mb-2 text-foreground">Berechnungsdetails</h4>
