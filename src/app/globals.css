@@ -181,103 +181,77 @@
     letter-spacing: var(--tracking-normal);
   }
   
-  /* VS Code style scrollbar - invisible by default with smooth fade transitions */
+  /* Hide native scrollbars completely - we'll use custom ones */
   html {
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
+    scrollbar-width: none; /* Firefox */
+    overflow: auto;
   }
   
   html::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+  
+  body {
+    scrollbar-width: none; /* Firefox */
+    overflow-y: auto;
+  }
+  
+  body::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+  
+  /* Custom VS Code scrollbar */
+  .vscode-scrollbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 100vh;
+    background: transparent;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events: none;
+    z-index: 9999;
+  }
+  
+  .vscode-scrollbar.visible {
+    opacity: 1;
+  }
+  
+  .vscode-scrollbar-thumb {
+    position: absolute;
+    width: 6px;
+    right: 2px;
+    background: linear-gradient(180deg, 
+      hsl(270 95% 75% / 0.4) 0%, 
+      hsl(280 80% 70% / 0.4) 50%, 
+      hsl(290 75% 65% / 0.4) 100%);
+    border-radius: 3px;
+    transition: all 0.2s ease-out;
+  }
+  
+  .vscode-scrollbar:hover .vscode-scrollbar-thumb {
     width: 8px;
-    transition: width 0.3s ease;
-  }
-  
-  html::-webkit-scrollbar-track {
-    background: transparent;
-    transition: background 0.4s ease;
-  }
-  
-  html::-webkit-scrollbar-thumb {
     background: linear-gradient(180deg, 
-      hsl(270 95% 75% / 0) 0%, 
-      hsl(280 80% 70% / 0) 50%, 
-      hsl(290 75% 65% / 0) 100%);
+      hsl(270 95% 75% / 0.8) 0%, 
+      hsl(280 80% 70% / 0.8) 50%, 
+      hsl(290 75% 65% / 0.8) 100%);
     border-radius: 4px;
-    border: none;
-    transition: background 0.4s ease, border-radius 0.3s ease, box-shadow 0.4s ease;
-    box-shadow: none;
   }
   
-  html::-webkit-scrollbar-corner {
-    background: transparent;
-  }
-  
-  /* Show scrollbar on hover over scrollbar area */
-  html::-webkit-scrollbar:hover {
-    width: 12px;
-  }
-  
-  html::-webkit-scrollbar-track:hover {
-    background: linear-gradient(180deg, hsl(270 20% 98% / 0.1) 0%, hsl(270 15% 95% / 0.1) 100%);
-  }
-  
-  html::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, hsl(270 95% 75% / 0.8) 0%, hsl(280 80% 70% / 0.8) 50%, hsl(290 75% 65% / 0.8) 100%);
-    border-radius: 6px;
-    box-shadow: 0 1px 3px hsl(270 50% 60% / 0.2);
-  }
-  
-  /* Active scrolling state - smooth fade in */
-  html.scrolling {
-    scrollbar-color: hsl(270 95% 75% / 0.6) hsl(270 20% 98% / 0.05);
-  }
-  
-  html.scrolling::-webkit-scrollbar-track {
-    background: linear-gradient(180deg, hsl(270 20% 98% / 0.05) 0%, hsl(270 15% 95% / 0.05) 100%);
-  }
-  
-  html.scrolling::-webkit-scrollbar-thumb {
+  /* Dark mode */
+  .dark .vscode-scrollbar-thumb {
     background: linear-gradient(180deg, 
-      hsl(270 95% 75% / 0.6) 0%, 
-      hsl(280 80% 70% / 0.6) 50%, 
-      hsl(290 75% 65% / 0.6) 100%);
+      hsl(270 80% 45% / 0.35) 0%, 
+      hsl(280 70% 40% / 0.35) 50%, 
+      hsl(290 65% 35% / 0.35) 100%);
   }
   
-  /* Dark mode for main scrollbar */
-  .dark html {
-    scrollbar-color: transparent transparent;
-  }
-  
-  .dark html::-webkit-scrollbar-thumb {
+  .dark .vscode-scrollbar:hover .vscode-scrollbar-thumb {
     background: linear-gradient(180deg, 
-      hsl(270 80% 45% / 0) 0%, 
-      hsl(280 70% 40% / 0) 50%, 
-      hsl(290 65% 35% / 0) 100%);
-    transition: background 0.4s ease, border-radius 0.3s ease, box-shadow 0.4s ease;
-  }
-  
-  .dark html::-webkit-scrollbar-track:hover {
-    background: linear-gradient(180deg, hsl(270 15% 15% / 0.1) 0%, hsl(270 20% 20% / 0.1) 100%);
-  }
-  
-  .dark html::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, hsl(270 80% 45% / 0.8) 0%, hsl(280 70% 40% / 0.8) 50%, hsl(290 65% 35% / 0.8) 100%);
-    box-shadow: 0 1px 3px hsl(270 40% 20% / 0.3);
-  }
-  
-  .dark html.scrolling {
-    scrollbar-color: hsl(270 80% 45% / 0.5) hsl(270 15% 15% / 0.05);
-  }
-  
-  .dark html.scrolling::-webkit-scrollbar-track {
-    background: linear-gradient(180deg, hsl(270 15% 15% / 0.05) 0%, hsl(270 20% 20% / 0.05) 100%);
-  }
-  
-  .dark html.scrolling::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, 
-      hsl(270 80% 45% / 0.5) 0%, 
-      hsl(280 70% 40% / 0.5) 50%, 
-      hsl(290 65% 35% / 0.5) 100%);
+      hsl(270 80% 45% / 0.8) 0%, 
+      hsl(280 70% 40% / 0.8) 50%, 
+      hsl(290 65% 35% / 0.8) 100%);
   }
 }
 
