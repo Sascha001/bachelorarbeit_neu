@@ -272,14 +272,14 @@ const FormulaTooltip = ({ param, stock }: { param: string; stock: string }) => {
       
       <div className="space-y-2">
         <div className="text-xs font-medium">Formel:</div>
-        <div className="bg-white p-2 rounded border">
+        <div className="bg-white p-2 rounded border text-black">
           <BlockMath math={formula.formula} />
         </div>
       </div>
       
       <div className="space-y-2">
         <div className="text-xs font-medium">Aktuell:</div>
-        <div className="bg-white p-2 rounded border">
+        <div className="bg-white p-2 rounded border text-black">
           <BlockMath math={formula.calculation} />
         </div>
       </div>
@@ -798,13 +798,13 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             <h4 className="font-medium mb-4 text-green-700">Gesamtberechnung</h4>
                             
                             <div className="space-y-4">
-                              <div className="bg-white p-3 rounded border">
+                              <div className="bg-white p-3 rounded border text-black">
                                 <div className="text-center">
                                   <BlockMath math="\\text{Fundamentaldaten-Score} = \\frac{C + T + K + A + S}{5}" />
                                 </div>
                               </div>
                               
-                              <div className="bg-white p-3 rounded border">
+                              <div className="bg-white p-3 rounded border text-black">
                                 <div className="text-center">
                                   <BlockMath math={`\\text{Aktuell} = \\frac{${(params.completeness.value * 100).toFixed(1)} + ${(params.timeliness.value * 100).toFixed(1)} + ${(params.consistency.value * 100).toFixed(1)} + ${(params.accuracy.value * 100).toFixed(1)} + ${(params.stability.value * 100).toFixed(1)}}{5} = ${overallScore}\\%`} />
                                 </div>
