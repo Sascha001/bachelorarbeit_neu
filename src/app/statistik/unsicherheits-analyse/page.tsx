@@ -20,9 +20,10 @@ import {
 } from "@/components/ui/sidebar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertTriangle } from "lucide-react"
+import { Search } from "lucide-react"
 import { useCoolScrollbar } from "@/hooks/use-cool-scrollbar"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useSearchParams, useRouter } from "next/navigation"
 import { UncertaintyOverview } from "@/components/uncertainty-overview"
 import { TechnicalAnalysisTab } from "@/components/technical-analysis-tab"
 import { SimplifiedAnalysisTab } from "@/components/simplified-analysis-tab"
@@ -30,7 +31,23 @@ import { PurchaseRecommendation } from "@/components/purchase-recommendation"
 
 export default function UnsicherheitsAnalysePage() {
   const scrollbarRef = useCoolScrollbar()
-  const [selectedStock, setSelectedStock] = useState<string | null>("AAPL")
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const [selectedStock, setSelectedStock] = useState<string | null>(null)
+  
+  // Initialize from URL parameter
+  useEffect(() => {
+    const stockParam = searchParams.get('stock')
+    setSelectedStock(stockParam)
+  }, [searchParams])
+  
+  // Handle stock selection from search
+  const handleStockSelect = (stock: string) => {
+    setSelectedStock(stock)
+    // Update URL with stock parameter
+    const newUrl = `/statistik/unsicherheits-analyse?stock=${encodeURIComponent(stock)}`
+    router.push(newUrl)
+  }
 
   return (
     <SidebarProvider>
@@ -58,9 +75,11 @@ export default function UnsicherheitsAnalysePage() {
             </Breadcrumb>
           </div>
           
-          <div className="flex-1 flex justify-center">
-            <StockSearch onStockSelect={setSelectedStock} />
-          </div>
+          {selectedStock && (
+            <div className="flex-1 flex justify-center">
+              <StockSearch onStockSelect={handleStockSelect} />
+            </div>
+          )}
           
           <div className="flex items-center gap-2">
             <NotificationButton />
@@ -69,16 +88,48 @@ export default function UnsicherheitsAnalysePage() {
         </header>
         <div ref={scrollbarRef} className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-auto">
           {!selectedStock ? (
-            <div className="flex flex-1 items-center justify-center">
-              <Card className="w-full max-w-md">
-                <CardContent className="flex flex-col items-center justify-center p-6">
-                  <AlertTriangle className="h-12 w-12 text-primary mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Wertpapier auswählen</h3>
-                  <p className="text-sm text-muted-foreground text-center">
-                    Verwenden Sie die Suchleiste oben, um ein Wertpapier für die Unsicherheitsanalyse auszuwählen.
+            <div className="flex flex-1 items-center justify-center min-h-[60vh]">
+              <div className="flex flex-col items-center justify-center space-y-8 w-full max-w-2xl px-4">
+                {/* Icon and Title */}
+                <div className="text-center space-y-4">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 rounded-full blur-xl"></div>
+                    <Search className="relative h-16 w-16 text-primary mx-auto" />
+                  </div>
+                  <div className="space-y-2">
+                    <h1 className="text-3xl font-bold text-foreground">Unsicherheitsanalyse</h1>
+                    <p className="text-lg text-muted-foreground">
+                      Wählen Sie ein Wertpapier für eine detaillierte KI-Unsicherheitsanalyse
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Centered Search Bar */}
+                <div className="w-full max-w-lg">
+                  <StockSearch onStockSelect={handleStockSelect} />
+                </div>
+                
+                {/* Additional Info */}
+                <div className="text-center space-y-3 max-w-md">
+                  <p className="text-sm text-muted-foreground">
+                    Analysieren Sie Daten-, Modell- und menschliche Unsicherheitsfaktoren
                   </p>
-                </CardContent>
-              </Card>
+                  <div className="flex items-center justify-center space-x-4 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1">
+                      <div className="h-2 w-2 bg-blue-500 rounded-full"></div>
+                      Datenunsicherheit
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <div className="h-2 w-2 bg-purple-500 rounded-full"></div>
+                      Modellunsicherheit
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <div className="h-2 w-2 bg-green-500 rounded-full"></div>
+                      Menschliche Faktoren
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           ) : (
             <>
