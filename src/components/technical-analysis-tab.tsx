@@ -1373,7 +1373,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                               </div>
                               
                               <div className="text-xs text-muted-foreground">
-                                <p>Spike = Zeitpunkt mit Volumen > k-facher Median des rollierenden Fensters</p>
+                                <p>Spike = Zeitpunkt mit Volumen &gt; k-facher Median des rollierenden Fensters</p>
                               </div>
                             </div>
                           </div>
