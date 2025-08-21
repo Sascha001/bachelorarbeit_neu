@@ -1303,83 +1303,151 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       const w1 = 0.4, w2 = 0.3, w3 = 0.3 // Gewichtungen
                       // Beispielwerte für besseres Verständnis
                       const sValue = 0.82, aValue = 0.91, tValue = 0.76
-                      const overallScore = ((w1 * sValue + w2 * aValue + w3 * tValue) * 100).toFixed(1)
+                      const overallScoreNum = (w1 * sValue + w2 * aValue + w3 * tValue) * 100
+                      const overallScore = overallScoreNum.toFixed(1)
+                      
+                      // Farblogik für Score-Qualität
+                      const getScoreColor = (score: number) => {
+                        if (score >= 90) return { bg: 'bg-green-500/5', border: 'border-green-500/20', text: 'text-green-700' }
+                        if (score >= 70) return { bg: 'bg-yellow-500/5', border: 'border-yellow-500/20', text: 'text-yellow-700' }
+                        return { bg: 'bg-red-500/5', border: 'border-red-500/20', text: 'text-red-700' }
+                      }
+                      
+                      const scoreColors = getScoreColor(overallScoreNum)
                       
                       return (
                         <>
-                          <div className="mt-8 p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
-                            <h4 className="font-medium mb-2 text-blue-700">1. Konzentration (S) = 0.82</h4>
+                          {/* Overall Score */}
+                          <div className={`mt-6 p-4 ${scoreColors.bg} border ${scoreColors.border} rounded-lg`}>
+                            <h4 className={`font-semibold mb-2 ${scoreColors.text}`}>Gesamtscore: {overallScore}%</h4>
+                            <p className="text-sm text-muted-foreground">
+                              Durchschnitt aller 3 Dimensionen für {selectedStock}
+                            </p>
+                          </div>
+
+                          {/* Parameter Details */}
+                          <div className="space-y-4">
+                            <h4 className="font-medium text-foreground">Detaillierte Parameter-Aufschlüsselung:</h4>
                             
-                            <div className="space-y-3">
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
-                                <div className="flex items-center justify-center min-h-[50px]">
-                                  <BlockMath math="HHI = \\sum_{i=1}^{N} s_i^2 = 0.18" />
-                                </div>
+                            {/* Concentration */}
+                            <div className="p-3 bg-muted/30 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="font-medium">1. Konzentration (S)</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button className="p-1 rounded-full hover:bg-muted/50">
+                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-lg">
+                                    <div className="space-y-2 p-2">
+                                      <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
+                                        <div className="flex items-center justify-center min-h-[50px]">
+                                          <BlockMath math="HHI = \\sum_{i=1}^{N} s_i^2" />
+                                        </div>
+                                      </div>
+                                      <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
+                                        <div className="flex items-center justify-center min-h-[50px]">
+                                          <BlockMath math="S = 1 - HHI" />
+                                        </div>
+                                      </div>
+                                      <p className="text-xs text-muted-foreground">Herfindahl-Hirschman Index für Marktkonzentration</p>
+                                    </div>
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Badge className="ml-auto">{(sValue * 100).toFixed(1)}%</Badge>
                               </div>
-                              
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
-                                <div className="flex items-center justify-center min-h-[50px]">
-                                  <BlockMath math="S = 1 - HHI = 1 - 0.18 = 0.82" />
-                                </div>
+                              <div className="text-sm text-muted-foreground">
+                                5 Hauptakteure mit HHI = 0.18
                               </div>
-                              
-                              <div className="text-xs text-muted-foreground">
-                                <p>5 Hauptakteure mit Anteilen: 30%, 25%, 20%, 15%, 10%</p>
+                            </div>
+
+                            {/* Anomalous Spikes */}
+                            <div className="p-3 bg-muted/30 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="font-medium">2. Anomalous Spikes (A)</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button className="p-1 rounded-full hover:bg-muted/50">
+                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-lg">
+                                    <div className="space-y-2 p-2">
+                                      <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
+                                        <div className="flex items-center justify-center min-h-[50px]">
+                                          <BlockMath math="A = 1 - \\frac{\\text{Spike-Zeitpunkte}}{\\text{Gesamtanzahl}}" />
+                                        </div>
+                                      </div>
+                                      <p className="text-xs text-muted-foreground">Erkennung untypischer Volumenschübe</p>
+                                    </div>
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Badge className="ml-auto">{(aValue * 100).toFixed(1)}%</Badge>
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                22 Spike-Zeitpunkte von 250 Handelstagen (8.8%)
+                              </div>
+                            </div>
+
+                            {/* Time Stability */}
+                            <div className="p-3 bg-muted/30 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="font-medium">3. Stabilität (T)</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button className="p-1 rounded-full hover:bg-muted/50">
+                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-lg">
+                                    <div className="space-y-2 p-2">
+                                      <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
+                                        <div className="flex items-center justify-center min-h-[50px]">
+                                          <BlockMath math="T = 1 - \\frac{\\sigma_V}{\\mu_V + \\epsilon}" />
+                                        </div>
+                                      </div>
+                                      <p className="text-xs text-muted-foreground">Coefficient of Variation für Volumen-Stabilität</p>
+                                    </div>
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Badge className="ml-auto">{(tValue * 100).toFixed(1)}%</Badge>
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                σ = 2.4M Aktien, μ = 10M Aktien (CV = 0.24)
                               </div>
                             </div>
                           </div>
 
-                          <div className="mt-6 p-4 bg-yellow-500/5 border border-yellow-500/20 rounded-lg">
-                            <h4 className="font-medium mb-2 text-yellow-700">2. Anomalous Spikes (A) = 0.91</h4>
-                            
-                            <div className="space-y-3">
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
-                                <div className="flex items-center justify-center min-h-[50px]">
-                                  <BlockMath math="A = 1 - \\frac{22}{250} = 0.91" />
-                                </div>
-                              </div>
-                              
-                              <div className="text-xs text-muted-foreground">
-                                <p>22 Spike-Zeitpunkte von 250 Handelstagen (8.8%)</p>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="mt-6 p-4 bg-purple-500/5 border border-purple-500/20 rounded-lg">
-                            <h4 className="font-medium mb-2 text-purple-700">3. Stabilität (T) = 0.76</h4>
-                            
-                            <div className="space-y-3">
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
-                                <div className="flex items-center justify-center min-h-[50px]">
-                                  <BlockMath math="T = 1 - \\frac{2.4M}{10M} = 0.76" />
-                                </div>
-                              </div>
-                              
-                              <div className="text-xs text-muted-foreground">
-                                <p>σ = 2.4M Aktien, μ = 10M Aktien (CV = 0.24)</p>
-                              </div>
-                            </div>
-                          </div>
-
+                          {/* Formula Explanation */}
                           <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                            <h4 className="font-medium mb-4 text-green-700">Gesamtberechnung</h4>
+                            <div className="flex items-center gap-2 mb-4">
+                              <h4 className="font-medium text-green-700">Gesamtberechnung</h4>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button className="p-1 rounded-full hover:bg-muted/50">
+                                    <Info className="h-4 w-4 text-muted-foreground" />
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-lg">
+                                  <div className="space-y-2 p-2">
+                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
+                                      <div className="flex items-center justify-center min-h-[50px]">
+                                        <BlockMath math="Q_{volume} = w_1 \\cdot S + w_2 \\cdot A + w_3 \\cdot T" />
+                                      </div>
+                                    </div>
+                                    <div className="text-xs text-muted-foreground space-y-1">
+                                      <p><strong>Gewichte:</strong> w₁=0.4, w₂=0.3, w₃=0.3</p>
+                                      <p>Konzentration hat größten Einfluss</p>
+                                    </div>
+                                  </div>
+                                </TooltipContent>
+                              </Tooltip>
+                            </div>
                             
-                            <div className="space-y-4">
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                                <div className="flex items-center justify-center min-h-[70px]">
-                                  <BlockMath math="Q_{volume} = w_1 \\cdot S + w_2 \\cdot A + w_3 \\cdot T" />
-                                </div>
-                              </div>
-                              
-                              <div className="text-xs text-muted-foreground space-y-1">
-                                <p><strong>S</strong> = Konzentration, <strong>A</strong> = Anomalous Spikes, <strong>T</strong> = Stabilität</p>
-                                <p><strong>Gewichte:</strong> w₁={w1}, w₂={w2}, w₃={w3}</p>
-                              </div>
-                              
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
-                                <div className="flex items-center justify-center min-h-[60px]">
-                                  <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${sValue} + ${w2} \\cdot ${aValue} + ${w3} \\cdot ${tValue} = ${overallScore}\\%`} />
-                                </div>
+                            <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
+                              <div className="flex items-center justify-center min-h-[60px]">
+                                <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${(sValue * 100).toFixed(1)}\\% + ${w2} \\cdot ${(aValue * 100).toFixed(1)}\\% + ${w3} \\cdot ${(tValue * 100).toFixed(1)}\\% = ${overallScore}\\%`} />
                               </div>
                             </div>
                           </div>
