@@ -339,7 +339,33 @@ const getInfoBoxContent = (metric: string) => {
     },
     tradingVolume: {
       title: "Handelsvolumen-Verteilung Berechnung",
-      content: "Detaillierte Informationen zur Berechnung der Handelsvolumen-Verteilung kommen hier..."
+      content: `Die Handelsvolumen-Verteilung misst die Qualität und Stabilität des Marktvolumens durch drei kritische Dimensionen:
+
+**1. Konzentration der Marktteilnehmer (S)**
+Bewertet, ob das Volumen gleichmäßig über viele Akteure verteilt oder von wenigen dominiert wird.
+
+Herfindahl-Hirschman Index (HHI): HHI = Σ(si²)
+mit si = Marktanteil eines Teilnehmers am Gesamtvolumen
+
+Score: S = 1 - HHI
+(je kleiner HHI, desto größer die Verteilung)
+
+**2. Anomalous Spikes (A)** 
+Erkennt untypische Volumenschübe (z.B. einzelne Zeitpunkte mit extrem hohem Anteil).
+
+Formel: A = 1 - (Anzahl Spike-Zeitpunkte / Gesamtanzahl Zeitpunkte)
+
+**3. Stabilität über die Zeit (T)**
+Misst die Volatilität des Handelsvolumens über Perioden.
+
+Formel: T = 1 - (σV / (μV + ε))
+mit σV = Standardabweichung, μV = Mittelwert
+
+**Gesamtformel:**
+Qvolume = w1·S + w2·A + w3·T
+
+Typische Gewichtung: w1=0.4, w2=0.3, w3=0.3
+→ Konzentration (S) hat größten Einfluss auf Marktunsicherheit`
     }
   }
   return infoContent[metric] || { title: "Information", content: "Keine Informationen verfügbar." }
