@@ -18,62 +18,55 @@ export function StockSearch({ onStockSelect }: StockSearchProps = {}) {
   const [isLoading, setIsLoading] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
   
-  // Debounced search function
-  const debouncedSearch = React.useCallback(
-    React.useMemo(
-      () => {
-        let timeoutId: NodeJS.Timeout
-        return (searchQuery: string) => {
-          clearTimeout(timeoutId)
-          timeoutId = setTimeout(async () => {
-            if (!searchQuery.trim()) {
-              setResults([])
-              setIsLoading(false)
-              return
-            }
-
-            setIsLoading(true)
-            setError(null)
-
-            try {
-              const response = await fetch(
-                `/api/stocks/search?q=${encodeURIComponent(searchQuery)}&limit=10`
-              )
-              
-              if (!response.ok) {
-                throw new Error(`Search failed: ${response.status}`)
-              }
-              
-              const data = await response.json()
-              
-              if (data.success) {
-                setResults(data.data || [])
-              } else {
-                throw new Error(data.error || 'Search failed')
-              }
-            } catch (err) {
-              console.error('Stock search error:', err)
-              setError(err instanceof Error ? err.message : 'Search failed')
-              setResults([])
-            } finally {
-              setIsLoading(false)
-            }
-          }, 300) // 300ms debounce
-        }
-      },
-      []
-    ),
-    []
-  )
-
-  React.useEffect(() => {
-    if (query.length > 0) {
-      debouncedSearch(query)
-    } else {
+  // Search function
+  const performSearch = React.useCallback(async (searchQuery: string) => {
+    if (!searchQuery.trim()) {
       setResults([])
       setIsLoading(false)
+      return
     }
-  }, [query, debouncedSearch])
+
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      const response = await fetch(
+        `/api/stocks/search?q=${encodeURIComponent(searchQuery)}&limit=10`
+      )
+      
+      if (!response.ok) {
+        throw new Error(`Search failed: ${response.status}`)
+      }
+      
+      const data = await response.json()
+      
+      if (data.success) {
+        setResults(data.data || [])
+      } else {
+        throw new Error(data.error || 'Search failed')
+      }
+    } catch (err) {
+      console.error('Stock search error:', err)
+      setError(err instanceof Error ? err.message : 'Search failed')
+      setResults([])
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  // Debounced effect
+  React.useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (query.length > 0) {
+        performSearch(query)
+      } else {
+        setResults([])
+        setIsLoading(false)
+      }
+    }, 300)
+
+    return () => clearTimeout(timeoutId)
+  }, [query, performSearch])
 
   const handleStockClick = (stock: EnhancedStockData) => {
     setQuery("")
@@ -121,7 +114,7 @@ export function StockSearch({ onStockSelect }: StockSearchProps = {}) {
           
           {!isLoading && !error && results.length === 0 && query.length > 0 && (
             <div className="p-3 text-sm text-muted-foreground text-center">
-              Keine Ergebnisse für "{query}" gefunden
+              Keine Ergebnisse für &quot;{query}&quot; gefunden
             </div>
           )}
           
