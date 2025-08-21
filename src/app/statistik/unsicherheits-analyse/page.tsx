@@ -76,11 +76,11 @@ function UnsicherheitsAnalyseContent() {
             </Breadcrumb>
           </div>
           
-          {selectedStock && (
-            <div className="flex-1 flex justify-center">
+          <div className="flex-1 flex justify-center">
+            {selectedStock && (
               <StockSearch onStockSelect={handleStockSelect} />
-            </div>
-          )}
+            )}
+          </div>
           
           <div className="flex items-center gap-2">
             <NotificationButton />
