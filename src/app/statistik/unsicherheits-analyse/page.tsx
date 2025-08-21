@@ -22,14 +22,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Search } from "lucide-react"
 import { useCoolScrollbar } from "@/hooks/use-cool-scrollbar"
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { UncertaintyOverview } from "@/components/uncertainty-overview"
 import { TechnicalAnalysisTab } from "@/components/technical-analysis-tab"
 import { SimplifiedAnalysisTab } from "@/components/simplified-analysis-tab"
 import { PurchaseRecommendation } from "@/components/purchase-recommendation"
 
-export default function UnsicherheitsAnalysePage() {
+// Inner component that uses search params
+function UnsicherheitsAnalyseContent() {
   const scrollbarRef = useCoolScrollbar()
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -167,5 +168,21 @@ export default function UnsicherheitsAnalysePage() {
         </div>
       </SidebarInset>
     </SidebarProvider>
+  )
+}
+
+// Main page component with Suspense boundary
+export default function UnsicherheitsAnalysePage() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-1 items-center justify-center min-h-screen">
+        <div className="text-center space-y-4">
+          <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto"></div>
+          <p className="text-muted-foreground">Lade Unsicherheitsanalyse...</p>
+        </div>
+      </div>
+    }>
+      <UnsicherheitsAnalyseContent />
+    </Suspense>
   )
 }
