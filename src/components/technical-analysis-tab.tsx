@@ -1322,8 +1322,111 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       )
                     })()}
                     
+                    {/* Trading Volume Distribution Info */}
+                    {(() => {
+                      if (activeInfoBox !== 'tradingVolume') return null
+                      
+                      const w1 = 0.4, w2 = 0.3, w3 = 0.3 // Gewichtungen
+                      
+                      return (
+                        <>
+                          <div className="mt-8 p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                            <h4 className="font-medium mb-4 text-blue-700">1. Konzentration der Marktteilnehmer (S)</h4>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Bewertet, ob das Handelsvolumen gleichmäßig über viele Akteure verteilt oder von wenigen dominiert wird.
+                            </p>
+                            
+                            <div className="space-y-4">
+                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
+                                <div className="flex items-center justify-center min-h-[70px]">
+                                  <BlockMath math="HHI = \\sum_{i=1}^{N} s_i^2" />
+                                </div>
+                              </div>
+                              
+                              <div className="text-xs text-muted-foreground">
+                                <p><strong>s_i</strong> = Marktanteil eines Teilnehmers am Gesamtvolumen</p>
+                              </div>
+                              
+                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
+                                <div className="flex items-center justify-center min-h-[70px]">
+                                  <BlockMath math="S = 1 - HHI" />
+                                </div>
+                              </div>
+                              
+                              <div className="text-xs text-muted-foreground">
+                                <p>Je kleiner HHI, desto größer die Verteilung, desto besser der Score</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="mt-6 p-4 bg-yellow-500/5 border border-yellow-500/20 rounded-lg">
+                            <h4 className="font-medium mb-4 text-yellow-700">2. Anomalous Spikes (A)</h4>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Erkennt untypische Volumenschübe (z.B. einzelne Zeitpunkte mit extrem hohem Anteil).
+                            </p>
+                            
+                            <div className="space-y-4">
+                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
+                                <div className="flex items-center justify-center min-h-[70px]">
+                                  <BlockMath math="A = 1 - \\frac{\\text{Anzahl Spike-Zeitpunkte}}{\\text{Gesamtanzahl Zeitpunkte}}" />
+                                </div>
+                              </div>
+                              
+                              <div className="text-xs text-muted-foreground">
+                                <p>Spike = Zeitpunkt mit Volumen > k-facher Median des rollierenden Fensters</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="mt-6 p-4 bg-purple-500/5 border border-purple-500/20 rounded-lg">
+                            <h4 className="font-medium mb-4 text-purple-700">3. Stabilität über die Zeit (T)</h4>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Misst die Volatilität des Handelsvolumens über Perioden (Coefficient of Variation).
+                            </p>
+                            
+                            <div className="space-y-4">
+                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
+                                <div className="flex items-center justify-center min-h-[70px]">
+                                  <BlockMath math="T = 1 - \\frac{\\sigma_V}{\\mu_V + \\epsilon}" />
+                                </div>
+                              </div>
+                              
+                              <div className="text-xs text-muted-foreground space-y-1">
+                                <p><strong>σ_V</strong> = Standardabweichung des Volumens</p>
+                                <p><strong>μ_V</strong> = Mittelwert des Volumens</p>
+                                <p><strong>ε</strong> = kleine Konstante für Sicherheit bei sehr kleinen Volumen</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                            <h4 className="font-medium mb-4 text-green-700">Gesamtformel</h4>
+                            
+                            <div className="space-y-4">
+                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
+                                <div className="flex items-center justify-center min-h-[70px]">
+                                  <BlockMath math="Q_{volume} = w_1 \\cdot S + w_2 \\cdot A + w_3 \\cdot T" />
+                                </div>
+                              </div>
+                              
+                              <div className="text-xs text-muted-foreground space-y-1">
+                                <p><strong>Typische Gewichtung:</strong> w₁={w1}, w₂={w2}, w₃={w3}</p>
+                                <p><strong>Begründung:</strong> Konzentration (S) hat größten Einfluss auf Marktunsicherheit</p>
+                              </div>
+                              
+                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
+                                <div className="flex items-center justify-center min-h-[60px]">
+                                  <BlockMath math={`Q_{volume} = ${w1} \\cdot S + ${w2} \\cdot A + ${w3} \\cdot T`} />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )
+                    })()}
+
                     {/* Other metrics placeholder */}
-                    {activeInfoBox !== 'fundamentalData' && activeInfoBox !== 'timeSeriesIntegrity' && activeInfoBox !== 'newsReliability' && (
+                    {activeInfoBox !== 'fundamentalData' && activeInfoBox !== 'timeSeriesIntegrity' && activeInfoBox !== 'newsReliability' && activeInfoBox !== 'tradingVolume' && (
                       <>
                         <div className="mt-8 p-4 bg-muted/30 rounded-lg">
                           <h4 className="font-medium mb-2 text-foreground">Berechnungsdetails</h4>
