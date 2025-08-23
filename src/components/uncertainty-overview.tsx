@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { AlertTriangle, Database, Brain, Users } from "lucide-react"
+import { getUncertaintyColor, getPercentageColor, getConfidenceColor } from "@/lib/score-colors"
 
 interface UncertaintyOverviewProps {
   selectedStock: string
@@ -51,21 +52,6 @@ const getUncertaintyData = (stock: string) => {
 export function UncertaintyOverview({ selectedStock }: UncertaintyOverviewProps) {
   const data = getUncertaintyData(selectedStock)
   
-  const getUncertaintyColor = (level: number) => {
-    if (level < 30) return "text-green-600"
-    if (level < 60) return "text-yellow-600" 
-    return "text-red-600"
-  }
-
-  const getConfidenceColor = (confidence: string) => {
-    switch (confidence) {
-      case "HOCH": return "bg-green-500/10 text-green-600"
-      case "MITTEL": return "bg-yellow-500/10 text-yellow-600"
-      case "NIEDRIG": return "bg-orange-500/10 text-orange-600"
-      case "SEHR NIEDRIG": return "bg-red-500/10 text-red-600"
-      default: return "bg-gray-500/10 text-gray-600"
-    }
-  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -89,7 +75,7 @@ export function UncertaintyOverview({ selectedStock }: UncertaintyOverviewProps)
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="text-center">
-            <div className={`text-4xl font-bold ${getUncertaintyColor(data.totalUncertainty)}`}>
+            <div className={`text-4xl font-bold ${getUncertaintyColor(data.totalUncertainty).text}`}>
               {data.totalUncertainty}%
             </div>
             <p className="text-sm text-muted-foreground mt-1">
@@ -126,7 +112,7 @@ export function UncertaintyOverview({ selectedStock }: UncertaintyOverviewProps)
                 <span className="text-sm font-medium">Daten-Unsicherheit</span>
               </div>
               <div className="text-right">
-                <div className="text-sm font-semibold">{data.dataUncertainty}%</div>
+                <div className={`text-sm font-semibold ${getPercentageColor(data.dataUncertainty).text}`}>{data.dataUncertainty}%</div>
                 <div className="text-xs text-muted-foreground">
                   ~{Math.round((data.dataUncertainty / 100) * data.totalUncertainty)}% absolut
                 </div>
@@ -143,7 +129,7 @@ export function UncertaintyOverview({ selectedStock }: UncertaintyOverviewProps)
                 <span className="text-sm font-medium">Modell-Unsicherheit</span>
               </div>
               <div className="text-right">
-                <div className="text-sm font-semibold">{data.modelUncertainty}%</div>
+                <div className={`text-sm font-semibold ${getPercentageColor(data.modelUncertainty).text}`}>{data.modelUncertainty}%</div>
                 <div className="text-xs text-muted-foreground">
                   ~{Math.round((data.modelUncertainty / 100) * data.totalUncertainty)}% absolut
                 </div>
@@ -160,7 +146,7 @@ export function UncertaintyOverview({ selectedStock }: UncertaintyOverviewProps)
                 <span className="text-sm font-medium">Menschliche Unsicherheit</span>
               </div>
               <div className="text-right">
-                <div className="text-sm font-semibold">{data.humanUncertainty}%</div>
+                <div className={`text-sm font-semibold ${getPercentageColor(data.humanUncertainty).text}`}>{data.humanUncertainty}%</div>
                 <div className="text-xs text-muted-foreground">
                   ~{Math.round((data.humanUncertainty / 100) * data.totalUncertainty)}% absolut
                 </div>

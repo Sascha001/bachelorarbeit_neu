@@ -75,6 +75,7 @@ import {
   Info,
   X
 } from "lucide-react"
+import { getPercentageColor } from "@/lib/score-colors"
 
 interface TechnicalAnalysisTabProps {
   selectedStock: string
@@ -578,7 +579,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     </TooltipContent>
                   </Tooltip>
                 </div>
-                <Badge className={getStatusColor(data.dataValidation.fundamentalData.status)}>
+                <Badge className={`${getStatusColor(data.dataValidation.fundamentalData.status)} ${getPercentageColor(data.dataValidation.fundamentalData.score).text}`}>
                   {data.dataValidation.fundamentalData.score}%
                 </Badge>
               </div>
@@ -608,7 +609,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     </TooltipContent>
                   </Tooltip>
                 </div>
-                <Badge className={getStatusColor(data.dataValidation.newsReliability.status)}>
+                <Badge className={`${getStatusColor(data.dataValidation.newsReliability.status)} ${getPercentageColor(data.dataValidation.newsReliability.score).text}`}>
                   {data.dataValidation.newsReliability.score}%
                 </Badge>
               </div>
@@ -638,7 +639,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     </TooltipContent>
                   </Tooltip>
                 </div>
-                <Badge className={getStatusColor(data.dataValidation.timeSeriesIntegrity.status)}>
+                <Badge className={`${getStatusColor(data.dataValidation.timeSeriesIntegrity.status)} ${getPercentageColor(data.dataValidation.timeSeriesIntegrity.score).text}`}>
                   {data.dataValidation.timeSeriesIntegrity.score}%
                 </Badge>
               </div>
@@ -668,7 +669,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     </TooltipContent>
                   </Tooltip>
                 </div>
-                <Badge className={getStatusColor(data.dataValidation.tradingVolume.status)}>
+                <Badge className={`${getStatusColor(data.dataValidation.tradingVolume.status)} ${getPercentageColor(data.dataValidation.tradingVolume.score).text}`}>
                   {data.dataValidation.tradingVolume.score}%
                 </Badge>
               </div>
@@ -699,7 +700,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
             {/* Model Performance Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center p-4 border rounded-lg">
-                <div className="text-2xl font-bold text-green-600">
+                <div className={`text-2xl font-bold ${getPercentageColor(data.modelMetrics.trainingAccuracy).text}`}>
                   {data.modelMetrics.trainingAccuracy}%
                 </div>
                 <p className="text-sm text-muted-foreground">Trainings-Genauigkeit</p>
@@ -759,7 +760,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Experten-Konsens</span>
-                  <span className="font-medium">{data.humanFactors.expertConsensus}%</span>
+                  <span className={`font-medium ${getPercentageColor(data.humanFactors.expertConsensus).text}`}>{data.humanFactors.expertConsensus}%</span>
                 </div>
                 <Progress value={data.humanFactors.expertConsensus} className="h-2" />
               </div>
@@ -767,7 +768,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Markt-Sentiment</span>
-                  <span className="font-medium">{data.humanFactors.marketSentiment}%</span>
+                  <span className={`font-medium ${getPercentageColor(data.humanFactors.marketSentiment).text}`}>{data.humanFactors.marketSentiment}%</span>
                 </div>
                 <Progress value={data.humanFactors.marketSentiment} className="h-2" />
               </div>
@@ -777,7 +778,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Analysten-Verlässlichkeit</span>
-                  <span className="font-medium">{data.humanFactors.analystReliability}%</span>
+                  <span className={`font-medium ${getPercentageColor(data.humanFactors.analystReliability).text}`}>{data.humanFactors.analystReliability}%</span>
                 </div>
                 <Progress value={data.humanFactors.analystReliability} className="h-2" />
               </div>
@@ -785,7 +786,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Verhaltens-Bias</span>
-                  <span className="font-medium text-red-600">{data.humanFactors.behavioralBias}%</span>
+                  <span className={`font-medium ${getPercentageColor(100 - data.humanFactors.behavioralBias).text}`}>{data.humanFactors.behavioralBias}%</span>
                 </div>
                 <Progress value={data.humanFactors.behavioralBias} className="h-2" />
                 <p className="text-xs text-muted-foreground">

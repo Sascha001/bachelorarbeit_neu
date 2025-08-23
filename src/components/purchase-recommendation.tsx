@@ -30,6 +30,7 @@ import {
   ThumbsUp
 } from "lucide-react"
 import { useState } from "react"
+import { getPercentageColor, getRecommendationColor } from "@/lib/score-colors"
 
 interface PurchaseRecommendationProps {
   selectedStock: string
@@ -104,14 +105,6 @@ const getPurchaseData = (stock: string): PurchaseData => {
   return mockData[stock] || mockData.AAPL
 }
 
-const getRecommendationColor = (rec: string) => {
-  switch (rec) {
-    case "BUY": return "bg-green-500/10 text-green-600 border-green-500/20"
-    case "HOLD": return "bg-blue-500/10 text-blue-600 border-blue-500/20"
-    case "SELL": return "bg-red-500/10 text-red-600 border-red-500/20"
-    default: return "bg-gray-500/10 text-gray-600 border-gray-500/20"
-  }
-}
 
 export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendationProps) {
   const data = getPurchaseData(selectedStock)
@@ -181,7 +174,7 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                   <span className="font-medium">Aktueller Kurs: €{data.currentPrice}</span>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Erwartete Rendite: {data.expectedReturn > 0 ? '+' : ''}{data.expectedReturn}% in {data.timeHorizon}
+                  Erwartete Rendite: <span className={`font-medium ${getPercentageColor(data.expectedReturn >= 0 ? data.expectedReturn : 0).text}`}>{data.expectedReturn > 0 ? '+' : ''}{data.expectedReturn}%</span> in {data.timeHorizon}
                 </p>
               </div>
               {data.expectedReturn > 0 ? (
@@ -244,14 +237,14 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Diversifikation</span>
-                    <span className="font-medium">{data.portfolioImpact.diversification}%</span>
+                    <span className={`font-medium ${getPercentageColor(data.portfolioImpact.diversification).text}`}>{data.portfolioImpact.diversification}%</span>
                   </div>
                   <Progress value={data.portfolioImpact.diversification} className="h-2" />
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Risiko-Reduktion</span>
-                    <span className={`font-medium ${data.portfolioImpact.riskReduction >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    <span className={`font-medium ${data.portfolioImpact.riskReduction >= 0 ? getPercentageColor(data.portfolioImpact.riskReduction).text : 'text-red-600'}`}>
                       {data.portfolioImpact.riskReduction > 0 ? '+' : ''}{data.portfolioImpact.riskReduction}%
                     </span>
                   </div>
@@ -263,7 +256,7 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Erwarteter Beitrag</span>
-                    <span className={`font-medium ${data.portfolioImpact.expectedContribution >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    <span className={`font-medium ${data.portfolioImpact.expectedContribution >= 0 ? getPercentageColor(data.portfolioImpact.expectedContribution).text : 'text-red-600'}`}>
                       {data.portfolioImpact.expectedContribution > 0 ? '+' : ''}{data.portfolioImpact.expectedContribution}%
                     </span>
                   </div>
