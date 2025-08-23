@@ -40,7 +40,6 @@ import {
   Filter,
   Search
 } from "lucide-react"
-import { useCoolScrollbar } from "@/hooks/use-cool-scrollbar"
 import { useState } from "react"
 
 // Mock validation data
@@ -142,7 +141,6 @@ const getReturnColor = (returnValue: number) => {
 }
 
 export default function ValidierungPage() {
-  const scrollbarRef = useCoolScrollbar()
   const [filter, setFilter] = useState("all") // all, pending, validated, expired
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedValidation, setSelectedValidation] = useState<string | null>(null)
@@ -207,7 +205,7 @@ export default function ValidierungPage() {
           </div>
         </header>
         
-        <div ref={scrollbarRef} className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-auto">
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-auto">
           {/* Statistics Overview */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card className="violet-bloom-card">
