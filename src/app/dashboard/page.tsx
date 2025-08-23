@@ -58,7 +58,7 @@ export default function Page() {
             <ThemeToggle />
           </div>
         </header>
-        <div ref={scrollbarRef} className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-auto">
+        <div ref={scrollbarRef} className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-auto violet-bloom-scrollbar">
           {/* Top 4 Metric Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
             {/* Portfolio Wert */}
