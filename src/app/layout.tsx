@@ -79,9 +79,10 @@ export default function RootLayout({
               
               // Component scrollbar functions
               function createComponentScrollbar(element) {
-                if (componentScrollbars.has(element) || !element.parentElement) return;
+                if (componentScrollbars.has(element)) return;
                 
-                const container = element.parentElement;
+                // Make the element itself the container for the scrollbar
+                element.style.position = element.style.position || 'relative';
                 
                 // Create scrollbar DOM elements
                 const scrollbar = document.createElement('div');
@@ -89,7 +90,7 @@ export default function RootLayout({
                 const thumb = document.createElement('div');
                 thumb.className = 'component-scrollbar-thumb';
                 scrollbar.appendChild(thumb);
-                container.appendChild(scrollbar);
+                element.appendChild(scrollbar);
                 
                 let fadeTimeout = null;
                 
@@ -111,10 +112,8 @@ export default function RootLayout({
                   thumb.style.top = thumbTop + 'px';
                   scrollbar.style.height = clientHeight + 'px';
                   
-                  // Position scrollbar relative to element
-                  const elementRect = element.getBoundingClientRect();
-                  const containerRect = container.getBoundingClientRect();
-                  scrollbar.style.top = (elementRect.top - containerRect.top) + 'px';
+                  // Position scrollbar directly within the element (no calculation needed)
+                  scrollbar.style.top = '0px';
                 }
                 
                 function showComponentScrollbar() {
