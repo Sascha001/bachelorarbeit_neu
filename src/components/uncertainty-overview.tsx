@@ -55,14 +55,14 @@ const getUncertaintyData = (stock: string) => {
   const modelUncertaintyRaw = 100 - modelCertainty  
   const humanUncertaintyRaw = 100 - humanCertainty
   
-  // STEP 5: Calculate total uncertainty (sum of all dimensions)
+  // STEP 5: Calculate total uncertainty (sum divided by maximum possible = 300%)
   const totalUncertaintyRaw = dataUncertaintyRaw + modelUncertaintyRaw + humanUncertaintyRaw
-  const totalUncertainty = Math.round(totalUncertaintyRaw)
+  const totalUncertainty = Math.round((totalUncertaintyRaw / 300) * 100)
   
-  // STEP 6: Calculate relative breakdown (always sums to 100%)
-  const dataUncertaintyPercent = Math.round((dataUncertaintyRaw / totalUncertaintyRaw) * 100)
-  const modelUncertaintyPercent = Math.round((modelUncertaintyRaw / totalUncertaintyRaw) * 100)  
-  const humanUncertaintyPercent = 100 - dataUncertaintyPercent - modelUncertaintyPercent // Ensure exact 100% sum
+  // STEP 6: Use absolute uncertainty values (not relative breakdown)
+  const dataUncertaintyPercent = Math.round(dataUncertaintyRaw)
+  const modelUncertaintyPercent = Math.round(modelUncertaintyRaw)  
+  const humanUncertaintyPercent = Math.round(humanUncertaintyRaw)
   
   // Determine recommendation and confidence level
   const getRecommendation = (uncertainty: number, stock: string) => {
@@ -80,9 +80,9 @@ const getUncertaintyData = (stock: string) => {
   
   return {
     totalUncertainty,
-    dataUncertainty: dataUncertaintyPercent,      // Now shows relative percentage
-    modelUncertainty: modelUncertaintyPercent,    // Now shows relative percentage  
-    humanUncertainty: humanUncertaintyPercent,    // Now shows relative percentage
+    dataUncertainty: dataUncertaintyPercent,      // Shows absolute percentage (0-100%)
+    modelUncertainty: modelUncertaintyPercent,    // Shows absolute percentage (0-100%)  
+    humanUncertainty: humanUncertaintyPercent,    // Shows absolute percentage (0-100%)
     recommendation: getRecommendation(totalUncertainty, stock),
     confidenceLevel: getConfidenceLevel(totalUncertainty)
   }
@@ -155,7 +155,7 @@ export function UncertaintyOverview({ selectedStock }: UncertaintyOverviewProps)
         <CardHeader className="pb-4">
           <CardTitle>Unsicherheits-Aufschlüsselung</CardTitle>
           <CardDescription>
-            Die {data.totalUncertainty}% Unsicherheit setzen sich zusammen aus:
+            Einzelne Unsicherheitsdimensionen für {selectedStock}:
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -168,9 +168,6 @@ export function UncertaintyOverview({ selectedStock }: UncertaintyOverviewProps)
               </div>
               <div className="text-right">
                 <div className="text-sm font-semibold">{data.dataUncertainty}%</div>
-                <div className="text-xs text-muted-foreground">
-                  ~{Math.round((data.dataUncertainty / 100) * data.totalUncertainty)}% absolut
-                </div>
               </div>
             </div>
             <Progress value={data.dataUncertainty} className="w-full h-2" />
@@ -185,9 +182,6 @@ export function UncertaintyOverview({ selectedStock }: UncertaintyOverviewProps)
               </div>
               <div className="text-right">
                 <div className="text-sm font-semibold">{data.modelUncertainty}%</div>
-                <div className="text-xs text-muted-foreground">
-                  ~{Math.round((data.modelUncertainty / 100) * data.totalUncertainty)}% absolut
-                </div>
               </div>
             </div>
             <Progress value={data.modelUncertainty} className="w-full h-2" />
@@ -202,9 +196,6 @@ export function UncertaintyOverview({ selectedStock }: UncertaintyOverviewProps)
               </div>
               <div className="text-right">
                 <div className="text-sm font-semibold">{data.humanUncertainty}%</div>
-                <div className="text-xs text-muted-foreground">
-                  ~{Math.round((data.humanUncertainty / 100) * data.totalUncertainty)}% absolut
-                </div>
               </div>
             </div>
             <Progress value={data.humanUncertainty} className="w-full h-2" />
@@ -212,8 +203,8 @@ export function UncertaintyOverview({ selectedStock }: UncertaintyOverviewProps)
 
           <div className="pt-2 border-t border-border">
             <div className="flex justify-between text-sm">
-              <span className="font-medium">Summe:</span>
-              <span className="font-semibold">{data.dataUncertainty + data.modelUncertainty + data.humanUncertainty}% = 100%</span>
+              <span className="font-medium">Gesamtunsicherheit:</span>
+              <span className="font-semibold">{data.totalUncertainty}% (von max. 100%)</span>
             </div>
           </div>
         </CardContent>
