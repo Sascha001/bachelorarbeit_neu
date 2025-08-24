@@ -465,11 +465,11 @@ const FormulaTooltip = ({ param, stock, type = "fundamental" }: { param: string;
   
   return (
     <div className="space-y-3 max-w-sm">
-      <div className="font-semibold text-sm">{formula.title}</div>
-      <div className="text-xs text-muted-foreground">{formula.description}</div>
+      <div className="font-semibold text-sm text-white">{formula.title}</div>
+      <div className="text-xs text-gray-200">{formula.description}</div>
       
       <div className="space-y-2">
-        <div className="text-xs font-medium">Formel:</div>
+        <div className="text-xs font-medium text-white">Formel:</div>
         <div className="bg-white p-2 rounded border text-black overflow-hidden formula-container">
           <div className="flex items-center justify-center min-h-[60px]">
             <BlockMath math={formula.formula} />
@@ -478,7 +478,7 @@ const FormulaTooltip = ({ param, stock, type = "fundamental" }: { param: string;
       </div>
       
       <div className="space-y-2">
-        <div className="text-xs font-medium">Aktuell:</div>
+        <div className="text-xs font-medium text-white">Aktuell:</div>
         <div className="bg-white p-2 rounded border text-black overflow-hidden formula-container-small">
           <div className="flex items-center justify-center min-h-[50px]">
             <BlockMath math={formula.calculation} />
@@ -486,8 +486,8 @@ const FormulaTooltip = ({ param, stock, type = "fundamental" }: { param: string;
         </div>
       </div>
       
-      <div className="text-xs text-muted-foreground border-t pt-2">
-        <strong>Auswirkung:</strong> {formula.impact}
+      <div className="text-xs text-gray-200 border-t border-gray-300 pt-2">
+        <strong className="text-white">Auswirkung:</strong> {formula.impact}
       </div>
     </div>
   )
@@ -1279,10 +1279,10 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                 </div>
                               </div>
                               
-                              <div className="text-xs text-muted-foreground space-y-1">
-                                <p><strong>R</strong> = Source Reliability, <strong>P</strong> = Reputation Accuracy</p>
-                                <p><strong>K</strong> = Cross-Source Consensus, <strong>B</strong> = Bias-Score</p>
-                                <p><strong>Gewichte:</strong> w₁={w1}, w₂={w2}, w₃={w3}, w₄={w4}</p>
+                              <div className="text-xs text-gray-200 space-y-1">
+                                <p><strong className="text-white">R</strong> = Source Reliability, <strong className="text-white">P</strong> = Reputation Accuracy</p>
+                                <p><strong className="text-white">K</strong> = Cross-Source Consensus, <strong className="text-white">B</strong> = Bias-Score</p>
+                                <p><strong className="text-white">Gewichte:</strong> w₁={w1}, w₂={w2}, w₃={w3}, w₄={w4}</p>
                               </div>
                               
                               <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
@@ -1351,7 +1351,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                           <BlockMath math="S = 1 - HHI" />
                                         </div>
                                       </div>
-                                      <p className="text-xs text-muted-foreground">Herfindahl-Hirschman Index für Marktkonzentration</p>
+                                      <p className="text-xs text-gray-200">Herfindahl-Hirschman Index für Marktkonzentration</p>
                                     </div>
                                   </TooltipContent>
                                 </Tooltip>
@@ -1379,7 +1379,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                           <BlockMath math="A = 1 - \\frac{\\text{Spike-Zeitpunkte}}{\\text{Gesamtanzahl}}" />
                                         </div>
                                       </div>
-                                      <p className="text-xs text-muted-foreground">Erkennung untypischer Volumenschübe</p>
+                                      <p className="text-xs text-gray-200">Erkennung untypischer Volumenschübe</p>
                                     </div>
                                   </TooltipContent>
                                 </Tooltip>
@@ -1407,7 +1407,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                           <BlockMath math="T = 1 - \\frac{\\sigma_V}{\\mu_V + \\epsilon}" />
                                         </div>
                                       </div>
-                                      <p className="text-xs text-muted-foreground">Coefficient of Variation für Volumen-Stabilität</p>
+                                      <p className="text-xs text-gray-200">Coefficient of Variation für Volumen-Stabilität</p>
                                     </div>
                                   </TooltipContent>
                                 </Tooltip>
@@ -1436,8 +1436,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                         <BlockMath math="Q_{volume} = w_1 \\cdot S + w_2 \\cdot A + w_3 \\cdot T" />
                                       </div>
                                     </div>
-                                    <div className="text-xs text-muted-foreground space-y-1">
-                                      <p><strong>Gewichte:</strong> w₁=0.4, w₂=0.3, w₃=0.3</p>
+                                    <div className="text-xs text-gray-200 space-y-1">
+                                      <p><strong className="text-white">Gewichte:</strong> w₁=0.4, w₂=0.3, w₃=0.3</p>
                                       <p>Konzentration hat größten Einfluss</p>
                                     </div>
                                   </div>
