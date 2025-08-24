@@ -15,7 +15,6 @@ import {
   Lightbulb,
   Target
 } from "lucide-react"
-import { getPercentageColor } from "@/lib/score-colors"
 
 interface SimplifiedAnalysisTabProps {
   selectedStock: string
@@ -139,12 +138,12 @@ const getSimplifiedData = (stock: string): SimplifiedData => {
 
 const getRiskColor = (level: string) => {
   switch (level.toLowerCase()) {
-    case "niedrig": return "text-green-600 bg-green-500/10 border-green-500/20"
-    case "mittel-niedrig": return "text-blue-600 bg-blue-500/10 border-blue-500/20" 
-    case "mittel": return "text-yellow-600 bg-yellow-500/10 border-yellow-500/20"
-    case "hoch": return "text-orange-600 bg-orange-500/10 border-orange-500/20"
-    case "sehr hoch": return "text-red-600 bg-red-500/10 border-red-500/20"
-    default: return "text-gray-600 bg-gray-500/10 border-gray-500/20"
+    case "niedrig": return "text-green-600 bg-green-500/10"
+    case "mittel-niedrig": return "text-blue-600 bg-blue-500/10" 
+    case "mittel": return "text-yellow-600 bg-yellow-500/10"
+    case "hoch": return "text-orange-600 bg-orange-500/10"
+    case "sehr hoch": return "text-red-600 bg-red-500/10"
+    default: return "text-gray-600 bg-gray-500/10"
   }
 }
 
@@ -208,7 +207,7 @@ export function SimplifiedAnalysisTab({ selectedStock }: SimplifiedAnalysisTabPr
                     <p className="text-base leading-relaxed">{data.overallMessage}</p>
                   </div>
                   <div className="text-center ml-6">
-                    <div className={`text-3xl font-bold ${getPercentageColor(100 - data.confidenceLevel).text} mb-1`}>
+                    <div className="text-3xl font-bold text-primary mb-1">
                       {100 - data.confidenceLevel}%
                     </div>
                     <p className="text-sm text-muted-foreground">Vertrauen</p>
