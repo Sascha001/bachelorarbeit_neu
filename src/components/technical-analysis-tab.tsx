@@ -221,7 +221,7 @@ interface FundamentalDataParams {
   stability: { value: number; revisions: number; totalDataPoints: number };
 }
 
-const getFundamentalDataParams = (stock: string): FundamentalDataParams => {
+export const getFundamentalDataParams = (stock: string): FundamentalDataParams => {
   const params: Record<string, FundamentalDataParams> = {
     // AAPL: Score should be 92% => (C + T + K + A + S) / 5 = 0.92
     AAPL: {
@@ -417,7 +417,7 @@ interface TimeSeriesIntegrityParams {
   continuity: { value: number; gaps: number; totalIntervals: number };
 }
 
-const getNewsReliabilityParams = (stock: string): NewsReliabilityParams => {
+export const getNewsReliabilityParams = (stock: string): NewsReliabilityParams => {
   const params: Record<string, NewsReliabilityParams> = {
     // AAPL: Score should be 88% => (R + P + K + (1-B)) * weights = 0.88
     // Weights: w1=0.3, w2=0.3, w3=0.25, w4=0.15
@@ -575,7 +575,7 @@ const getNewsReliabilityParams = (stock: string): NewsReliabilityParams => {
   return params[stock] || params.AAPL
 }
 
-const getTimeSeriesIntegrityParams = (stock: string): TimeSeriesIntegrityParams => {
+export const getTimeSeriesIntegrityParams = (stock: string): TimeSeriesIntegrityParams => {
   const params: Record<string, TimeSeriesIntegrityParams> = {
     // AAPL: Score should be 95% => (C + O + R + K) / 4 = 0.95
     AAPL: {
@@ -739,7 +739,7 @@ interface TradingVolumeParams {
   timeStability: { value: number; stdev: number; avgVolume: number };
 }
 
-const getTradingVolumeParams = (stock: string): TradingVolumeParams => {
+export const getTradingVolumeParams = (stock: string): TradingVolumeParams => {
   const params: Record<string, TradingVolumeParams> = {
     // US Tech Giants - Mixed patterns due to high retail interest
     AAPL: {
