@@ -108,88 +108,88 @@ interface TechnicalData {
 }
 
 const getTechnicalData = (stock: string): TechnicalData => {
-  const mockData: Record<string, TechnicalData> = {
-    AAPL: {
-      dataValidation: {
-        fundamentalData: { score: 92, status: "excellent", issues: 0 },
-        newsReliability: { score: 88, status: "good", sources: 15 },
-        timeSeriesIntegrity: { score: 95, status: "excellent", gaps: 0 },
-        tradingVolume: { score: 85, status: "good", anomalies: 2 }
-      },
-      modelMetrics: {
-        trainingAccuracy: 94.2,
-        validationLoss: 0.032,
-        featureImportance: [
-          { name: "Price Momentum", weight: 0.28 },
-          { name: "Volume Trend", weight: 0.22 },
-          { name: "Technical Indicators", weight: 0.20 },
-          { name: "Market Sentiment", weight: 0.18 },
-          { name: "Fundamental Ratios", weight: 0.12 }
-        ],
-        predictionInterval: "95% Confidence: $165.20 - $191.44"
-      },
-      humanFactors: {
-        expertConsensus: 78,
-        marketSentiment: 82,
-        analystReliability: 88,
-        behavioralBias: 15
-      }
-    },
-    MSFT: {
-      dataValidation: {
-        fundamentalData: { score: 96, status: "excellent", issues: 0 },
-        newsReliability: { score: 91, status: "excellent", sources: 12 },
-        timeSeriesIntegrity: { score: 89, status: "good", gaps: 1 },
-        tradingVolume: { score: 93, status: "excellent", anomalies: 0 }
-      },
-      modelMetrics: {
-        trainingAccuracy: 91.8,
-        validationLoss: 0.045,
-        featureImportance: [
-          { name: "Fundamental Ratios", weight: 0.32 },
-          { name: "Price Momentum", weight: 0.25 },
-          { name: "Market Sentiment", weight: 0.20 },
-          { name: "Technical Indicators", weight: 0.15 },
-          { name: "Volume Trend", weight: 0.08 }
-        ],
-        predictionInterval: "95% Confidence: $385.15 - $432.78"
-      },
-      humanFactors: {
-        expertConsensus: 85,
-        marketSentiment: 89,
-        analystReliability: 92,
-        behavioralBias: 8
-      }
-    },
-    TSLA: {
-      dataValidation: {
-        fundamentalData: { score: 75, status: "fair", issues: 3 },
-        newsReliability: { score: 68, status: "fair", sources: 8 },
-        timeSeriesIntegrity: { score: 82, status: "good", gaps: 2 },
-        tradingVolume: { score: 71, status: "fair", anomalies: 5 }
-      },
-      modelMetrics: {
-        trainingAccuracy: 78.5,
-        validationLoss: 0.089,
-        featureImportance: [
-          { name: "Market Sentiment", weight: 0.35 },
-          { name: "Volume Trend", weight: 0.28 },
-          { name: "Price Momentum", weight: 0.18 },
-          { name: "Technical Indicators", weight: 0.12 },
-          { name: "Fundamental Ratios", weight: 0.07 }
-        ],
-        predictionInterval: "95% Confidence: $198.45 - $287.91"
-      },
-      humanFactors: {
-        expertConsensus: 62,
-        marketSentiment: 74,
-        analystReliability: 71,
-        behavioralBias: 28
-      }
+  // Calculate actual scores from parameter functions
+  const fundamentalParams = getFundamentalDataParams(stock)
+  const newsParams = getNewsReliabilityParams(stock) 
+  const timeSeriesParams = getTimeSeriesIntegrityParams(stock)
+  const tradingVolumeParams = getTradingVolumeParams(stock)
+  
+  // Calculate weighted averages for each dimension
+  const fundamentalScore = Math.round((0.2 * fundamentalParams.completeness.value + 
+                                      0.2 * fundamentalParams.timeliness.value + 
+                                      0.2 * fundamentalParams.consistency.value + 
+                                      0.2 * fundamentalParams.accuracy.value + 
+                                      0.2 * fundamentalParams.stability.value) * 100)
+  
+  const newsScore = Math.round((0.3 * newsParams.sourceReliability.value + 
+                               0.3 * newsParams.reputationAccuracy.value + 
+                               0.25 * newsParams.crossSourceConsensus.value + 
+                               0.15 * newsParams.biasCheck.value) * 100)
+  
+  const timeSeriesScore = Math.round((0.25 * timeSeriesParams.completeness.value + 
+                                     0.25 * timeSeriesParams.outlierFreedom.value + 
+                                     0.25 * timeSeriesParams.revisionStability.value + 
+                                     0.25 * timeSeriesParams.continuity.value) * 100)
+  
+  const tradingVolumeScore = Math.round((0.4 * tradingVolumeParams.concentration.value + 
+                                        0.3 * tradingVolumeParams.anomalousSpikes.value + 
+                                        0.3 * tradingVolumeParams.timeStability.value) * 100)
+  
+  // Status based on score
+  const getStatus = (score: number) => {
+    if (score >= 90) return "excellent"
+    if (score >= 80) return "good" 
+    if (score >= 70) return "fair"
+    return "poor"
+  }
+  
+  // Calculate derived metrics
+  const fundamentalIssues = Math.max(0, Math.floor((100 - fundamentalScore) / 10))
+  const newsSources = newsParams.sourceReliability.totalSources
+  const timeSeriesGaps = timeSeriesParams.continuity.gaps > 30 ? Math.floor(timeSeriesParams.continuity.gaps / 15) : 0
+  const tradingAnomalies = tradingVolumeParams.anomalousSpikes.spikes
+  
+  // Stock-specific model metrics and human factors (simplified for demo)
+  const getModelMetrics = (stockSymbol: string) => {
+    const baseAccuracy = fundamentalScore * 0.85 + timeSeriesScore * 0.15
+    const baseValidationLoss = Math.max(0.01, (100 - baseAccuracy) / 1000)
+    
+    return {
+      trainingAccuracy: Math.round(baseAccuracy * 10) / 10,
+      validationLoss: Math.round(baseValidationLoss * 1000) / 1000,
+      featureImportance: [
+        { name: "Price Momentum", weight: 0.25 },
+        { name: "Volume Trend", weight: 0.20 },
+        { name: "Technical Indicators", weight: 0.20 },
+        { name: "Market Sentiment", weight: 0.20 },
+        { name: "Fundamental Ratios", weight: 0.15 }
+      ],
+      predictionInterval: `95% Confidence: Calculated based on ${stockSymbol} volatility`
     }
   }
   
-  return mockData[stock] || mockData.AAPL
+  const getHumanFactors = (stockSymbol: string) => {
+    const baseConsensus = Math.min(95, fundamentalScore * 0.8 + newsScore * 0.2)
+    const baseSentiment = Math.min(95, newsScore * 0.7 + tradingVolumeScore * 0.3)
+    
+    return {
+      expertConsensus: Math.round(baseConsensus),
+      marketSentiment: Math.round(baseSentiment), 
+      analystReliability: Math.round((fundamentalScore + newsScore) / 2),
+      behavioralBias: Math.max(5, Math.round((100 - tradingVolumeScore) / 3))
+    }
+  }
+  
+  return {
+    dataValidation: {
+      fundamentalData: { score: fundamentalScore, status: getStatus(fundamentalScore), issues: fundamentalIssues },
+      newsReliability: { score: newsScore, status: getStatus(newsScore), sources: newsSources },
+      timeSeriesIntegrity: { score: timeSeriesScore, status: getStatus(timeSeriesScore), gaps: timeSeriesGaps },
+      tradingVolume: { score: tradingVolumeScore, status: getStatus(tradingVolumeScore), anomalies: tradingAnomalies }
+    },
+    modelMetrics: getModelMetrics(stock),
+    humanFactors: getHumanFactors(stock)
+  }
 }
 
 const getStatusColor = (status: string) => {
