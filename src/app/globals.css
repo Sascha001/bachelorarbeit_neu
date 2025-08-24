@@ -341,6 +341,29 @@
   box-shadow: 0 2px 4px hsl(270 40% 20% / 0.4);
 }
 
+/* Force standard scrollbars for specific elements */
+.standard-scrollbar {
+  scrollbar-width: auto !important; /* Firefox - show standard scrollbar */
+}
+
+.standard-scrollbar::-webkit-scrollbar {
+  display: block !important; /* Chrome/Safari - show standard scrollbar */
+  width: auto !important;
+  height: auto !important;
+}
+
+.standard-scrollbar::-webkit-scrollbar-track {
+  display: block !important;
+}
+
+.standard-scrollbar::-webkit-scrollbar-thumb {
+  display: block !important;
+}
+
+.standard-scrollbar::-webkit-scrollbar-corner {
+  display: block !important;
+}
+
 @layer components {
   .violet-bloom-hover {
     @apply transition-all duration-300 hover:bg-primary/10 hover:text-primary hover:border-primary/30;

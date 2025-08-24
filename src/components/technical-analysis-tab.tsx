@@ -440,6 +440,136 @@ const getNewsReliabilityParams = (stock: string): NewsReliabilityParams => {
       reputationAccuracy: { value: 0.75, totalNews: 100, falseNews: 25 },                   // P = 1 - (25/100) = 0.75
       crossSourceConsensus: { value: 0.60, totalNews: 10, confirmedNews: 6 },               // K = 6/10 = 0.60 (viel speculation)
       biasCheck: { value: 0.65, biasIndex: 0.35, maxBiasValue: 1.0 }                       // B = 0.35 (high bias), so (1-B) = 0.65
+    },
+
+    // Additional US Tech Giants
+    GOOGL: {
+      sourceReliability: { value: 0.91, totalSources: 14, averageReliability: 0.91 },
+      reputationAccuracy: { value: 0.89, totalNews: 100, falseNews: 11 },
+      crossSourceConsensus: { value: 0.87, totalNews: 10, confirmedNews: 8.7 },
+      biasCheck: { value: 0.86, biasIndex: 0.14, maxBiasValue: 1.0 }
+    },
+    AMZN: {
+      sourceReliability: { value: 0.88, totalSources: 13, averageReliability: 0.88 },
+      reputationAccuracy: { value: 0.85, totalNews: 100, falseNews: 15 },
+      crossSourceConsensus: { value: 0.82, totalNews: 10, confirmedNews: 8.2 },
+      biasCheck: { value: 0.83, biasIndex: 0.17, maxBiasValue: 1.0 }
+    },
+    META: {
+      sourceReliability: { value: 0.85, totalSources: 11, averageReliability: 0.85 },
+      reputationAccuracy: { value: 0.78, totalNews: 100, falseNews: 22 },
+      crossSourceConsensus: { value: 0.75, totalNews: 10, confirmedNews: 7.5 },
+      biasCheck: { value: 0.77, biasIndex: 0.23, maxBiasValue: 1.0 }
+    },
+    NVDA: {
+      sourceReliability: { value: 0.87, totalSources: 10, averageReliability: 0.87 },
+      reputationAccuracy: { value: 0.82, totalNews: 100, falseNews: 18 },
+      crossSourceConsensus: { value: 0.79, totalNews: 10, confirmedNews: 7.9 },
+      biasCheck: { value: 0.80, biasIndex: 0.20, maxBiasValue: 1.0 }
+    },
+
+    // Traditional US Finance/Healthcare - Very reliable sources
+    "BRK.B": {
+      sourceReliability: { value: 0.96, totalSources: 18, averageReliability: 0.96 },
+      reputationAccuracy: { value: 0.95, totalNews: 100, falseNews: 5 },
+      crossSourceConsensus: { value: 0.93, totalNews: 10, confirmedNews: 9.3 },
+      biasCheck: { value: 0.94, biasIndex: 0.06, maxBiasValue: 1.0 }
+    },
+    JPM: {
+      sourceReliability: { value: 0.94, totalSources: 16, averageReliability: 0.94 },
+      reputationAccuracy: { value: 0.93, totalNews: 100, falseNews: 7 },
+      crossSourceConsensus: { value: 0.91, totalNews: 10, confirmedNews: 9.1 },
+      biasCheck: { value: 0.92, biasIndex: 0.08, maxBiasValue: 1.0 }
+    },
+    JNJ: {
+      sourceReliability: { value: 0.93, totalSources: 15, averageReliability: 0.93 },
+      reputationAccuracy: { value: 0.91, totalNews: 100, falseNews: 9 },
+      crossSourceConsensus: { value: 0.89, totalNews: 10, confirmedNews: 8.9 },
+      biasCheck: { value: 0.90, biasIndex: 0.10, maxBiasValue: 1.0 }
+    },
+
+    // German Stocks - Good but localized sources
+    "SAP.DE": {
+      sourceReliability: { value: 0.86, totalSources: 12, averageReliability: 0.86 },
+      reputationAccuracy: { value: 0.84, totalNews: 100, falseNews: 16 },
+      crossSourceConsensus: { value: 0.80, totalNews: 10, confirmedNews: 8.0 },
+      biasCheck: { value: 0.82, biasIndex: 0.18, maxBiasValue: 1.0 }
+    },
+    "BMW.DE": {
+      sourceReliability: { value: 0.82, totalSources: 10, averageReliability: 0.82 },
+      reputationAccuracy: { value: 0.79, totalNews: 100, falseNews: 21 },
+      crossSourceConsensus: { value: 0.75, totalNews: 10, confirmedNews: 7.5 },
+      biasCheck: { value: 0.78, biasIndex: 0.22, maxBiasValue: 1.0 }
+    },
+    "SIE.DE": {
+      sourceReliability: { value: 0.85, totalSources: 11, averageReliability: 0.85 },
+      reputationAccuracy: { value: 0.82, totalNews: 100, falseNews: 18 },
+      crossSourceConsensus: { value: 0.78, totalNews: 10, confirmedNews: 7.8 },
+      biasCheck: { value: 0.80, biasIndex: 0.20, maxBiasValue: 1.0 }
+    },
+    "ALV.DE": {
+      sourceReliability: { value: 0.88, totalSources: 13, averageReliability: 0.88 },
+      reputationAccuracy: { value: 0.86, totalNews: 100, falseNews: 14 },
+      crossSourceConsensus: { value: 0.83, totalNews: 10, confirmedNews: 8.3 },
+      biasCheck: { value: 0.84, biasIndex: 0.16, maxBiasValue: 1.0 }
+    },
+    "BAS.DE": {
+      sourceReliability: { value: 0.79, totalSources: 9, averageReliability: 0.79 },
+      reputationAccuracy: { value: 0.75, totalNews: 100, falseNews: 25 },
+      crossSourceConsensus: { value: 0.71, totalNews: 10, confirmedNews: 7.1 },
+      biasCheck: { value: 0.74, biasIndex: 0.26, maxBiasValue: 1.0 }
+    },
+
+    // More US stocks
+    V: {
+      sourceReliability: { value: 0.92, totalSources: 15, averageReliability: 0.92 },
+      reputationAccuracy: { value: 0.90, totalNews: 100, falseNews: 10 },
+      crossSourceConsensus: { value: 0.88, totalNews: 10, confirmedNews: 8.8 },
+      biasCheck: { value: 0.89, biasIndex: 0.11, maxBiasValue: 1.0 }
+    },
+    MA: {
+      sourceReliability: { value: 0.91, totalSources: 14, averageReliability: 0.91 },
+      reputationAccuracy: { value: 0.88, totalNews: 100, falseNews: 12 },
+      crossSourceConsensus: { value: 0.86, totalNews: 10, confirmedNews: 8.6 },
+      biasCheck: { value: 0.87, biasIndex: 0.13, maxBiasValue: 1.0 }
+    },
+    UNH: {
+      sourceReliability: { value: 0.89, totalSources: 13, averageReliability: 0.89 },
+      reputationAccuracy: { value: 0.86, totalNews: 100, falseNews: 14 },
+      crossSourceConsensus: { value: 0.84, totalNews: 10, confirmedNews: 8.4 },
+      biasCheck: { value: 0.85, biasIndex: 0.15, maxBiasValue: 1.0 }
+    },
+    HD: {
+      sourceReliability: { value: 0.87, totalSources: 12, averageReliability: 0.87 },
+      reputationAccuracy: { value: 0.84, totalNews: 100, falseNews: 16 },
+      crossSourceConsensus: { value: 0.81, totalNews: 10, confirmedNews: 8.1 },
+      biasCheck: { value: 0.83, biasIndex: 0.17, maxBiasValue: 1.0 }
+    },
+    PG: {
+      sourceReliability: { value: 0.90, totalSources: 14, averageReliability: 0.90 },
+      reputationAccuracy: { value: 0.88, totalNews: 100, falseNews: 12 },
+      crossSourceConsensus: { value: 0.85, totalNews: 10, confirmedNews: 8.5 },
+      biasCheck: { value: 0.87, biasIndex: 0.13, maxBiasValue: 1.0 }
+    },
+    KO: {
+      sourceReliability: { value: 0.89, totalSources: 13, averageReliability: 0.89 },
+      reputationAccuracy: { value: 0.87, totalNews: 100, falseNews: 13 },
+      crossSourceConsensus: { value: 0.84, totalNews: 10, confirmedNews: 8.4 },
+      biasCheck: { value: 0.86, biasIndex: 0.14, maxBiasValue: 1.0 }
+    },
+
+    // International stocks - Mixed source quality
+    "ASML.AS": {
+      sourceReliability: { value: 0.83, totalSources: 10, averageReliability: 0.83 },
+      reputationAccuracy: { value: 0.80, totalNews: 100, falseNews: 20 },
+      crossSourceConsensus: { value: 0.76, totalNews: 10, confirmedNews: 7.6 },
+      biasCheck: { value: 0.79, biasIndex: 0.21, maxBiasValue: 1.0 }
+    },
+    "NESN.SW": {
+      sourceReliability: { value: 0.85, totalSources: 11, averageReliability: 0.85 },
+      reputationAccuracy: { value: 0.83, totalNews: 100, falseNews: 17 },
+      crossSourceConsensus: { value: 0.79, totalNews: 10, confirmedNews: 7.9 },
+      biasCheck: { value: 0.81, biasIndex: 0.19, maxBiasValue: 1.0 }
     }
   }
   return params[stock] || params.AAPL
@@ -467,6 +597,271 @@ const getTimeSeriesIntegrityParams = (stock: string): TimeSeriesIntegrityParams 
       outlierFreedom: { value: 0.84, outliers: 40, totalObservations: 250 },          // O = 1 - (40/250) = 0.84
       revisionStability: { value: 0.78, revisedValues: 55, totalValues: 250 },        // R = 1 - (55/250) = 0.78
       continuity: { value: 0.78, gaps: 55, totalIntervals: 250 }                      // K = 1 - (55/250) = 0.78
+    },
+
+    // Additional US Tech Giants
+    GOOGL: {
+      completeness: { value: 0.94, missingTimepoints: 15, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.92, outliers: 20, totalObservations: 250 },
+      revisionStability: { value: 0.90, revisedValues: 25, totalValues: 250 },
+      continuity: { value: 0.88, gaps: 30, totalIntervals: 250 }
+    },
+    AMZN: {
+      completeness: { value: 0.90, missingTimepoints: 25, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.88, outliers: 30, totalObservations: 250 },
+      revisionStability: { value: 0.86, revisedValues: 35, totalValues: 250 },
+      continuity: { value: 0.84, gaps: 40, totalIntervals: 250 }
+    },
+    META: {
+      completeness: { value: 0.92, missingTimepoints: 20, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.85, outliers: 38, totalObservations: 250 },
+      revisionStability: { value: 0.83, revisedValues: 43, totalValues: 250 },
+      continuity: { value: 0.80, gaps: 50, totalIntervals: 250 }
+    },
+    NVDA: {
+      completeness: { value: 0.89, missingTimepoints: 28, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.82, outliers: 45, totalObservations: 250 },
+      revisionStability: { value: 0.79, revisedValues: 53, totalValues: 250 },
+      continuity: { value: 0.76, gaps: 60, totalIntervals: 250 }
+    },
+
+    // Traditional US Finance/Healthcare - Very stable
+    "BRK.B": {
+      completeness: { value: 0.99, missingTimepoints: 3, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.98, outliers: 5, totalObservations: 250 },
+      revisionStability: { value: 0.99, revisedValues: 3, totalValues: 250 },
+      continuity: { value: 0.98, gaps: 5, totalIntervals: 250 }
+    },
+    JPM: {
+      completeness: { value: 0.97, missingTimepoints: 8, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.95, outliers: 13, totalObservations: 250 },
+      revisionStability: { value: 0.96, revisedValues: 10, totalValues: 250 },
+      continuity: { value: 0.94, gaps: 15, totalIntervals: 250 }
+    },
+    JNJ: {
+      completeness: { value: 0.96, missingTimepoints: 10, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.94, outliers: 15, totalObservations: 250 },
+      revisionStability: { value: 0.95, revisedValues: 13, totalValues: 250 },
+      continuity: { value: 0.93, gaps: 18, totalIntervals: 250 }
+    },
+
+    // German Stocks - Moderate stability
+    "SAP.DE": {
+      completeness: { value: 0.91, missingTimepoints: 23, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.87, outliers: 33, totalObservations: 250 },
+      revisionStability: { value: 0.85, revisedValues: 38, totalValues: 250 },
+      continuity: { value: 0.83, gaps: 43, totalIntervals: 250 }
+    },
+    "BMW.DE": {
+      completeness: { value: 0.88, missingTimepoints: 30, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.84, outliers: 40, totalObservations: 250 },
+      revisionStability: { value: 0.81, revisedValues: 48, totalValues: 250 },
+      continuity: { value: 0.79, gaps: 53, totalIntervals: 250 }
+    },
+    "SIE.DE": {
+      completeness: { value: 0.90, missingTimepoints: 25, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.86, outliers: 35, totalObservations: 250 },
+      revisionStability: { value: 0.84, revisedValues: 40, totalValues: 250 },
+      continuity: { value: 0.82, gaps: 45, totalIntervals: 250 }
+    },
+    "ALV.DE": {
+      completeness: { value: 0.93, missingTimepoints: 18, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.89, outliers: 28, totalObservations: 250 },
+      revisionStability: { value: 0.87, revisedValues: 33, totalValues: 250 },
+      continuity: { value: 0.85, gaps: 38, totalIntervals: 250 }
+    },
+    "BAS.DE": {
+      completeness: { value: 0.85, missingTimepoints: 38, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.80, outliers: 50, totalObservations: 250 },
+      revisionStability: { value: 0.77, revisedValues: 58, totalValues: 250 },
+      continuity: { value: 0.74, gaps: 65, totalIntervals: 250 }
+    },
+
+    // More US stocks
+    V: {
+      completeness: { value: 0.95, missingTimepoints: 13, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.93, outliers: 18, totalObservations: 250 },
+      revisionStability: { value: 0.94, revisedValues: 15, totalValues: 250 },
+      continuity: { value: 0.92, gaps: 20, totalIntervals: 250 }
+    },
+    MA: {
+      completeness: { value: 0.94, missingTimepoints: 15, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.91, outliers: 23, totalObservations: 250 },
+      revisionStability: { value: 0.92, revisedValues: 20, totalValues: 250 },
+      continuity: { value: 0.90, gaps: 25, totalIntervals: 250 }
+    },
+    UNH: {
+      completeness: { value: 0.93, missingTimepoints: 18, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.90, outliers: 25, totalObservations: 250 },
+      revisionStability: { value: 0.91, revisedValues: 23, totalValues: 250 },
+      continuity: { value: 0.89, gaps: 28, totalIntervals: 250 }
+    },
+    HD: {
+      completeness: { value: 0.91, missingTimepoints: 23, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.88, outliers: 30, totalObservations: 250 },
+      revisionStability: { value: 0.89, revisedValues: 28, totalValues: 250 },
+      continuity: { value: 0.86, gaps: 35, totalIntervals: 250 }
+    },
+    PG: {
+      completeness: { value: 0.94, missingTimepoints: 15, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.92, outliers: 20, totalObservations: 250 },
+      revisionStability: { value: 0.93, revisedValues: 18, totalValues: 250 },
+      continuity: { value: 0.91, gaps: 23, totalIntervals: 250 }
+    },
+    KO: {
+      completeness: { value: 0.93, missingTimepoints: 18, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.91, outliers: 23, totalObservations: 250 },
+      revisionStability: { value: 0.92, revisedValues: 20, totalValues: 250 },
+      continuity: { value: 0.90, gaps: 25, totalIntervals: 250 }
+    },
+
+    // International stocks
+    "ASML.AS": {
+      completeness: { value: 0.89, missingTimepoints: 28, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.85, outliers: 38, totalObservations: 250 },
+      revisionStability: { value: 0.82, revisedValues: 45, totalValues: 250 },
+      continuity: { value: 0.80, gaps: 50, totalIntervals: 250 }
+    },
+    "NESN.SW": {
+      completeness: { value: 0.92, missingTimepoints: 20, expectedTimepoints: 250 },
+      outlierFreedom: { value: 0.88, outliers: 30, totalObservations: 250 },
+      revisionStability: { value: 0.86, revisedValues: 35, totalValues: 250 },
+      continuity: { value: 0.84, gaps: 40, totalIntervals: 250 }
+    }
+  }
+  return params[stock] || params.AAPL
+}
+
+// Trading Volume Distribution Parameters Interface
+interface TradingVolumeParams {
+  concentration: { value: number; hhi: number; mainActors: number };
+  anomalousSpikes: { value: number; spikes: number; totalDays: number };
+  timeStability: { value: number; stdev: number; avgVolume: number };
+}
+
+const getTradingVolumeParams = (stock: string): TradingVolumeParams => {
+  const params: Record<string, TradingVolumeParams> = {
+    // US Tech Giants - Mixed patterns due to high retail interest
+    AAPL: {
+      concentration: { value: 0.82, hhi: 0.18, mainActors: 5 },
+      anomalousSpikes: { value: 0.91, spikes: 3, totalDays: 30 },
+      timeStability: { value: 0.76, stdev: 0.24, avgVolume: 45123456 }
+    },
+    MSFT: {
+      concentration: { value: 0.88, hhi: 0.12, mainActors: 4 },
+      anomalousSpikes: { value: 0.95, spikes: 2, totalDays: 30 },
+      timeStability: { value: 0.82, stdev: 0.18, avgVolume: 23567890 }
+    },
+    GOOGL: {
+      concentration: { value: 0.85, hhi: 0.15, mainActors: 6 },
+      anomalousSpikes: { value: 0.89, spikes: 4, totalDays: 30 },
+      timeStability: { value: 0.78, stdev: 0.22, avgVolume: 18456789 }
+    },
+    AMZN: {
+      concentration: { value: 0.79, hhi: 0.21, mainActors: 7 },
+      anomalousSpikes: { value: 0.87, spikes: 5, totalDays: 30 },
+      timeStability: { value: 0.74, stdev: 0.26, avgVolume: 35789123 }
+    },
+    TSLA: {
+      concentration: { value: 0.65, hhi: 0.35, mainActors: 8 },
+      anomalousSpikes: { value: 0.71, spikes: 9, totalDays: 30 },
+      timeStability: { value: 0.68, stdev: 0.32, avgVolume: 89456123 }
+    },
+    META: {
+      concentration: { value: 0.83, hhi: 0.17, mainActors: 5 },
+      anomalousSpikes: { value: 0.92, spikes: 3, totalDays: 30 },
+      timeStability: { value: 0.81, stdev: 0.19, avgVolume: 12345678 }
+    },
+    NVDA: {
+      concentration: { value: 0.77, hhi: 0.23, mainActors: 6 },
+      anomalousSpikes: { value: 0.84, spikes: 6, totalDays: 30 },
+      timeStability: { value: 0.72, stdev: 0.28, avgVolume: 45678912 }
+    },
+
+    // Traditional US Companies - More stable institutional trading
+    "BRK.B": {
+      concentration: { value: 0.94, hhi: 0.06, mainActors: 3 },
+      anomalousSpikes: { value: 0.97, spikes: 1, totalDays: 30 },
+      timeStability: { value: 0.91, stdev: 0.09, avgVolume: 2345678 }
+    },
+    JPM: {
+      concentration: { value: 0.91, hhi: 0.09, mainActors: 4 },
+      anomalousSpikes: { value: 0.94, spikes: 2, totalDays: 30 },
+      timeStability: { value: 0.88, stdev: 0.12, avgVolume: 8901234 }
+    },
+    JNJ: {
+      concentration: { value: 0.93, hhi: 0.07, mainActors: 3 },
+      anomalousSpikes: { value: 0.96, spikes: 1, totalDays: 30 },
+      timeStability: { value: 0.90, stdev: 0.10, avgVolume: 5678901 }
+    },
+    V: {
+      concentration: { value: 0.89, hhi: 0.11, mainActors: 4 },
+      anomalousSpikes: { value: 0.93, spikes: 2, totalDays: 30 },
+      timeStability: { value: 0.86, stdev: 0.14, avgVolume: 4567890 }
+    },
+    MA: {
+      concentration: { value: 0.92, hhi: 0.08, mainActors: 3 },
+      anomalousSpikes: { value: 0.95, spikes: 1, totalDays: 30 },
+      timeStability: { value: 0.89, stdev: 0.11, avgVolume: 2109876 }
+    },
+    UNH: {
+      concentration: { value: 0.90, hhi: 0.10, mainActors: 4 },
+      anomalousSpikes: { value: 0.94, spikes: 2, totalDays: 30 },
+      timeStability: { value: 0.87, stdev: 0.13, avgVolume: 1987654 }
+    },
+    HD: {
+      concentration: { value: 0.87, hhi: 0.13, mainActors: 5 },
+      anomalousSpikes: { value: 0.91, spikes: 3, totalDays: 30 },
+      timeStability: { value: 0.84, stdev: 0.16, avgVolume: 3456789 }
+    },
+    PG: {
+      concentration: { value: 0.93, hhi: 0.07, mainActors: 3 },
+      anomalousSpikes: { value: 0.96, spikes: 1, totalDays: 30 },
+      timeStability: { value: 0.91, stdev: 0.09, avgVolume: 4321098 }
+    },
+    KO: {
+      concentration: { value: 0.95, hhi: 0.05, mainActors: 3 },
+      anomalousSpikes: { value: 0.98, spikes: 1, totalDays: 30 },
+      timeStability: { value: 0.93, stdev: 0.07, avgVolume: 6789012 }
+    },
+
+    // German Stocks - Lower volumes, more concentrated
+    "SAP.DE": {
+      concentration: { value: 0.86, hhi: 0.14, mainActors: 4 },
+      anomalousSpikes: { value: 0.89, spikes: 3, totalDays: 30 },
+      timeStability: { value: 0.83, stdev: 0.17, avgVolume: 1234567 }
+    },
+    "BMW.DE": {
+      concentration: { value: 0.81, hhi: 0.19, mainActors: 5 },
+      anomalousSpikes: { value: 0.85, spikes: 4, totalDays: 30 },
+      timeStability: { value: 0.78, stdev: 0.22, avgVolume: 987654 }
+    },
+    "SIE.DE": {
+      concentration: { value: 0.88, hhi: 0.12, mainActors: 4 },
+      anomalousSpikes: { value: 0.92, spikes: 2, totalDays: 30 },
+      timeStability: { value: 0.85, stdev: 0.15, avgVolume: 765432 }
+    },
+    "ALV.DE": {
+      concentration: { value: 0.90, hhi: 0.10, mainActors: 3 },
+      anomalousSpikes: { value: 0.94, spikes: 2, totalDays: 30 },
+      timeStability: { value: 0.87, stdev: 0.13, avgVolume: 543210 }
+    },
+    "BAS.DE": {
+      concentration: { value: 0.84, hhi: 0.16, mainActors: 4 },
+      anomalousSpikes: { value: 0.88, spikes: 4, totalDays: 30 },
+      timeStability: { value: 0.80, stdev: 0.20, avgVolume: 1876543 }
+    },
+
+    // International Stocks - Mixed patterns based on local markets
+    "ASML.AS": {
+      concentration: { value: 0.85, hhi: 0.15, mainActors: 5 },
+      anomalousSpikes: { value: 0.88, spikes: 4, totalDays: 30 },
+      timeStability: { value: 0.81, stdev: 0.19, avgVolume: 234567 }
+    },
+    "NESN.SW": {
+      concentration: { value: 0.91, hhi: 0.09, mainActors: 3 },
+      anomalousSpikes: { value: 0.95, spikes: 2, totalDays: 30 },
+      timeStability: { value: 0.88, stdev: 0.12, avgVolume: 345678 }
     }
   }
   return params[stock] || params.AAPL
@@ -496,10 +891,11 @@ const getInfoBoxContent = (metric: string) => {
 }
 
 // Mathematical Formula Component for Tooltips
-const FormulaTooltip = ({ param, stock, type = "fundamental" }: { param: string; stock: string; type?: "fundamental" | "timeSeries" | "newsReliability" }) => {
+const FormulaTooltip = ({ param, stock, type = "fundamental" }: { param: string; stock: string; type?: "fundamental" | "timeSeries" | "newsReliability" | "tradingVolume" }) => {
   const fundamentalData = getFundamentalDataParams(stock)
   const timeSeriesData = getTimeSeriesIntegrityParams(stock)
   const newsReliabilityData = getNewsReliabilityParams(stock)
+  const tradingVolumeData = getTradingVolumeParams(stock)
   
   const fundamentalFormulas = {
     completeness: {
@@ -601,12 +997,38 @@ const FormulaTooltip = ({ param, stock, type = "fundamental" }: { param: string;
     }
   }
 
+  const tradingVolumeFormulas = {
+    concentration: {
+      title: `Konzentration (S = ${tradingVolumeData.concentration.value})`,
+      description: "Herfindahl-Hirschman Index für Marktkonzentration",
+      formula: "HHI = \\sum_{i=1}^{N} s_i^2, \\quad S = 1 - HHI",
+      calculation: `S = 1 - ${tradingVolumeData.concentration.hhi.toFixed(3)} = ${tradingVolumeData.concentration.value.toFixed(3)}`,
+      impact: `${tradingVolumeData.concentration.mainActors} Hauptakteure mit HHI=${tradingVolumeData.concentration.hhi.toFixed(2)} zeigen ${tradingVolumeData.concentration.hhi > 0.25 ? 'hohe' : tradingVolumeData.concentration.hhi > 0.15 ? 'moderate' : 'geringe'} Konzentration.`
+    },
+    anomalousSpikes: {
+      title: `Anomalous Spikes (A = ${tradingVolumeData.anomalousSpikes.value})`,
+      description: "Erkennung untypischer Volumenschübe",
+      formula: "A = 1 - \\frac{\\text{Spike-Zeitpunkte}}{\\text{Gesamtanzahl}}",
+      calculation: `A = 1 - \\frac{${tradingVolumeData.anomalousSpikes.spikes}}{${tradingVolumeData.anomalousSpikes.totalDays}} = ${tradingVolumeData.anomalousSpikes.value.toFixed(3)}`,
+      impact: `${tradingVolumeData.anomalousSpikes.spikes} Spikes in ${tradingVolumeData.anomalousSpikes.totalDays} Tagen (${((tradingVolumeData.anomalousSpikes.spikes / tradingVolumeData.anomalousSpikes.totalDays) * 100).toFixed(1)}%) deuten auf ${tradingVolumeData.anomalousSpikes.spikes > 6 ? 'erhöhte' : 'normale'} Marktvolatilität hin.`
+    },
+    timeStability: {
+      title: `Zeit-Stabilität (T = ${tradingVolumeData.timeStability.value})`,
+      description: "Coefficient of Variation für Volumen-Stabilität",
+      formula: "T = 1 - \\frac{\\sigma_V}{\\mu_V + \\epsilon}",
+      calculation: `T = 1 - \\frac{${(tradingVolumeData.timeStability.stdev * tradingVolumeData.timeStability.avgVolume / 1000000).toFixed(1)}M}{${(tradingVolumeData.timeStability.avgVolume / 1000000).toFixed(1)}M} = ${tradingVolumeData.timeStability.value.toFixed(3)}`,
+      impact: `CV von ${tradingVolumeData.timeStability.stdev.toFixed(2)} zeigt ${tradingVolumeData.timeStability.stdev > 0.3 ? 'hohe' : tradingVolumeData.timeStability.stdev > 0.2 ? 'moderate' : 'geringe'} Volumen-Volatilität.`
+    }
+  }
+
   let formula: { title: string; description: string; formula: string; calculation: string; impact: string } | undefined
   
   if (type === "newsReliability") {
     formula = newsReliabilityFormulas[param as keyof typeof newsReliabilityFormulas]
   } else if (type === "timeSeries") {
     formula = timeSeriesFormulas[param as keyof typeof timeSeriesFormulas]
+  } else if (type === "tradingVolume") {
+    formula = tradingVolumeFormulas[param as keyof typeof tradingVolumeFormulas]
   } else {
     formula = fundamentalFormulas[param as keyof typeof fundamentalFormulas]
   }
@@ -1515,10 +1937,9 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     {(() => {
                       if (activeInfoBox !== 'tradingVolume') return null
                       
+                      const params = getTradingVolumeParams(selectedStock)
                       const w1 = 0.4, w2 = 0.3, w3 = 0.3 // Gewichtungen
-                      // Beispielwerte für besseres Verständnis
-                      const sValue = 0.82, aValue = 0.91, tValue = 0.76
-                      const overallScoreNum = (w1 * sValue + w2 * aValue + w3 * tValue) * 100
+                      const overallScoreNum = (w1 * params.concentration.value + w2 * params.anomalousSpikes.value + w3 * params.timeStability.value) * 100
                       const overallScore = overallScoreNum.toFixed(1)
                       
                       // Farblogik für Score-Qualität
@@ -1561,25 +1982,13 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
-                                      <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
-                                        <div className="flex items-center justify-center min-h-[50px]">
-                                          <BlockMath math="HHI = \\sum_{i=1}^{N} s_i^2" />
-                                        </div>
-                                      </div>
-                                      <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
-                                        <div className="flex items-center justify-center min-h-[50px]">
-                                          <BlockMath math="S = 1 - HHI" />
-                                        </div>
-                                      </div>
-                                      <p className="text-xs text-gray-200">Herfindahl-Hirschman Index für Marktkonzentration</p>
-                                    </div>
+                                    <FormulaTooltip param="concentration" stock={selectedStock} type="tradingVolume" />
                                   </TooltipContent>
                                 </Tooltip>
-                                <Badge className="ml-auto">{(sValue * 100).toFixed(1)}%</Badge>
+                                <Badge className="ml-auto">{(params.concentration.value * 100).toFixed(1)}%</Badge>
                               </div>
                               <div className="text-sm text-muted-foreground">
-                                5 Hauptakteure mit HHI = 0.18
+                                {params.concentration.mainActors} Hauptakteure mit HHI = {params.concentration.hhi.toFixed(2)}
                               </div>
                               <div className="text-xs text-muted-foreground mt-1">
                                 Gewichtung: {w1 * 100}% - Dominanter Einfluss auf Marktstruktur
@@ -1597,20 +2006,13 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
-                                      <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
-                                        <div className="flex items-center justify-center min-h-[50px]">
-                                          <BlockMath math="A = 1 - \\frac{\\text{Spike-Zeitpunkte}}{\\text{Gesamtanzahl}}" />
-                                        </div>
-                                      </div>
-                                      <p className="text-xs text-gray-200">Erkennung untypischer Volumenschübe</p>
-                                    </div>
+                                    <FormulaTooltip param="anomalousSpikes" stock={selectedStock} type="tradingVolume" />
                                   </TooltipContent>
                                 </Tooltip>
-                                <Badge className="ml-auto">{(aValue * 100).toFixed(1)}%</Badge>
+                                <Badge className="ml-auto">{(params.anomalousSpikes.value * 100).toFixed(1)}%</Badge>
                               </div>
                               <div className="text-sm text-muted-foreground">
-                                22 Spike-Zeitpunkte von 250 Handelstagen (8.8%)
+                                {params.anomalousSpikes.spikes} Spike-Zeitpunkte von {params.anomalousSpikes.totalDays} Handelstagen ({((params.anomalousSpikes.spikes / params.anomalousSpikes.totalDays) * 100).toFixed(1)}%)
                               </div>
                               <div className="text-xs text-muted-foreground mt-1">
                                 Gewichtung: {w2 * 100}% - Erkennung von Marktmanipulation
@@ -1628,20 +2030,13 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
-                                      <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
-                                        <div className="flex items-center justify-center min-h-[50px]">
-                                          <BlockMath math="T = 1 - \\frac{\\sigma_V}{\\mu_V + \\epsilon}" />
-                                        </div>
-                                      </div>
-                                      <p className="text-xs text-gray-200">Coefficient of Variation für Volumen-Stabilität</p>
-                                    </div>
+                                    <FormulaTooltip param="timeStability" stock={selectedStock} type="tradingVolume" />
                                   </TooltipContent>
                                 </Tooltip>
-                                <Badge className="ml-auto">{(tValue * 100).toFixed(1)}%</Badge>
+                                <Badge className="ml-auto">{(params.timeStability.value * 100).toFixed(1)}%</Badge>
                               </div>
                               <div className="text-sm text-muted-foreground">
-                                σ = 2.4M Aktien, μ = 10M Aktien (CV = 0.24)
+                                σ = {(params.timeStability.stdev * params.timeStability.avgVolume / 1000000).toFixed(1)}M Aktien, μ = {(params.timeStability.avgVolume / 1000000).toFixed(1)}M Aktien (CV = {params.timeStability.stdev.toFixed(2)})
                               </div>
                               <div className="text-xs text-muted-foreground mt-1">
                                 Gewichtung: {w3 * 100}% - Vorhersagbarkeit des Handelsvolumens
@@ -1677,7 +2072,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             
                             <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
                               <div className="flex items-center justify-center min-h-[60px]">
-                                <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${(sValue * 100).toFixed(1)}\\% + ${w2} \\cdot ${(aValue * 100).toFixed(1)}\\% + ${w3} \\cdot ${(tValue * 100).toFixed(1)}\\% = ${overallScore}\\%`} />
+                                <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${params.concentration.value.toFixed(3)} + ${w2} \\cdot ${params.anomalousSpikes.value.toFixed(3)} + ${w3} \\cdot ${params.timeStability.value.toFixed(3)} = ${(overallScoreNum/100).toFixed(3)}`} />
                               </div>
                             </div>
                           </div>
