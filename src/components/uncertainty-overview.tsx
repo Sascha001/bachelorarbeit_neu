@@ -9,43 +9,73 @@ interface UncertaintyOverviewProps {
   selectedStock: string
 }
 
-// Mock data - in real app this would come from API
+// Import parameter functions from technical analysis
+import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams } from "./technical-analysis-tab"
+
+// Calculate uncertainty data from actual parameters
 const getUncertaintyData = (stock: string) => {
-  const mockData: Record<string, {
-    totalUncertainty: number;
-    dataUncertainty: number;
-    modelUncertainty: number;
-    humanUncertainty: number;
-    recommendation: string;
-    confidenceLevel: string;
-  }> = {
-    AAPL: {
-      totalUncertainty: 73,
-      dataUncertainty: 50, // 50% of total uncertainty
-      modelUncertainty: 30, // 30% of total uncertainty  
-      humanUncertainty: 20, // 20% of total uncertainty
-      recommendation: "HOLD",
-      confidenceLevel: "NIEDRIG"
-    },
-    MSFT: {
-      totalUncertainty: 45,
-      dataUncertainty: 40,
-      modelUncertainty: 35,
-      humanUncertainty: 25,
-      recommendation: "BUY",
-      confidenceLevel: "MITTEL"
-    },
-    TSLA: {
-      totalUncertainty: 89,
-      dataUncertainty: 60,
-      modelUncertainty: 25,
-      humanUncertainty: 15,
-      recommendation: "SELL",
-      confidenceLevel: "SEHR NIEDRIG"
-    }
+  // Get calculated scores from parameter functions
+  const fundamentalParams = getFundamentalDataParams(stock)
+  const newsParams = getNewsReliabilityParams(stock) 
+  const timeSeriesParams = getTimeSeriesIntegrityParams(stock)
+  const tradingVolumeParams = getTradingVolumeParams(stock)
+  
+  // Calculate individual dimension certainties (higher score = lower uncertainty)
+  const fundamentalCertainty = (0.2 * fundamentalParams.completeness.value + 
+                               0.2 * fundamentalParams.timeliness.value + 
+                               0.2 * fundamentalParams.consistency.value + 
+                               0.2 * fundamentalParams.accuracy.value + 
+                               0.2 * fundamentalParams.stability.value) * 100
+  
+  const newsCertainty = (0.3 * newsParams.sourceReliability.value + 
+                        0.3 * newsParams.reputationAccuracy.value + 
+                        0.25 * newsParams.crossSourceConsensus.value + 
+                        0.15 * newsParams.biasCheck.value) * 100
+  
+  const timeSeriesCertainty = (0.25 * timeSeriesParams.completeness.value + 
+                              0.25 * timeSeriesParams.outlierFreedom.value + 
+                              0.25 * timeSeriesParams.revisionStability.value + 
+                              0.25 * timeSeriesParams.continuity.value) * 100
+  
+  const tradingVolumeCertainty = (0.4 * tradingVolumeParams.concentration.value + 
+                                 0.3 * tradingVolumeParams.anomalousSpikes.value + 
+                                 0.3 * tradingVolumeParams.timeStability.value) * 100
+  
+  // Calculate weighted data uncertainty (average of all data dimensions)
+  const dataCertainty = (fundamentalCertainty + newsCertainty + timeSeriesCertainty + tradingVolumeCertainty) / 4
+  const dataUncertainty = 100 - dataCertainty
+  
+  // Estimate model uncertainty based on data quality (better data = more stable model)
+  const modelUncertainty = Math.max(5, Math.min(40, 30 - (dataCertainty - 70) * 0.5))
+  
+  // Estimate human uncertainty (inversely related to news reliability and fundamental quality)
+  const humanUncertainty = Math.max(10, Math.min(35, 35 - (newsCertainty + fundamentalCertainty) / 6))
+  
+  // Calculate total uncertainty as weighted average
+  const totalUncertainty = Math.round(0.5 * dataUncertainty + 0.3 * modelUncertainty + 0.2 * humanUncertainty)
+  
+  // Determine recommendation and confidence level
+  const getRecommendation = (uncertainty: number, stock: string) => {
+    if (uncertainty < 25) return "BUY"
+    if (uncertainty < 55) return "HOLD" 
+    return "SELL"
   }
   
-  return mockData[stock] || mockData.AAPL
+  const getConfidenceLevel = (uncertainty: number) => {
+    if (uncertainty < 20) return "HOCH"
+    if (uncertainty < 40) return "MITTEL"
+    if (uncertainty < 70) return "NIEDRIG"
+    return "SEHR NIEDRIG"
+  }
+  
+  return {
+    totalUncertainty,
+    dataUncertainty: Math.round(dataUncertainty),
+    modelUncertainty: Math.round(modelUncertainty),
+    humanUncertainty: Math.round(humanUncertainty),
+    recommendation: getRecommendation(totalUncertainty, stock),
+    confidenceLevel: getConfidenceLevel(totalUncertainty)
+  }
 }
 
 export function UncertaintyOverview({ selectedStock }: UncertaintyOverviewProps) {

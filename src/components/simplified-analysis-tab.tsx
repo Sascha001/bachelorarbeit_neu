@@ -20,6 +20,9 @@ interface SimplifiedAnalysisTabProps {
   selectedStock: string
 }
 
+// Import parameter functions and uncertainty calculation
+import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams } from "./technical-analysis-tab"
+
 // Mock simplified data
 interface ConcernData {
   category: string;
@@ -37,103 +40,130 @@ interface SimplifiedData {
 }
 
 const getSimplifiedData = (stock: string): SimplifiedData => {
-  const mockData: Record<string, SimplifiedData> = {
-    AAPL: {
-      overallMessage: "Die KI-Empfehlung für Apple ist relativ verlässlich, aber es gibt einige Unsicherheiten zu beachten.",
-      confidenceLevel: 73,
-      mainConcerns: [
-        {
-          category: "Datenqualität",
-          explanation: "Die Informationen über Apple sind größtenteils aktuell und zuverlässig. Gelegentlich können Verzögerungen bei Quartalszahlen auftreten.",
-          impact: "mittel",
-          userAction: "Warten Sie auf die neuesten Quartalsergebnisse, bevor Sie große Investitionen tätigen."
-        },
-        {
-          category: "KI-Modell",
-          explanation: "Unser KI-System funktioniert gut für Apple, da das Unternehmen ein vorhersagbares Geschäftsmodell hat.",
-          impact: "niedrig", 
-          userAction: "Das Modell sollte zuverlässige Prognosen für die nächsten 1-3 Monate liefern."
-        },
-        {
-          category: "Marktmeinung",
-          explanation: "Experten sind sich über Apples Zukunft nicht ganz einig. Einige sehen großes Wachstumspotential, andere warnen vor Marktsättigung.",
-          impact: "mittel",
-          userAction: "Berücksichtigen Sie verschiedene Expertenmeinungen und diversifizieren Sie Ihr Portfolio."
-        }
-      ],
-      recommendations: [
-        "Apple gilt als relativ sichere Investition für langfristige Anleger",
-        "Beobachten Sie iPhone-Verkaufszahlen und neue Produktankündigungen",
-        "Achten Sie auf Entwicklungen im Bereich Services (App Store, iCloud)",
-        "Berücksichtigen Sie geopolitische Risiken in Bezug auf China"
-      ],
-      riskLevel: "Mittel-Niedrig"
-    },
-    MSFT: {
-      overallMessage: "Microsoft zeigt starke Fundamentaldaten, aber die hohe Bewertung schafft Unsicherheit über zukünftige Renditen.",
-      confidenceLevel: 55,
-      mainConcerns: [
-        {
-          category: "Datenqualität", 
-          explanation: "Microsoft-Daten sind sehr zuverlässig und aktuell. Das Unternehmen veröffentlicht regelmäßig detaillierte Finanzdaten.",
-          impact: "niedrig",
-          userAction: "Sie können sich auf die verfügbaren Daten verlassen."
-        },
-        {
-          category: "KI-Modell",
-          explanation: "Unser Modell hat Schwierigkeiten mit Microsofts sich schnell entwickelndem Cloud-Geschäft und KI-Investitionen.",
-          impact: "hoch",
-          userAction: "Seien Sie vorsichtig bei kurzfristigen Prognosen. Fokussieren Sie sich auf langfristige Trends."
-        },
-        {
-          category: "Marktmeinung",
-          explanation: "Experten sind optimistisch über Microsoft, aber es gibt Bedenken über die hohe Bewertung und Konkurrenz im Cloud-Bereich.",
-          impact: "mittel",
-          userAction: "Verfolgen Sie Azure-Wachstumszahlen und Konkurrenz mit Amazon AWS."
-        }
-      ],
-      recommendations: [
-        "Microsoft profitiert von der KI-Revolution und Cloud-Migration",
-        "Hohe Bewertung erfordert kontinuierliches starkes Wachstum", 
-        "Achten Sie auf Office 365 und Teams Nutzerzahlen",
-        "Regulierungsrisiken im Tech-Sektor beobachten"
-      ],
-      riskLevel: "Mittel"
-    },
-    TSLA: {
-      overallMessage: "Tesla ist sehr schwer vorherzusagen aufgrund der hohen Volatilität und unvorhersehbaren Faktoren.",
-      confidenceLevel: 11,
-      mainConcerns: [
-        {
-          category: "Datenqualität",
-          explanation: "Tesla-Daten sind oft widersprüchlich. Elon Musks Tweets und spontane Ankündigungen erschweren die Analyse erheblich.",
-          impact: "hoch",
-          userAction: "Verlassen Sie sich nicht nur auf automatisierte Analysen. Verfolgen Sie Tesla-News sehr aktiv."
-        },
-        {
-          category: "KI-Modell", 
-          explanation: "Unser Modell versagt bei Tesla regelmäßig, da das Unternehmen sich nicht wie traditionelle Autohersteller verhält.",
-          impact: "sehr hoch",
-          userAction: "Nutzen Sie unsere Empfehlungen nur als einen von vielen Faktoren für Ihre Entscheidung."
-        },
-        {
-          category: "Marktmeinung",
-          explanation: "Experten sind extrem gespalten über Tesla - von 'Revolutionary Company' bis 'Overvalued Bubble' ist alles dabei.",
-          impact: "sehr hoch", 
-          userAction: "Bilden Sie sich eine eigene Meinung basierend auf fundamentalen Faktoren."
-        }
-      ],
-      recommendations: [
-        "Tesla ist nur für risikobereite Anleger geeignet",
-        "Investieren Sie nur Geld, dessen Verlust Sie verkraften können",
-        "Verfolgen Sie Autopilot-Entwicklung und Produktionszahlen genau",
-        "Beachten Sie regulatorische Entwicklungen bei autonomem Fahren"
-      ],
-      riskLevel: "Sehr Hoch"
+  // Calculate uncertainty scores from parameters
+  const fundamentalParams = getFundamentalDataParams(stock)
+  const newsParams = getNewsReliabilityParams(stock) 
+  const timeSeriesParams = getTimeSeriesIntegrityParams(stock)
+  const tradingVolumeParams = getTradingVolumeParams(stock)
+  
+  // Calculate dimension certainties
+  const fundamentalCertainty = (0.2 * fundamentalParams.completeness.value + 
+                               0.2 * fundamentalParams.timeliness.value + 
+                               0.2 * fundamentalParams.consistency.value + 
+                               0.2 * fundamentalParams.accuracy.value + 
+                               0.2 * fundamentalParams.stability.value) * 100
+  
+  const newsCertainty = (0.3 * newsParams.sourceReliability.value + 
+                        0.3 * newsParams.reputationAccuracy.value + 
+                        0.25 * newsParams.crossSourceConsensus.value + 
+                        0.15 * newsParams.biasCheck.value) * 100
+  
+  const timeSeriesCertainty = (0.25 * timeSeriesParams.completeness.value + 
+                              0.25 * timeSeriesParams.outlierFreedom.value + 
+                              0.25 * timeSeriesParams.revisionStability.value + 
+                              0.25 * timeSeriesParams.continuity.value) * 100
+  
+  const tradingVolumeCertainty = (0.4 * tradingVolumeParams.concentration.value + 
+                                 0.3 * tradingVolumeParams.anomalousSpikes.value + 
+                                 0.3 * tradingVolumeParams.timeStability.value) * 100
+  
+  const dataCertainty = (fundamentalCertainty + newsCertainty + timeSeriesCertainty + tradingVolumeCertainty) / 4
+  const confidenceLevel = Math.round(dataCertainty)
+  
+  // Generate dynamic explanations based on scores
+  const getOverallMessage = (confidence: number, stockSymbol: string) => {
+    if (confidence >= 90) return `Die KI-Empfehlung für ${stockSymbol} ist sehr verlässlich mit hochwertigen Daten und geringer Unsicherheit.`
+    if (confidence >= 80) return `Die KI-Empfehlung für ${stockSymbol} ist weitgehend verlässlich, mit nur geringen Unsicherheiten.`
+    if (confidence >= 70) return `Die KI-Empfehlung für ${stockSymbol} ist relativ verlässlich, aber es gibt einige Unsicherheiten zu beachten.`
+    if (confidence >= 60) return `Die KI-Empfehlung für ${stockSymbol} zeigt moderate Unsicherheiten, die Ihre Entscheidung beeinflussen könnten.`
+    return `Die KI-Empfehlung für ${stockSymbol} ist mit hohen Unsicherheiten verbunden und sollte vorsichtig interpretiert werden.`
+  }
+  
+  const getRiskLevel = (confidence: number) => {
+    if (confidence >= 90) return "Niedrig"
+    if (confidence >= 80) return "Mittel-Niedrig" 
+    if (confidence >= 70) return "Mittel"
+    if (confidence >= 60) return "Mittel-Hoch"
+    return "Sehr Hoch"
+  }
+  
+  const getDataQualityConcern = (fundamentalCert: number, newsCert: number) => {
+    const avgDataQuality = (fundamentalCert + newsCert) / 2
+    if (avgDataQuality >= 90) {
+      return {
+        category: "Datenqualität",
+        explanation: `Die Fundamentaldaten (${fundamentalCert.toFixed(1)}%) und Nachrichten (${newsCert.toFixed(1)}%) für ${stock} sind sehr hochwertig und zuverlässig.`,
+        impact: "niedrig",
+        userAction: "Sie können sich auf die verfügbaren Daten verlassen und kurzfristige Entscheidungen treffen."
+      }
+    } else if (avgDataQuality >= 80) {
+      return {
+        category: "Datenqualität", 
+        explanation: `Die Datenqualität für ${stock} ist gut (Fundamentals: ${fundamentalCert.toFixed(1)}%, News: ${newsCert.toFixed(1)}%), aber gelegentliche Verzögerungen können auftreten.`,
+        impact: "mittel",
+        userAction: "Warten Sie bei wichtigen Entscheidungen auf die neuesten Quartalsergebnisse."
+      }
+    } else {
+      return {
+        category: "Datenqualität",
+        explanation: `Die Datenqualität für ${stock} zeigt Probleme (Fundamentals: ${fundamentalCert.toFixed(1)}%, News: ${newsCert.toFixed(1)}%). Widersprüchliche Informationen können die Analyse erschweren.`,
+        impact: "hoch", 
+        userAction: "Verlassen Sie sich nicht nur auf automatisierte Analysen. Prüfen Sie mehrere Quellen."
+      }
     }
   }
   
-  return mockData[stock] || mockData.AAPL
+  const getModelConcern = (timeSeriesCert: number, tradingCert: number) => {
+    const avgModelData = (timeSeriesCert + tradingCert) / 2
+    if (avgModelData >= 90) {
+      return {
+        category: "KI-Modell",
+        explanation: `Unser KI-System funktioniert sehr gut für ${stock} mit stabilen Zeitreihen (${timeSeriesCert.toFixed(1)}%) und vorhersagbaren Handelsmustern (${tradingCert.toFixed(1)}%).`,
+        impact: "niedrig",
+        userAction: "Das Modell liefert zuverlässige Prognosen für die nächsten 1-3 Monate."
+      }
+    } else if (avgModelData >= 75) {
+      return {
+        category: "KI-Modell",
+        explanation: `Unser Modell arbeitet ordentlich für ${stock}, aber volatilere Handelsmuster (${tradingCert.toFixed(1)}%) können die Vorhersagen beeinträchtigen.`,
+        impact: "mittel",
+        userAction: "Fokussieren Sie sich auf längerfristige Trends statt kurzfristige Prognosen."
+      }
+    } else {
+      return {
+        category: "KI-Modell",
+        explanation: `Unser Modell hat Schwierigkeiten mit ${stock} aufgrund unvorhersagbarer Zeitreihen (${timeSeriesCert.toFixed(1)}%) und volatiler Handelsmuster (${tradingCert.toFixed(1)}%).`,
+        impact: "hoch",
+        userAction: "Nutzen Sie unsere Empfehlungen nur als einen von vielen Faktoren."
+      }
+    }
+  }
+  
+  const mainConcerns = [
+    getDataQualityConcern(fundamentalCertainty, newsCertainty),
+    getModelConcern(timeSeriesCertainty, tradingVolumeCertainty),
+    {
+      category: "Marktmeinung",
+      explanation: `Expertenmeinungen zu ${stock} variieren basierend auf der aktuellen Nachrichtenlage (Verlässlichkeit: ${newsCertainty.toFixed(1)}%).`,
+      impact: newsCertainty >= 85 ? "niedrig" : newsCertainty >= 75 ? "mittel" : "hoch",
+      userAction: newsCertainty >= 85 ? "Expertenmeinungen sind weitgehend konsistent." : "Berücksichtigen Sie verschiedene Expertenmeinungen und diversifizieren Sie."
+    }
+  ]
+  
+  const recommendations = [
+    `${stock} zeigt ${confidenceLevel >= 80 ? 'gute' : confidenceLevel >= 70 ? 'moderate' : 'schwache'} Datenqualität für KI-basierte Entscheidungen`,
+    `Zeitreihen-Integrität: ${timeSeriesCertainty.toFixed(1)}% - ${timeSeriesCertainty >= 90 ? 'sehr stabil' : timeSeriesCertainty >= 80 ? 'stabil' : 'volatil'}`,
+    `Handelsvolumen-Analyse: ${tradingVolumeCertainty.toFixed(1)}% - ${tradingVolumeCertainty >= 85 ? 'vorhersagbare Muster' : 'unregelmäßige Muster'}`,
+    confidenceLevel >= 80 ? `Empfehlungen für ${stock} sind verlässlich` : `Seien Sie bei ${stock}-Entscheidungen besonders vorsichtig`
+  ]
+  
+  return {
+    overallMessage: getOverallMessage(confidenceLevel, stock),
+    confidenceLevel,
+    mainConcerns,
+    recommendations,
+    riskLevel: getRiskLevel(confidenceLevel)
+  }
 }
 
 const getRiskColor = (level: string) => {

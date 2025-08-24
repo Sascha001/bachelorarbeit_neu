@@ -35,6 +35,10 @@ interface PurchaseRecommendationProps {
   selectedStock: string
 }
 
+// Import parameter functions and mock stock prices
+import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams } from "./technical-analysis-tab"
+import { COMPREHENSIVE_MOCK_DATA } from "../data/mockStockData"
+
 // Mock purchase data
 interface PurchaseData {
   currentPrice: number;
@@ -53,55 +57,121 @@ interface PurchaseData {
 }
 
 const getPurchaseData = (stock: string): PurchaseData => {
-  const mockData: Record<string, PurchaseData> = {
-    AAPL: {
-      currentPrice: 178.32,
-      recommendation: "BUY",
-      recommendedAmount: 2500,
-      minAmount: 500,
-      maxAmount: 10000,
-      expectedReturn: 8.5,
-      timeHorizon: "3-6 Monate",
-      riskScore: 27,
-      portfolioImpact: {
-        diversification: 92,
-        riskReduction: 15,
-        expectedContribution: 12
-      }
-    },
-    MSFT: {
-      currentPrice: 408.90,
-      recommendation: "HOLD", 
-      recommendedAmount: 1800,
-      minAmount: 400,
-      maxAmount: 8000,
-      expectedReturn: 6.2,
-      timeHorizon: "6-12 Monate",
-      riskScore: 55,
-      portfolioImpact: {
-        diversification: 88,
-        riskReduction: 8,
-        expectedContribution: 18
-      }
-    },
-    TSLA: {
-      currentPrice: 242.68,
-      recommendation: "SELL",
-      recommendedAmount: 0,
-      minAmount: 200,
-      maxAmount: 5000,
-      expectedReturn: -2.8,
-      timeHorizon: "1-3 Monate",
-      riskScore: 89,
-      portfolioImpact: {
-        diversification: 65,
-        riskReduction: -12,
-        expectedContribution: -5
-      }
+  // Get stock price from mock data
+  const stockData = COMPREHENSIVE_MOCK_DATA[stock] || COMPREHENSIVE_MOCK_DATA.AAPL
+  const currentPrice = stockData.price
+  
+  // Calculate uncertainty scores from parameters
+  const fundamentalParams = getFundamentalDataParams(stock)
+  const newsParams = getNewsReliabilityParams(stock) 
+  const timeSeriesParams = getTimeSeriesIntegrityParams(stock)
+  const tradingVolumeParams = getTradingVolumeParams(stock)
+  
+  // Calculate dimension certainties
+  const fundamentalCertainty = (0.2 * fundamentalParams.completeness.value + 
+                               0.2 * fundamentalParams.timeliness.value + 
+                               0.2 * fundamentalParams.consistency.value + 
+                               0.2 * fundamentalParams.accuracy.value + 
+                               0.2 * fundamentalParams.stability.value) * 100
+  
+  const newsCertainty = (0.3 * newsParams.sourceReliability.value + 
+                        0.3 * newsParams.reputationAccuracy.value + 
+                        0.25 * newsParams.crossSourceConsensus.value + 
+                        0.15 * newsParams.biasCheck.value) * 100
+  
+  const timeSeriesCertainty = (0.25 * timeSeriesParams.completeness.value + 
+                              0.25 * timeSeriesParams.outlierFreedom.value + 
+                              0.25 * timeSeriesParams.revisionStability.value + 
+                              0.25 * timeSeriesParams.continuity.value) * 100
+  
+  const tradingVolumeCertainty = (0.4 * tradingVolumeParams.concentration.value + 
+                                 0.3 * tradingVolumeParams.anomalousSpikes.value + 
+                                 0.3 * tradingVolumeParams.timeStability.value) * 100
+  
+  // Overall data certainty
+  const overallCertainty = (fundamentalCertainty + newsCertainty + timeSeriesCertainty + tradingVolumeCertainty) / 4
+  const uncertaintyScore = 100 - overallCertainty
+  
+  // Generate recommendation based on data quality
+  const getRecommendation = (certainty: number, stock: string) => {
+    // German stocks and traditional US companies get more conservative recommendations
+    if (stock.includes('.DE') || ['BRK.B', 'JNJ', 'PG', 'KO', 'UNH'].includes(stock)) {
+      if (certainty >= 85) return "BUY"
+      if (certainty >= 75) return "HOLD"
+      return "SELL"
+    }
+    // Tech stocks need higher certainty for BUY
+    if (certainty >= 90) return "BUY"
+    if (certainty >= 70) return "HOLD" 
+    return "SELL"
+  }
+  
+  const recommendation = getRecommendation(overallCertainty, stock)
+  
+  // Calculate portfolio metrics based on uncertainty and stock characteristics
+  const calculatePortfolioMetrics = (certainty: number, stockSymbol: string) => {
+    // Diversification: Higher for stocks with different risk profiles
+    const isDifferentSector = stockData.sector !== 'Technology'
+    const baseDiversification = isDifferentSector ? 85 : 75
+    const diversification = Math.min(95, Math.max(50, baseDiversification + (certainty - 75) * 0.3))
+    
+    // Risk Reduction: Better data quality = better risk management
+    const baseRiskReduction = certainty >= 85 ? 15 : certainty >= 75 ? 8 : certainty >= 65 ? 2 : -8
+    const riskReduction = Math.round(baseRiskReduction + (tradingVolumeCertainty - 80) * 0.2)
+    
+    // Expected Contribution: Based on fundamental strength and news reliability
+    const baseContribution = (fundamentalCertainty + newsCertainty) / 2
+    const expectedContribution = Math.round((baseContribution - 70) * 0.4)
+    
+    return {
+      diversification: Math.round(diversification),
+      riskReduction: Math.max(-15, Math.min(25, riskReduction)),
+      expectedContribution: Math.max(-10, Math.min(25, expectedContribution))
     }
   }
   
-  return mockData[stock] || mockData.AAPL
+  // Calculate investment amounts based on certainty
+  const getInvestmentAmounts = (certainty: number, price: number, rec: string) => {
+    if (rec === "SELL") return { recommended: 0, min: 100, max: Math.round(price * 10) }
+    
+    const baseAmount = certainty >= 85 ? 3000 : certainty >= 75 ? 2000 : 1000
+    const priceAdjusted = Math.round(baseAmount / price) * price  // Round to whole shares
+    
+    return {
+      recommended: priceAdjusted,
+      min: Math.round(price * 2), // At least 2 shares
+      max: Math.round(priceAdjusted * 4) // Up to 4x recommended
+    }
+  }
+  
+  const amounts = getInvestmentAmounts(overallCertainty, currentPrice, recommendation)
+  
+  // Calculate expected return based on data quality and recommendation
+  const getExpectedReturn = (certainty: number, rec: string) => {
+    if (rec === "SELL") return Math.round(((certainty - 80) * -0.3) * 10) / 10
+    if (rec === "HOLD") return Math.round(((certainty - 70) * 0.15) * 10) / 10
+    return Math.round(((certainty - 65) * 0.25) * 10) / 10
+  }
+  
+  // Time horizon based on data stability
+  const getTimeHorizon = (timeSeriesCert: number, newsCert: number) => {
+    const avgStability = (timeSeriesCert + newsCert) / 2
+    if (avgStability >= 90) return "6-12 Monate"
+    if (avgStability >= 80) return "3-6 Monate"
+    return "1-3 Monate"
+  }
+  
+  return {
+    currentPrice,
+    recommendation,
+    recommendedAmount: amounts.recommended,
+    minAmount: amounts.min,
+    maxAmount: amounts.max,
+    expectedReturn: getExpectedReturn(overallCertainty, recommendation),
+    timeHorizon: getTimeHorizon(timeSeriesCertainty, newsCertainty),
+    riskScore: Math.round(uncertaintyScore),
+    portfolioImpact: calculatePortfolioMetrics(overallCertainty, stock)
+  }
 }
 
 const getRecommendationColor = (rec: string) => {
