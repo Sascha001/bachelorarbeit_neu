@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import {
   Dialog,
   DialogContent,
@@ -27,7 +28,8 @@ import {
   CheckCircle,
   MessageSquare,
   Star,
-  ThumbsUp
+  ThumbsUp,
+  Info
 } from "lucide-react"
 import { useState } from "react"
 
@@ -185,7 +187,7 @@ const getRecommendationColor = (rec: string) => {
 
 export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendationProps) {
   const data = getPurchaseData(selectedStock)
-  const [purchaseAmount, setPurchaseAmount] = useState(data.recommendedAmount)
+  const [purchaseAmount, setPurchaseAmount] = useState(0)
   const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false)
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false)
   const [feedbackRating, setFeedbackRating] = useState(0)
@@ -195,7 +197,7 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
   const [scheduleForValidation, setScheduleForValidation] = useState(false)
 
   const calculateShares = () => {
-    return Math.floor(purchaseAmount / data.currentPrice)
+    return purchaseAmount > 0 ? Math.floor(purchaseAmount / data.currentPrice) : 0
   }
 
   const handlePurchase = () => {
@@ -291,10 +293,11 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                   <Input
                     id="purchase-amount"
                     type="number"
-                    value={purchaseAmount}
-                    onChange={(e) => setPurchaseAmount(Number(e.target.value))}
+                    value={purchaseAmount || ""}
+                    onChange={(e) => setPurchaseAmount(Number(e.target.value) || 0)}
                     min={data.minAmount}
                     max={data.maxAmount}
+                    placeholder={`Empfohlen: €${data.recommendedAmount}`}
                     className="flex-1"
                   />
                   <div className="text-sm text-muted-foreground whitespace-nowrap">
@@ -313,14 +316,44 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span>Diversifikation</span>
+                    <div className="flex items-center gap-1">
+                      <span>Diversifikation</span>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Info className="h-3 w-3 text-muted-foreground" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="max-w-xs text-sm">
+                              Wie stark diese Aktie zur Risikoverstreuung Ihres Portfolios beiträgt. 
+                              Höhere Werte bedeuten bessere Diversifikation durch unterschiedliche Branchen oder Regionen.
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
                     <span className="font-medium">{data.portfolioImpact.diversification}%</span>
                   </div>
                   <Progress value={data.portfolioImpact.diversification} className="h-2" />
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span>Risiko-Reduktion</span>
+                    <div className="flex items-center gap-1">
+                      <span>Risiko-Reduktion</span>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Info className="h-3 w-3 text-muted-foreground" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="max-w-xs text-sm">
+                              Erwartete Veränderung des Gesamtrisikos Ihres Portfolios durch diese Investition. 
+                              Positive Werte reduzieren das Risiko, negative Werte erhöhen es.
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
                     <span className={`font-medium ${data.portfolioImpact.riskReduction >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                       {data.portfolioImpact.riskReduction > 0 ? '+' : ''}{data.portfolioImpact.riskReduction}%
                     </span>
@@ -332,7 +365,22 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span>Erwarteter Beitrag</span>
+                    <div className="flex items-center gap-1">
+                      <span>Erwarteter Beitrag</span>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Info className="h-3 w-3 text-muted-foreground" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="max-w-xs text-sm">
+                              Prognostizierter Beitrag dieser Aktie zur Gesamtrendite Ihres Portfolios. 
+                              Basiert auf Fundamentaldaten und aktueller Markteinschätzung.
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
                     <span className={`font-medium ${data.portfolioImpact.expectedContribution >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                       {data.portfolioImpact.expectedContribution > 0 ? '+' : ''}{data.portfolioImpact.expectedContribution}%
                     </span>
@@ -390,17 +438,17 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                       </div>
                       <div>
                         <Label>Betrag</Label>
-                        <div className="font-medium">€{purchaseAmount}</div>
+                        <div className="font-medium">€{purchaseAmount || data.recommendedAmount}</div>
                       </div>
                       <div>
                         <Label>Anzahl Aktien</Label>
-                        <div className="font-medium">{calculateShares()}</div>
+                        <div className="font-medium">{purchaseAmount > 0 ? calculateShares() : Math.floor(data.recommendedAmount / data.currentPrice)}</div>
                       </div>
                     </div>
                     <div className="p-3 bg-muted/50 rounded-lg">
                       <div className="flex justify-between">
                         <span>Gesamtkosten (inkl. Gebühren):</span>
-                        <span className="font-bold">€{(purchaseAmount + 9.90).toFixed(2)}</span>
+                        <span className="font-bold">€{((purchaseAmount || data.recommendedAmount) + 9.90).toFixed(2)}</span>
                       </div>
                     </div>
                   </div>

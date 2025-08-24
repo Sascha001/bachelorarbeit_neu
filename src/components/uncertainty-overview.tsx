@@ -41,18 +41,28 @@ const getUncertaintyData = (stock: string) => {
                                  0.3 * tradingVolumeParams.anomalousSpikes.value + 
                                  0.3 * tradingVolumeParams.timeStability.value) * 100
   
-  // Calculate weighted data uncertainty (average of all data dimensions)
+  // STEP 1: Calculate average certainty for data dimension (4 parameters)
   const dataCertainty = (fundamentalCertainty + newsCertainty + timeSeriesCertainty + tradingVolumeCertainty) / 4
-  const dataUncertainty = 100 - dataCertainty
   
-  // Estimate model uncertainty based on data quality (better data = more stable model)
-  const modelUncertainty = Math.max(5, Math.min(40, 30 - (dataCertainty - 70) * 0.5))
+  // STEP 2: Calculate model certainty (existing logic, no new parameters yet)
+  const modelCertainty = Math.max(30, Math.min(95, 70 + (dataCertainty - 70) * 0.4)) // Model benefits from good data
   
-  // Estimate human uncertainty (inversely related to news reliability and fundamental quality)
-  const humanUncertainty = Math.max(10, Math.min(35, 35 - (newsCertainty + fundamentalCertainty) / 6))
+  // STEP 3: Calculate human certainty (existing logic, no new parameters yet)  
+  const humanCertainty = Math.max(60, Math.min(95, 80 - (fundamentalCertainty + newsCertainty) / 12)) // Experts more uncertain with complex situations
   
-  // Calculate total uncertainty as weighted average
-  const totalUncertainty = Math.round(0.5 * dataUncertainty + 0.3 * modelUncertainty + 0.2 * humanUncertainty)
+  // STEP 4: Convert certainties to uncertainties (inversion)
+  const dataUncertaintyRaw = 100 - dataCertainty
+  const modelUncertaintyRaw = 100 - modelCertainty  
+  const humanUncertaintyRaw = 100 - humanCertainty
+  
+  // STEP 5: Calculate total uncertainty (sum of all dimensions)
+  const totalUncertaintyRaw = dataUncertaintyRaw + modelUncertaintyRaw + humanUncertaintyRaw
+  const totalUncertainty = Math.round(totalUncertaintyRaw)
+  
+  // STEP 6: Calculate relative breakdown (always sums to 100%)
+  const dataUncertaintyPercent = Math.round((dataUncertaintyRaw / totalUncertaintyRaw) * 100)
+  const modelUncertaintyPercent = Math.round((modelUncertaintyRaw / totalUncertaintyRaw) * 100)  
+  const humanUncertaintyPercent = 100 - dataUncertaintyPercent - modelUncertaintyPercent // Ensure exact 100% sum
   
   // Determine recommendation and confidence level
   const getRecommendation = (uncertainty: number, stock: string) => {
@@ -70,9 +80,9 @@ const getUncertaintyData = (stock: string) => {
   
   return {
     totalUncertainty,
-    dataUncertainty: Math.round(dataUncertainty),
-    modelUncertainty: Math.round(modelUncertainty),
-    humanUncertainty: Math.round(humanUncertainty),
+    dataUncertainty: dataUncertaintyPercent,      // Now shows relative percentage
+    modelUncertainty: modelUncertaintyPercent,    // Now shows relative percentage  
+    humanUncertainty: humanUncertaintyPercent,    // Now shows relative percentage
     recommendation: getRecommendation(totalUncertainty, stock),
     confidenceLevel: getConfidenceLevel(totalUncertainty)
   }
@@ -82,9 +92,10 @@ export function UncertaintyOverview({ selectedStock }: UncertaintyOverviewProps)
   const data = getUncertaintyData(selectedStock)
   
   const getUncertaintyColor = (level: number) => {
-    if (level < 30) return "text-green-600"
-    if (level < 60) return "text-yellow-600" 
-    return "text-red-600"
+    if (level < 20) return "text-green-600"    // HOCH confidence = green
+    if (level < 40) return "text-yellow-600"   // MITTEL confidence = yellow
+    if (level < 70) return "text-orange-600"   // NIEDRIG confidence = orange
+    return "text-red-600"                      // SEHR NIEDRIG confidence = red
   }
 
   const getConfidenceColor = (confidence: string) => {

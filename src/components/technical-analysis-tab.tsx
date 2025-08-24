@@ -257,25 +257,25 @@ export const getFundamentalDataParams = (stock: string): FundamentalDataParams =
       stability: { value: 0.93, revisions: 7, totalDataPoints: 100 }
     },
     AMZN: {
-      completeness: { value: 0.94, missingValues: 6, totalValues: 100 },
-      timeliness: { value: 0.88, delayDays: 3.6, maxTolerance: 30 },
-      consistency: { value: 0.91, avgDeviation: 0.14, referenceValue: 1.55 },
-      accuracy: { value: 0.90, deviation: 0.155, officialValue: 1.55 },
-      stability: { value: 0.87, revisions: 13, totalDataPoints: 100 }
+      completeness: { value: 0.60, missingValues: 40, totalValues: 100 },         // Low completeness
+      timeliness: { value: 0.55, delayDays: 13.5, maxTolerance: 30 },            // High delays
+      consistency: { value: 0.58, avgDeviation: 0.651, referenceValue: 1.55 },    // High inconsistency
+      accuracy: { value: 0.62, deviation: 0.589, officialValue: 1.55 },          // Low accuracy
+      stability: { value: 0.52, revisions: 48, totalDataPoints: 100 }            // Many revisions
     },
     META: {
-      completeness: { value: 0.93, missingValues: 7, totalValues: 100 },
-      timeliness: { value: 0.89, delayDays: 3.3, maxTolerance: 30 },
-      consistency: { value: 0.92, avgDeviation: 0.192, referenceValue: 2.40 },
-      accuracy: { value: 0.91, deviation: 0.216, officialValue: 2.40 },
-      stability: { value: 0.85, revisions: 15, totalDataPoints: 100 }
+      completeness: { value: 0.78, missingValues: 22, totalValues: 100 },         // Medium completeness
+      timeliness: { value: 0.75, delayDays: 7.5, maxTolerance: 30 },             // Medium delays
+      consistency: { value: 0.73, avgDeviation: 0.648, referenceValue: 2.40 },    // Medium inconsistency
+      accuracy: { value: 0.76, deviation: 0.576, officialValue: 2.40 },          // Medium accuracy
+      stability: { value: 0.72, revisions: 28, totalDataPoints: 100 }            // Medium revisions
     },
     NVDA: {
-      completeness: { value: 0.92, missingValues: 8, totalValues: 100 },
-      timeliness: { value: 0.86, delayDays: 4.2, maxTolerance: 30 },
-      consistency: { value: 0.89, avgDeviation: 0.264, referenceValue: 2.40 },
-      accuracy: { value: 0.88, deviation: 0.288, officialValue: 2.40 },
-      stability: { value: 0.85, revisions: 15, totalDataPoints: 100 }
+      completeness: { value: 0.68, missingValues: 32, totalValues: 100 },        // Lower completeness
+      timeliness: { value: 0.62, delayDays: 11.4, maxTolerance: 30 },            // Higher delays
+      consistency: { value: 0.65, avgDeviation: 0.840, referenceValue: 2.40 },    // More inconsistency
+      accuracy: { value: 0.63, deviation: 0.888, officialValue: 2.40 },          // Lower accuracy
+      stability: { value: 0.58, revisions: 42, totalDataPoints: 100 }            // Many revisions
     },
 
     // Traditional US Finance/Healthcare - Very reliable
@@ -303,18 +303,18 @@ export const getFundamentalDataParams = (stock: string): FundamentalDataParams =
 
     // German Stocks - Good quality, slight delays
     "SAP.DE": {
-      completeness: { value: 0.94, missingValues: 6, totalValues: 100 },
-      timeliness: { value: 0.87, delayDays: 3.9, maxTolerance: 30 },
-      consistency: { value: 0.93, avgDeviation: 0.112, referenceValue: 1.60 },
-      accuracy: { value: 0.92, deviation: 0.128, officialValue: 1.60 },
-      stability: { value: 0.89, revisions: 11, totalDataPoints: 100 }
+      completeness: { value: 0.78, missingValues: 22, totalValues: 100 },               // More missing data
+      timeliness: { value: 0.70, delayDays: 9, maxTolerance: 30 },                     // Higher delays
+      consistency: { value: 0.75, avgDeviation: 0.400, referenceValue: 1.60 },         // More inconsistency
+      accuracy: { value: 0.72, deviation: 0.448, officialValue: 1.60 },                // Lower accuracy
+      stability: { value: 0.68, revisions: 32, totalDataPoints: 100 }                  // More revisions
     },
     "BMW.DE": {
-      completeness: { value: 0.91, missingValues: 9, totalValues: 100 },
-      timeliness: { value: 0.83, delayDays: 5.1, maxTolerance: 30 },
-      consistency: { value: 0.88, avgDeviation: 0.156, referenceValue: 1.30 },
-      accuracy: { value: 0.87, deviation: 0.169, officialValue: 1.30 },
-      stability: { value: 0.86, revisions: 14, totalDataPoints: 100 }
+      completeness: { value: 0.65, missingValues: 35, totalValues: 100 },               // High missing data
+      timeliness: { value: 0.58, delayDays: 12.6, maxTolerance: 30 },                  // Very high delays
+      consistency: { value: 0.62, avgDeviation: 0.494, referenceValue: 1.30 },         // High inconsistency
+      accuracy: { value: 0.60, deviation: 0.520, officialValue: 1.30 },                // Low accuracy
+      stability: { value: 0.55, revisions: 45, totalDataPoints: 100 }                  // Many revisions
     },
     "SIE.DE": {
       completeness: { value: 0.93, missingValues: 7, totalValues: 100 },
@@ -450,22 +450,22 @@ export const getNewsReliabilityParams = (stock: string): NewsReliabilityParams =
       biasCheck: { value: 0.86, biasIndex: 0.14, maxBiasValue: 1.0 }
     },
     AMZN: {
-      sourceReliability: { value: 0.88, totalSources: 13, averageReliability: 0.88 },
-      reputationAccuracy: { value: 0.85, totalNews: 100, falseNews: 15 },
-      crossSourceConsensus: { value: 0.82, totalNews: 10, confirmedNews: 8.2 },
-      biasCheck: { value: 0.83, biasIndex: 0.17, maxBiasValue: 1.0 }
+      sourceReliability: { value: 0.62, totalSources: 13, averageReliability: 0.62 },    // Low reliability
+      reputationAccuracy: { value: 0.55, totalNews: 100, falseNews: 45 },               // Many false news
+      crossSourceConsensus: { value: 0.52, totalNews: 10, confirmedNews: 5.2 },         // Low consensus
+      biasCheck: { value: 0.58, biasIndex: 0.42, maxBiasValue: 1.0 }                   // High bias
     },
     META: {
-      sourceReliability: { value: 0.85, totalSources: 11, averageReliability: 0.85 },
-      reputationAccuracy: { value: 0.78, totalNews: 100, falseNews: 22 },
-      crossSourceConsensus: { value: 0.75, totalNews: 10, confirmedNews: 7.5 },
-      biasCheck: { value: 0.77, biasIndex: 0.23, maxBiasValue: 1.0 }
+      sourceReliability: { value: 0.72, totalSources: 11, averageReliability: 0.72 },    // Medium reliability
+      reputationAccuracy: { value: 0.68, totalNews: 100, falseNews: 32 },               // More false news
+      crossSourceConsensus: { value: 0.65, totalNews: 10, confirmedNews: 6.5 },         // Medium consensus
+      biasCheck: { value: 0.70, biasIndex: 0.30, maxBiasValue: 1.0 }                   // Medium bias
     },
     NVDA: {
-      sourceReliability: { value: 0.87, totalSources: 10, averageReliability: 0.87 },
-      reputationAccuracy: { value: 0.82, totalNews: 100, falseNews: 18 },
-      crossSourceConsensus: { value: 0.79, totalNews: 10, confirmedNews: 7.9 },
-      biasCheck: { value: 0.80, biasIndex: 0.20, maxBiasValue: 1.0 }
+      sourceReliability: { value: 0.65, totalSources: 10, averageReliability: 0.65 },    // Lower reliability
+      reputationAccuracy: { value: 0.58, totalNews: 100, falseNews: 42 },               // More false news
+      crossSourceConsensus: { value: 0.55, totalNews: 10, confirmedNews: 5.5 },         // Less consensus
+      biasCheck: { value: 0.60, biasIndex: 0.40, maxBiasValue: 1.0 }                   // More bias
     },
 
     // Traditional US Finance/Healthcare - Very reliable sources
@@ -488,18 +488,18 @@ export const getNewsReliabilityParams = (stock: string): NewsReliabilityParams =
       biasCheck: { value: 0.90, biasIndex: 0.10, maxBiasValue: 1.0 }
     },
 
-    // German Stocks - Good but localized sources
+    // German Stocks - More problematic for demo variety
     "SAP.DE": {
-      sourceReliability: { value: 0.86, totalSources: 12, averageReliability: 0.86 },
-      reputationAccuracy: { value: 0.84, totalNews: 100, falseNews: 16 },
-      crossSourceConsensus: { value: 0.80, totalNews: 10, confirmedNews: 8.0 },
-      biasCheck: { value: 0.82, biasIndex: 0.18, maxBiasValue: 1.0 }
+      sourceReliability: { value: 0.75, totalSources: 8, averageReliability: 0.75 },      // Reduced reliability
+      reputationAccuracy: { value: 0.68, totalNews: 100, falseNews: 32 },                 // More false news
+      crossSourceConsensus: { value: 0.65, totalNews: 10, confirmedNews: 6.5 },           // Lower consensus
+      biasCheck: { value: 0.72, biasIndex: 0.28, maxBiasValue: 1.0 }                      // Higher bias
     },
     "BMW.DE": {
-      sourceReliability: { value: 0.82, totalSources: 10, averageReliability: 0.82 },
-      reputationAccuracy: { value: 0.79, totalNews: 100, falseNews: 21 },
-      crossSourceConsensus: { value: 0.75, totalNews: 10, confirmedNews: 7.5 },
-      biasCheck: { value: 0.78, biasIndex: 0.22, maxBiasValue: 1.0 }
+      sourceReliability: { value: 0.62, totalSources: 7, averageReliability: 0.62 },      // Much lower reliability
+      reputationAccuracy: { value: 0.58, totalNews: 100, falseNews: 42 },                 // High false news rate
+      crossSourceConsensus: { value: 0.55, totalNews: 10, confirmedNews: 5.5 },           // Low consensus
+      biasCheck: { value: 0.60, biasIndex: 0.40, maxBiasValue: 1.0 }                      // High bias (speculation)
     },
     "SIE.DE": {
       sourceReliability: { value: 0.85, totalSources: 11, averageReliability: 0.85 },
@@ -607,22 +607,22 @@ export const getTimeSeriesIntegrityParams = (stock: string): TimeSeriesIntegrity
       continuity: { value: 0.88, gaps: 30, totalIntervals: 250 }
     },
     AMZN: {
-      completeness: { value: 0.90, missingTimepoints: 25, expectedTimepoints: 250 },
-      outlierFreedom: { value: 0.88, outliers: 30, totalObservations: 250 },
-      revisionStability: { value: 0.86, revisedValues: 35, totalValues: 250 },
-      continuity: { value: 0.84, gaps: 40, totalIntervals: 250 }
+      completeness: { value: 0.58, missingTimepoints: 105, expectedTimepoints: 250 },    // High missing data
+      outlierFreedom: { value: 0.52, outliers: 120, totalObservations: 250 },          // Many outliers
+      revisionStability: { value: 0.50, revisedValues: 125, totalValues: 250 },        // Many revisions
+      continuity: { value: 0.48, gaps: 130, totalIntervals: 250 }                      // Many gaps
     },
     META: {
-      completeness: { value: 0.92, missingTimepoints: 20, expectedTimepoints: 250 },
-      outlierFreedom: { value: 0.85, outliers: 38, totalObservations: 250 },
-      revisionStability: { value: 0.83, revisedValues: 43, totalValues: 250 },
-      continuity: { value: 0.80, gaps: 50, totalIntervals: 250 }
+      completeness: { value: 0.75, missingTimepoints: 63, expectedTimepoints: 250 },     // Medium missing data
+      outlierFreedom: { value: 0.70, outliers: 75, totalObservations: 250 },           // Medium outliers
+      revisionStability: { value: 0.68, revisedValues: 80, totalValues: 250 },         // Medium revisions
+      continuity: { value: 0.72, gaps: 70, totalIntervals: 250 }                       // Medium gaps
     },
     NVDA: {
-      completeness: { value: 0.89, missingTimepoints: 28, expectedTimepoints: 250 },
-      outlierFreedom: { value: 0.82, outliers: 45, totalObservations: 250 },
-      revisionStability: { value: 0.79, revisedValues: 53, totalValues: 250 },
-      continuity: { value: 0.76, gaps: 60, totalIntervals: 250 }
+      completeness: { value: 0.62, missingTimepoints: 95, expectedTimepoints: 250 },     // More missing data
+      outlierFreedom: { value: 0.58, outliers: 105, totalObservations: 250 },           // More outliers
+      revisionStability: { value: 0.55, revisedValues: 113, totalValues: 250 },         // More revisions
+      continuity: { value: 0.52, gaps: 120, totalIntervals: 250 }                       // More gaps
     },
 
     // Traditional US Finance/Healthcare - Very stable
@@ -758,9 +758,9 @@ export const getTradingVolumeParams = (stock: string): TradingVolumeParams => {
       timeStability: { value: 0.78, stdev: 0.22, avgVolume: 18456789 }
     },
     AMZN: {
-      concentration: { value: 0.79, hhi: 0.21, mainActors: 7 },
-      anomalousSpikes: { value: 0.87, spikes: 5, totalDays: 30 },
-      timeStability: { value: 0.74, stdev: 0.26, avgVolume: 35789123 }
+      concentration: { value: 0.52, hhi: 0.48, mainActors: 9 },                         // High concentration risk
+      anomalousSpikes: { value: 0.45, spikes: 17, totalDays: 30 },                     // Many anomalies
+      timeStability: { value: 0.42, stdev: 0.58, avgVolume: 35789123 }                 // Very unstable
     },
     TSLA: {
       concentration: { value: 0.65, hhi: 0.35, mainActors: 8 },
@@ -768,14 +768,14 @@ export const getTradingVolumeParams = (stock: string): TradingVolumeParams => {
       timeStability: { value: 0.68, stdev: 0.32, avgVolume: 89456123 }
     },
     META: {
-      concentration: { value: 0.83, hhi: 0.17, mainActors: 5 },
-      anomalousSpikes: { value: 0.92, spikes: 3, totalDays: 30 },
-      timeStability: { value: 0.81, stdev: 0.19, avgVolume: 12345678 }
+      concentration: { value: 0.72, hhi: 0.28, mainActors: 6 },                         // Medium concentration
+      anomalousSpikes: { value: 0.75, spikes: 8, totalDays: 30 },                      // Medium anomalies
+      timeStability: { value: 0.68, stdev: 0.32, avgVolume: 12345678 }                 // Medium stability
     },
     NVDA: {
-      concentration: { value: 0.77, hhi: 0.23, mainActors: 6 },
-      anomalousSpikes: { value: 0.84, spikes: 6, totalDays: 30 },
-      timeStability: { value: 0.72, stdev: 0.28, avgVolume: 45678912 }
+      concentration: { value: 0.58, hhi: 0.42, mainActors: 8 },                         // Higher concentration risk
+      anomalousSpikes: { value: 0.52, spikes: 14, totalDays: 30 },                     // Many anomalies
+      timeStability: { value: 0.48, stdev: 0.52, avgVolume: 45678912 }                 // Very unstable
     },
 
     // Traditional US Companies - More stable institutional trading
