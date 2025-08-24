@@ -888,6 +888,12 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       
                       return (
                         <>
+                          {/* Short intro text */}
+                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                            <p className="text-sm text-muted-foreground">
+                              Die Fundamentaldaten-Qualität wird aus 5 kritischen Parametern berechnet: Vollständigkeit, Aktualität, Konsistenz, Genauigkeit und Stabilität der Finanzdaten.
+                            </p>
+                          </div>
                           {/* Overall Score */}
                           <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
                             <h4 className="font-semibold mb-2 text-primary">Gesamtscore: {overallScore}%</h4>
@@ -1008,7 +1014,34 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
 
                           {/* Formula Explanation */}
                           <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                            <h4 className="font-medium mb-4 text-green-700">Gesamtberechnung</h4>
+                            <div className="flex items-center gap-2 mb-4">
+                              <h4 className="font-medium text-green-700">Gesamtberechnung</h4>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button className="p-1 rounded-full hover:bg-muted/50">
+                                    <Info className="h-4 w-4 text-muted-foreground" />
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-lg">
+                                  <div className="space-y-3 p-2">
+                                    <div className="font-semibold text-sm text-white">Fundamentaldaten Gesamtformel</div>
+                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
+                                      <div className="flex items-center justify-center min-h-[60px]">
+                                        <BlockMath math="\\text{Score} = \\frac{C + T + K + A + S}{5}" />
+                                      </div>
+                                    </div>
+                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
+                                      <div className="flex items-center justify-center min-h-[50px]">
+                                        <BlockMath math={`\\text{Aktuell} = \\frac{${(params.completeness.value * 100).toFixed(1)} + ${(params.timeliness.value * 100).toFixed(1)} + ${(params.consistency.value * 100).toFixed(1)} + ${(params.accuracy.value * 100).toFixed(1)} + ${(params.stability.value * 100).toFixed(1)}}{5} = ${overallScore}\\%`} />
+                                      </div>
+                                    </div>
+                                    <div className="text-xs text-gray-200">
+                                      Gleichgewichteter Durchschnitt aller 5 Parameter
+                                    </div>
+                                  </div>
+                                </TooltipContent>
+                              </Tooltip>
+                            </div>
                             
                             <div className="space-y-4">
                               <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
@@ -1036,6 +1069,12 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       
                       return (
                         <>
+                          {/* Short intro text */}
+                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                            <p className="text-sm text-muted-foreground">
+                              Die Zeitreihen-Integrität bewertet die Qualität der Kursdaten über die Zeit anhand von 4 Dimensionen: Vollständigkeit, Ausreißer-Freiheit, Revision-Stabilität und Kontinuität.
+                            </p>
+                          </div>
                           {/* Overall Score */}
                           <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
                             <h4 className="font-semibold mb-2 text-primary">Gesamtscore: {overallScore}%</h4>
@@ -1134,14 +1173,47 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                           </div>
 
                           {/* Overall Formula */}
-                          <div className="mt-6 p-4 bg-muted/30 rounded-lg">
-                            <h4 className="font-medium mb-2 text-foreground">Berechnung des Gesamtscores</h4>
-                            <p className="text-sm text-muted-foreground mb-3">
-                              Durchschnitt aller 4 Parameter mit gleicher Gewichtung:
-                            </p>
-                            <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
-                              <div className="flex items-center justify-center min-h-[60px]">
-                                <BlockMath math={`\\text{Aktuell} = \\frac{${(params.completeness.value * 100).toFixed(1)} + ${(params.outlierFreedom.value * 100).toFixed(1)} + ${(params.revisionStability.value * 100).toFixed(1)} + ${(params.continuity.value * 100).toFixed(1)}}{4} = ${overallScore}\\%`} />
+                          <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                            <div className="flex items-center gap-2 mb-4">
+                              <h4 className="font-medium text-green-700">Gesamtberechnung</h4>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button className="p-1 rounded-full hover:bg-muted/50">
+                                    <Info className="h-4 w-4 text-muted-foreground" />
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-lg">
+                                  <div className="space-y-3 p-2">
+                                    <div className="font-semibold text-sm text-white">Zeitreihen-Integrität Gesamtformel</div>
+                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
+                                      <div className="flex items-center justify-center min-h-[60px]">
+                                        <BlockMath math="\\text{Score} = \\frac{C + O + R + K}{4}" />
+                                      </div>
+                                    </div>
+                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
+                                      <div className="flex items-center justify-center min-h-[50px]">
+                                        <BlockMath math={`\\text{Aktuell} = \\frac{${(params.completeness.value * 100).toFixed(1)} + ${(params.outlierFreedom.value * 100).toFixed(1)} + ${(params.revisionStability.value * 100).toFixed(1)} + ${(params.continuity.value * 100).toFixed(1)}}{4} = ${overallScore}\\%`} />
+                                      </div>
+                                    </div>
+                                    <div className="text-xs text-gray-200">
+                                      Gleichgewichteter Durchschnitt aller 4 Parameter
+                                    </div>
+                                  </div>
+                                </TooltipContent>
+                              </Tooltip>
+                            </div>
+                            
+                            <div className="space-y-4">
+                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
+                                <div className="flex items-center justify-center min-h-[70px]">
+                                  <BlockMath math="\\text{Zeitreihen-Score} = \\frac{C + O + R + K}{4}" />
+                                </div>
+                              </div>
+                              
+                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
+                                <div className="flex items-center justify-center min-h-[60px]">
+                                  <BlockMath math={`\\text{Aktuell} = \\frac{${(params.completeness.value * 100).toFixed(1)} + ${(params.outlierFreedom.value * 100).toFixed(1)} + ${(params.revisionStability.value * 100).toFixed(1)} + ${(params.continuity.value * 100).toFixed(1)}}{4} = ${overallScore}\\%`} />
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -1159,6 +1231,12 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       
                       return (
                         <>
+                          {/* Short intro text */}
+                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                            <p className="text-sm text-muted-foreground">
+                              Die Nachrichten-Verlässlichkeit bewertet die Qualität von Marktinformationen durch 4 gewichtete Dimensionen: Quellenseriosität, historische Trefferquote, Bestätigung durch mehrere Quellen und Verzerrungsanalyse.
+                            </p>
+                          </div>
                           {/* Overall Score */}
                           <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
                             <h4 className="font-semibold mb-2 text-primary">Gesamtscore: {overallScore}%</h4>
@@ -1270,7 +1348,34 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
 
                           {/* Formula Explanation */}
                           <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                            <h4 className="font-medium mb-4 text-green-700">Gesamtformel Nachrichten-Verlässlichkeit</h4>
+                            <div className="flex items-center gap-2 mb-4">
+                              <h4 className="font-medium text-green-700">Gesamtberechnung</h4>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button className="p-1 rounded-full hover:bg-muted/50">
+                                    <Info className="h-4 w-4 text-muted-foreground" />
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-lg">
+                                  <div className="space-y-3 p-2">
+                                    <div className="font-semibold text-sm text-white">Nachrichten-Verlässlichkeit Gesamtformel</div>
+                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
+                                      <div className="flex items-center justify-center min-h-[60px]">
+                                        <BlockMath math="Q_{news} = w_1 \\cdot R + w_2 \\cdot P + w_3 \\cdot K + w_4 \\cdot (1-B)" />
+                                      </div>
+                                    </div>
+                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
+                                      <div className="flex items-center justify-center min-h-[50px]">
+                                        <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${params.sourceReliability.value} + ${w2} \\cdot ${params.reputationAccuracy.value} + ${w3} \\cdot ${params.crossSourceConsensus.value} + ${w4} \\cdot ${params.biasCheck.value} = ${(overallScoreNum/100).toFixed(3)}`} />
+                                      </div>
+                                    </div>
+                                    <div className="text-xs text-gray-200">
+                                      Gewichteter Durchschnitt: w₁=30%, w₂=30%, w₃=25%, w₄=15%
+                                    </div>
+                                  </div>
+                                </TooltipContent>
+                              </Tooltip>
+                            </div>
                             
                             <div className="space-y-4">
                               <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
@@ -1317,6 +1422,12 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       
                       return (
                         <>
+                          {/* Short intro text */}
+                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                            <p className="text-sm text-muted-foreground">
+                              Die Handelsvolumen-Verteilung bewertet die Marktstruktur durch 3 gewichtete Dimensionen: Marktteilnehmer-Konzentration, Anomalous Spikes und Zeit-Stabilität des Handelsvolumens.
+                            </p>
+                          </div>
                           {/* Overall Score */}
                           <div className={`mt-6 p-4 ${scoreColors.bg} border ${scoreColors.border} rounded-lg`}>
                             <h4 className={`font-semibold mb-2 ${scoreColors.text}`}>Gesamtscore: {overallScore}%</h4>
@@ -1360,6 +1471,9 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                               <div className="text-sm text-muted-foreground">
                                 5 Hauptakteure mit HHI = 0.18
                               </div>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                Gewichtung: {w1 * 100}% - Dominanter Einfluss auf Marktstruktur
+                              </div>
                             </div>
 
                             {/* Anomalous Spikes */}
@@ -1387,6 +1501,9 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                               </div>
                               <div className="text-sm text-muted-foreground">
                                 22 Spike-Zeitpunkte von 250 Handelstagen (8.8%)
+                              </div>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                Gewichtung: {w2 * 100}% - Erkennung von Marktmanipulation
                               </div>
                             </div>
 
@@ -1416,6 +1533,9 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                               <div className="text-sm text-muted-foreground">
                                 σ = 2.4M Aktien, μ = 10M Aktien (CV = 0.24)
                               </div>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                Gewichtung: {w3 * 100}% - Vorhersagbarkeit des Handelsvolumens
+                              </div>
                             </div>
                           </div>
 
@@ -1430,24 +1550,37 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                   </button>
                                 </TooltipTrigger>
                                 <TooltipContent className="max-w-lg">
-                                  <div className="space-y-2 p-2">
-                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
-                                      <div className="flex items-center justify-center min-h-[50px]">
+                                  <div className="space-y-3 p-2">
+                                    <div className="font-semibold text-sm text-white">Handelsvolumen-Verteilung Gesamtformel</div>
+                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
+                                      <div className="flex items-center justify-center min-h-[60px]">
                                         <BlockMath math="Q_{volume} = w_1 \\cdot S + w_2 \\cdot A + w_3 \\cdot T" />
                                       </div>
                                     </div>
-                                    <div className="text-xs text-gray-200 space-y-1">
-                                      <p><strong className="text-white">Gewichte:</strong> w₁=0.4, w₂=0.3, w₃=0.3</p>
-                                      <p>Konzentration hat größten Einfluss</p>
+                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
+                                      <div className="flex items-center justify-center min-h-[50px]">
+                                        <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${(sValue * 100).toFixed(1)}\\% + ${w2} \\cdot ${(aValue * 100).toFixed(1)}\\% + ${w3} \\cdot ${(tValue * 100).toFixed(1)}\\% = ${overallScore}\\%`} />
+                                      </div>
+                                    </div>
+                                    <div className="text-xs text-gray-200">
+                                      Gewichteter Durchschnitt: w₁=40%, w₂=30%, w₃=30%
                                     </div>
                                   </div>
                                 </TooltipContent>
                               </Tooltip>
                             </div>
                             
-                            <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
-                              <div className="flex items-center justify-center min-h-[60px]">
-                                <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${(sValue * 100).toFixed(1)}\\% + ${w2} \\cdot ${(aValue * 100).toFixed(1)}\\% + ${w3} \\cdot ${(tValue * 100).toFixed(1)}\\% = ${overallScore}\\%`} />
+                            <div className="space-y-4">
+                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
+                                <div className="flex items-center justify-center min-h-[70px]">
+                                  <BlockMath math="\\text{Handelsvolumen-Score} = w_1 \\cdot S + w_2 \\cdot A + w_3 \\cdot T" />
+                                </div>
+                              </div>
+                              
+                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
+                                <div className="flex items-center justify-center min-h-[60px]">
+                                  <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${(sValue * 100).toFixed(1)}\\% + ${w2} \\cdot ${(aValue * 100).toFixed(1)}\\% + ${w3} \\cdot ${(tValue * 100).toFixed(1)}\\% = ${overallScore}\\%`} />
+                                </div>
                               </div>
                             </div>
                           </div>
