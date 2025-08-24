@@ -877,9 +877,6 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                 {/* Content */}
                 <div className="flex-1 overflow-y-auto violet-bloom-scrollbar">
                   <div className="space-y-4">
-                    <p className="text-muted-foreground leading-relaxed">
-                      {getInfoBoxContent(activeInfoBox).content}
-                    </p>
                     
                     {/* Fundamentaldaten detailed parameters */}
                     {activeInfoBox === 'fundamentalData' && (() => {
@@ -1030,11 +1027,6 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                         <BlockMath math="\\text{Score} = \\frac{C + T + K + A + S}{5}" />
                                       </div>
                                     </div>
-                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
-                                      <div className="flex items-center justify-center min-h-[50px]">
-                                        <BlockMath math={`\\text{Aktuell} = \\frac{${(params.completeness.value * 100).toFixed(1)} + ${(params.timeliness.value * 100).toFixed(1)} + ${(params.consistency.value * 100).toFixed(1)} + ${(params.accuracy.value * 100).toFixed(1)} + ${(params.stability.value * 100).toFixed(1)}}{5} = ${overallScore}\\%`} />
-                                      </div>
-                                    </div>
                                     <div className="text-xs text-gray-200">
                                       Gleichgewichteter Durchschnitt aller 5 Parameter
                                     </div>
@@ -1043,17 +1035,9 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                               </Tooltip>
                             </div>
                             
-                            <div className="space-y-4">
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                                <div className="flex items-center justify-center min-h-[70px]">
-                                  <BlockMath math="\\text{Fundamentaldaten-Score} = \\frac{C + T + K + A + S}{5}" />
-                                </div>
-                              </div>
-                              
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
-                                <div className="flex items-center justify-center min-h-[60px]">
-                                  <BlockMath math={`\\text{Aktuell} = \\frac{${(params.completeness.value * 100).toFixed(1)} + ${(params.timeliness.value * 100).toFixed(1)} + ${(params.consistency.value * 100).toFixed(1)} + ${(params.accuracy.value * 100).toFixed(1)} + ${(params.stability.value * 100).toFixed(1)}}{5} = ${overallScore}\\%`} />
-                                </div>
+                            <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
+                              <div className="flex items-center justify-center min-h-[60px]">
+                                <BlockMath math={`\\text{Aktuell} = \\frac{${(params.completeness.value * 100).toFixed(1)} + ${(params.timeliness.value * 100).toFixed(1)} + ${(params.consistency.value * 100).toFixed(1)} + ${(params.accuracy.value * 100).toFixed(1)} + ${(params.stability.value * 100).toFixed(1)}}{5} = ${overallScore}\\%`} />
                               </div>
                             </div>
                           </div>
@@ -1190,11 +1174,6 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                         <BlockMath math="\\text{Score} = \\frac{C + O + R + K}{4}" />
                                       </div>
                                     </div>
-                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
-                                      <div className="flex items-center justify-center min-h-[50px]">
-                                        <BlockMath math={`\\text{Aktuell} = \\frac{${(params.completeness.value * 100).toFixed(1)} + ${(params.outlierFreedom.value * 100).toFixed(1)} + ${(params.revisionStability.value * 100).toFixed(1)} + ${(params.continuity.value * 100).toFixed(1)}}{4} = ${overallScore}\\%`} />
-                                      </div>
-                                    </div>
                                     <div className="text-xs text-gray-200">
                                       Gleichgewichteter Durchschnitt aller 4 Parameter
                                     </div>
@@ -1203,17 +1182,9 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                               </Tooltip>
                             </div>
                             
-                            <div className="space-y-4">
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                                <div className="flex items-center justify-center min-h-[70px]">
-                                  <BlockMath math="\\text{Zeitreihen-Score} = \\frac{C + O + R + K}{4}" />
-                                </div>
-                              </div>
-                              
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
-                                <div className="flex items-center justify-center min-h-[60px]">
-                                  <BlockMath math={`\\text{Aktuell} = \\frac{${(params.completeness.value * 100).toFixed(1)} + ${(params.outlierFreedom.value * 100).toFixed(1)} + ${(params.revisionStability.value * 100).toFixed(1)} + ${(params.continuity.value * 100).toFixed(1)}}{4} = ${overallScore}\\%`} />
-                                </div>
+                            <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
+                              <div className="flex items-center justify-center min-h-[60px]">
+                                <BlockMath math={`\\text{Aktuell} = \\frac{${(params.completeness.value * 100).toFixed(1)} + ${(params.outlierFreedom.value * 100).toFixed(1)} + ${(params.revisionStability.value * 100).toFixed(1)} + ${(params.continuity.value * 100).toFixed(1)}}{4} = ${overallScore}\\%`} />
                               </div>
                             </div>
                           </div>
@@ -1364,11 +1335,6 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                         <BlockMath math="Q_{news} = w_1 \\cdot R + w_2 \\cdot P + w_3 \\cdot K + w_4 \\cdot (1-B)" />
                                       </div>
                                     </div>
-                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
-                                      <div className="flex items-center justify-center min-h-[50px]">
-                                        <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${params.sourceReliability.value} + ${w2} \\cdot ${params.reputationAccuracy.value} + ${w3} \\cdot ${params.crossSourceConsensus.value} + ${w4} \\cdot ${params.biasCheck.value} = ${(overallScoreNum/100).toFixed(3)}`} />
-                                      </div>
-                                    </div>
                                     <div className="text-xs text-gray-200">
                                       Gewichteter Durchschnitt: w₁=30%, w₂=30%, w₃=25%, w₄=15%
                                     </div>
@@ -1378,19 +1344,13 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
                             
                             <div className="space-y-4">
+                              <div className="text-xs text-muted-foreground space-y-1 mb-3">
+                                <p><strong>R</strong> = Source Reliability, <strong>P</strong> = Reputation Accuracy</p>
+                                <p><strong>K</strong> = Cross-Source Consensus, <strong>B</strong> = Bias-Score</p>
+                                <p><strong>Gewichte:</strong> w₁={w1}, w₂={w2}, w₃={w3}, w₄={w4}</p>
+                              </div>
+                              
                               <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                                <div className="flex items-center justify-center min-h-[70px]">
-                                  <BlockMath math="Q_{news} = w_1 \\cdot R + w_2 \\cdot P + w_3 \\cdot K + w_4 \\cdot (1-B)" />
-                                </div>
-                              </div>
-                              
-                              <div className="text-xs text-gray-200 space-y-1">
-                                <p><strong className="text-white">R</strong> = Source Reliability, <strong className="text-white">P</strong> = Reputation Accuracy</p>
-                                <p><strong className="text-white">K</strong> = Cross-Source Consensus, <strong className="text-white">B</strong> = Bias-Score</p>
-                                <p><strong className="text-white">Gewichte:</strong> w₁={w1}, w₂={w2}, w₃={w3}, w₄={w4}</p>
-                              </div>
-                              
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
                                 <div className="flex items-center justify-center min-h-[60px]">
                                   <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${params.sourceReliability.value} + ${w2} \\cdot ${params.reputationAccuracy.value} + ${w3} \\cdot ${params.crossSourceConsensus.value} + ${w4} \\cdot ${params.biasCheck.value} = ${(overallScoreNum/100).toFixed(3)}`} />
                                 </div>
@@ -1557,11 +1517,6 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                         <BlockMath math="Q_{volume} = w_1 \\cdot S + w_2 \\cdot A + w_3 \\cdot T" />
                                       </div>
                                     </div>
-                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
-                                      <div className="flex items-center justify-center min-h-[50px]">
-                                        <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${(sValue * 100).toFixed(1)}\\% + ${w2} \\cdot ${(aValue * 100).toFixed(1)}\\% + ${w3} \\cdot ${(tValue * 100).toFixed(1)}\\% = ${overallScore}\\%`} />
-                                      </div>
-                                    </div>
                                     <div className="text-xs text-gray-200">
                                       Gewichteter Durchschnitt: w₁=40%, w₂=30%, w₃=30%
                                     </div>
@@ -1570,17 +1525,9 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                               </Tooltip>
                             </div>
                             
-                            <div className="space-y-4">
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                                <div className="flex items-center justify-center min-h-[70px]">
-                                  <BlockMath math="\\text{Handelsvolumen-Score} = w_1 \\cdot S + w_2 \\cdot A + w_3 \\cdot T" />
-                                </div>
-                              </div>
-                              
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-small">
-                                <div className="flex items-center justify-center min-h-[60px]">
-                                  <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${(sValue * 100).toFixed(1)}\\% + ${w2} \\cdot ${(aValue * 100).toFixed(1)}\\% + ${w3} \\cdot ${(tValue * 100).toFixed(1)}\\% = ${overallScore}\\%`} />
-                                </div>
+                            <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
+                              <div className="flex items-center justify-center min-h-[60px]">
+                                <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${(sValue * 100).toFixed(1)}\\% + ${w2} \\cdot ${(aValue * 100).toFixed(1)}\\% + ${w3} \\cdot ${(tValue * 100).toFixed(1)}\\% = ${overallScore}\\%`} />
                               </div>
                             </div>
                           </div>
