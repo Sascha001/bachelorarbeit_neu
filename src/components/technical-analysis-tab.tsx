@@ -234,18 +234,168 @@ const getFundamentalDataParams = (stock: string): FundamentalDataParams => {
     // MSFT: Score should be 96% => (C + T + K + A + S) / 5 = 0.96  
     MSFT: {
       completeness: { value: 0.98, missingValues: 2, totalValues: 100 },        // C = 1 - (2/100) = 0.98
-      timeliness: { value: 0.93, delayDays: 2, maxTolerance: 30 },             // T = max(0, 1 - (2/30)) = 0.93
+      timeliness: { value: 0.95, delayDays: 1.5, maxTolerance: 30 },           // T = max(0, 1 - (1.5/30)) = 0.95
       consistency: { value: 0.96, avgDeviation: 0.098, referenceValue: 2.45 }, // K = 1 - (0.098/2.45) = 0.96
-      accuracy: { value: 0.975, deviation: 0.06, officialValue: 2.40 },        // A = 1 - (0.06/2.40) = 0.975
-      stability: { value: 0.965, revisions: 3.5, totalDataPoints: 100 }        // S = 1 - (3.5/100) = 0.965
+      accuracy: { value: 0.97, deviation: 0.072, officialValue: 2.40 },        // A = 1 - (0.072/2.40) = 0.97
+      stability: { value: 0.94, revisions: 6, totalDataPoints: 100 }           // S = 1 - (6/100) = 0.94
     },
     // TSLA: Score should be 75% => (C + T + K + A + S) / 5 = 0.75
     TSLA: {
       completeness: { value: 0.85, missingValues: 15, totalValues: 100 },       // C = 1 - (15/100) = 0.85
       timeliness: { value: 0.70, delayDays: 9, maxTolerance: 30 },             // T = max(0, 1 - (9/30)) = 0.70
-      consistency: { value: 0.72, avgDeviation: 0.518, referenceValue: 1.85 }, // K = 1 - (0.518/1.85) = 0.72
-      accuracy: { value: 0.70, deviation: 0.546, officialValue: 1.82 },        // A = 1 - (0.546/1.82) = 0.70
-      stability: { value: 0.73, revisions: 27, totalDataPoints: 100 }          // S = 1 - (27/100) = 0.73
+      consistency: { value: 0.68, avgDeviation: 0.592, referenceValue: 1.85 }, // K = 1 - (0.592/1.85) = 0.68
+      accuracy: { value: 0.72, deviation: 0.509, officialValue: 1.82 },        // A = 1 - (0.509/1.82) = 0.72
+      stability: { value: 0.75, revisions: 25, totalDataPoints: 100 }          // S = 1 - (25/100) = 0.75
+    },
+
+    // Additional US Tech Giants
+    GOOGL: {
+      completeness: { value: 0.96, missingValues: 4, totalValues: 100 },
+      timeliness: { value: 0.92, delayDays: 2.4, maxTolerance: 30 },
+      consistency: { value: 0.94, avgDeviation: 0.078, referenceValue: 1.30 },
+      accuracy: { value: 0.93, deviation: 0.091, officialValue: 1.30 },
+      stability: { value: 0.93, revisions: 7, totalDataPoints: 100 }
+    },
+    AMZN: {
+      completeness: { value: 0.94, missingValues: 6, totalValues: 100 },
+      timeliness: { value: 0.88, delayDays: 3.6, maxTolerance: 30 },
+      consistency: { value: 0.91, avgDeviation: 0.14, referenceValue: 1.55 },
+      accuracy: { value: 0.90, deviation: 0.155, officialValue: 1.55 },
+      stability: { value: 0.87, revisions: 13, totalDataPoints: 100 }
+    },
+    META: {
+      completeness: { value: 0.93, missingValues: 7, totalValues: 100 },
+      timeliness: { value: 0.89, delayDays: 3.3, maxTolerance: 30 },
+      consistency: { value: 0.92, avgDeviation: 0.192, referenceValue: 2.40 },
+      accuracy: { value: 0.91, deviation: 0.216, officialValue: 2.40 },
+      stability: { value: 0.85, revisions: 15, totalDataPoints: 100 }
+    },
+    NVDA: {
+      completeness: { value: 0.92, missingValues: 8, totalValues: 100 },
+      timeliness: { value: 0.86, delayDays: 4.2, maxTolerance: 30 },
+      consistency: { value: 0.89, avgDeviation: 0.264, referenceValue: 2.40 },
+      accuracy: { value: 0.88, deviation: 0.288, officialValue: 2.40 },
+      stability: { value: 0.85, revisions: 15, totalDataPoints: 100 }
+    },
+
+    // Traditional US Finance/Healthcare - Very reliable
+    "BRK.B": {
+      completeness: { value: 0.99, missingValues: 1, totalValues: 100 },
+      timeliness: { value: 0.97, delayDays: 0.9, maxTolerance: 30 },
+      consistency: { value: 0.98, avgDeviation: 0.048, referenceValue: 2.40 },
+      accuracy: { value: 0.98, deviation: 0.048, officialValue: 2.40 },
+      stability: { value: 0.98, revisions: 2, totalDataPoints: 100 }
+    },
+    JPM: {
+      completeness: { value: 0.98, missingValues: 2, totalValues: 100 },
+      timeliness: { value: 0.96, delayDays: 1.2, maxTolerance: 30 },
+      consistency: { value: 0.97, avgDeviation: 0.060, referenceValue: 2.00 },
+      accuracy: { value: 0.97, deviation: 0.060, officialValue: 2.00 },
+      stability: { value: 0.97, revisions: 3, totalDataPoints: 100 }
+    },
+    JNJ: {
+      completeness: { value: 0.97, missingValues: 3, totalValues: 100 },
+      timeliness: { value: 0.95, delayDays: 1.5, maxTolerance: 30 },
+      consistency: { value: 0.96, avgDeviation: 0.064, referenceValue: 1.60 },
+      accuracy: { value: 0.96, deviation: 0.064, officialValue: 1.60 },
+      stability: { value: 0.96, revisions: 4, totalDataPoints: 100 }
+    },
+
+    // German Stocks - Good quality, slight delays
+    "SAP.DE": {
+      completeness: { value: 0.94, missingValues: 6, totalValues: 100 },
+      timeliness: { value: 0.87, delayDays: 3.9, maxTolerance: 30 },
+      consistency: { value: 0.93, avgDeviation: 0.112, referenceValue: 1.60 },
+      accuracy: { value: 0.92, deviation: 0.128, officialValue: 1.60 },
+      stability: { value: 0.89, revisions: 11, totalDataPoints: 100 }
+    },
+    "BMW.DE": {
+      completeness: { value: 0.91, missingValues: 9, totalValues: 100 },
+      timeliness: { value: 0.83, delayDays: 5.1, maxTolerance: 30 },
+      consistency: { value: 0.88, avgDeviation: 0.156, referenceValue: 1.30 },
+      accuracy: { value: 0.87, deviation: 0.169, officialValue: 1.30 },
+      stability: { value: 0.86, revisions: 14, totalDataPoints: 100 }
+    },
+    "SIE.DE": {
+      completeness: { value: 0.93, missingValues: 7, totalValues: 100 },
+      timeliness: { value: 0.85, delayDays: 4.5, maxTolerance: 30 },
+      consistency: { value: 0.90, avgDeviation: 0.180, referenceValue: 1.80 },
+      accuracy: { value: 0.89, deviation: 0.198, officialValue: 1.80 },
+      stability: { value: 0.88, revisions: 12, totalDataPoints: 100 }
+    },
+    "ALV.DE": {
+      completeness: { value: 0.95, missingValues: 5, totalValues: 100 },
+      timeliness: { value: 0.90, delayDays: 3, maxTolerance: 30 },
+      consistency: { value: 0.92, avgDeviation: 0.144, referenceValue: 1.80 },
+      accuracy: { value: 0.91, deviation: 0.162, officialValue: 1.80 },
+      stability: { value: 0.92, revisions: 8, totalDataPoints: 100 }
+    },
+    "BAS.DE": {
+      completeness: { value: 0.89, missingValues: 11, totalValues: 100 },
+      timeliness: { value: 0.80, delayDays: 6, maxTolerance: 30 },
+      consistency: { value: 0.85, avgDeviation: 0.195, referenceValue: 1.30 },
+      accuracy: { value: 0.84, deviation: 0.208, officialValue: 1.30 },
+      stability: { value: 0.82, revisions: 18, totalDataPoints: 100 }
+    },
+
+    // More US stocks
+    V: {
+      completeness: { value: 0.97, missingValues: 3, totalValues: 100 },
+      timeliness: { value: 0.94, delayDays: 1.8, maxTolerance: 30 },
+      consistency: { value: 0.95, avgDeviation: 0.090, referenceValue: 1.80 },
+      accuracy: { value: 0.94, deviation: 0.108, officialValue: 1.80 },
+      stability: { value: 0.95, revisions: 5, totalDataPoints: 100 }
+    },
+    MA: {
+      completeness: { value: 0.96, missingValues: 4, totalValues: 100 },
+      timeliness: { value: 0.93, delayDays: 2.1, maxTolerance: 30 },
+      consistency: { value: 0.94, avgDeviation: 0.108, referenceValue: 1.80 },
+      accuracy: { value: 0.93, deviation: 0.126, officialValue: 1.80 },
+      stability: { value: 0.94, revisions: 6, totalDataPoints: 100 }
+    },
+    UNH: {
+      completeness: { value: 0.95, missingValues: 5, totalValues: 100 },
+      timeliness: { value: 0.92, delayDays: 2.4, maxTolerance: 30 },
+      consistency: { value: 0.93, avgDeviation: 0.119, referenceValue: 1.70 },
+      accuracy: { value: 0.92, deviation: 0.136, officialValue: 1.70 },
+      stability: { value: 0.93, revisions: 7, totalDataPoints: 100 }
+    },
+    HD: {
+      completeness: { value: 0.92, missingValues: 8, totalValues: 100 },
+      timeliness: { value: 0.89, delayDays: 3.3, maxTolerance: 30 },
+      consistency: { value: 0.91, avgDeviation: 0.144, referenceValue: 1.60 },
+      accuracy: { value: 0.90, deviation: 0.160, officialValue: 1.60 },
+      stability: { value: 0.88, revisions: 12, totalDataPoints: 100 }
+    },
+    PG: {
+      completeness: { value: 0.96, missingValues: 4, totalValues: 100 },
+      timeliness: { value: 0.93, delayDays: 2.1, maxTolerance: 30 },
+      consistency: { value: 0.94, avgDeviation: 0.084, referenceValue: 1.40 },
+      accuracy: { value: 0.93, deviation: 0.098, officialValue: 1.40 },
+      stability: { value: 0.94, revisions: 6, totalDataPoints: 100 }
+    },
+    KO: {
+      completeness: { value: 0.95, missingValues: 5, totalValues: 100 },
+      timeliness: { value: 0.91, delayDays: 2.7, maxTolerance: 30 },
+      consistency: { value: 0.93, avgDeviation: 0.098, referenceValue: 1.40 },
+      accuracy: { value: 0.92, deviation: 0.112, officialValue: 1.40 },
+      stability: { value: 0.94, revisions: 6, totalDataPoints: 100 }
+    },
+
+    // International stocks
+    "ASML.AS": {
+      completeness: { value: 0.93, missingValues: 7, totalValues: 100 },
+      timeliness: { value: 0.86, delayDays: 4.2, maxTolerance: 30 },
+      consistency: { value: 0.90, avgDeviation: 0.200, referenceValue: 2.00 },
+      accuracy: { value: 0.89, deviation: 0.220, officialValue: 2.00 },
+      stability: { value: 0.87, revisions: 13, totalDataPoints: 100 }
+    },
+    "NESN.SW": {
+      completeness: { value: 0.94, missingValues: 6, totalValues: 100 },
+      timeliness: { value: 0.88, delayDays: 3.6, maxTolerance: 30 },
+      consistency: { value: 0.92, avgDeviation: 0.128, referenceValue: 1.60 },
+      accuracy: { value: 0.91, deviation: 0.144, officialValue: 1.60 },
+      stability: { value: 0.90, revisions: 10, totalDataPoints: 100 }
     }
   }
   return params[stock] || params.AAPL
@@ -299,10 +449,10 @@ const getTimeSeriesIntegrityParams = (stock: string): TimeSeriesIntegrityParams 
   const params: Record<string, TimeSeriesIntegrityParams> = {
     // AAPL: Score should be 95% => (C + O + R + K) / 4 = 0.95
     AAPL: {
-      completeness: { value: 0.98, missingTimepoints: 5, expectedTimepoints: 250 },     // C = 1 - (5/250) = 0.98
-      outlierFreedom: { value: 0.988, outliers: 3, totalObservations: 250 },          // O = 1 - (3/250) = 0.988
-      revisionStability: { value: 0.992, revisedValues: 2, totalValues: 250 },        // R = 1 - (2/250) = 0.992
-      continuity: { value: 1.0, gaps: 0, totalIntervals: 250 }                        // K = 1 - (0/250) = 1.0
+      completeness: { value: 0.96, missingTimepoints: 10, expectedTimepoints: 250 },   // C = 1 - (10/250) = 0.96
+      outlierFreedom: { value: 0.952, outliers: 12, totalObservations: 250 },         // O = 1 - (12/250) = 0.952
+      revisionStability: { value: 0.944, revisedValues: 14, totalValues: 250 },       // R = 1 - (14/250) = 0.944
+      continuity: { value: 0.944, gaps: 14, totalIntervals: 250 }                     // K = 1 - (14/250) = 0.944
     },
     // MSFT: Score should be 89% => (C + O + R + K) / 4 = 0.89  
     MSFT: {
