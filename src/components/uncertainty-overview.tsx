@@ -10,7 +10,7 @@ interface UncertaintyOverviewProps {
 }
 
 // Import parameter functions from technical analysis
-import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams } from "./technical-analysis-tab"
+import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams, getModelUncertaintyParams } from "./technical-analysis-tab"
 
 // Calculate uncertainty data from actual parameters
 const getUncertaintyData = (stock: string) => {
@@ -44,8 +44,13 @@ const getUncertaintyData = (stock: string) => {
   // STEP 1: Calculate average certainty for data dimension (4 parameters)
   const dataCertainty = (fundamentalCertainty + newsCertainty + timeSeriesCertainty + tradingVolumeCertainty) / 4
   
-  // STEP 2: Calculate model certainty (existing logic, no new parameters yet)
-  const modelCertainty = Math.max(30, Math.min(95, 70 + (dataCertainty - 70) * 0.4)) // Model benefits from good data
+  // STEP 2: Calculate model certainty using ChatGPT Framework
+  const modelParams = getModelUncertaintyParams(stock)
+  const modelCertainty = (0.25 * modelParams.epistemicUncertainty.value + 
+                         0.15 * modelParams.aleatoricUncertainty.value + 
+                         0.20 * modelParams.overfittingRisk.value + 
+                         0.20 * modelParams.robustness.value + 
+                         0.20 * modelParams.explanationConsistency.value) * 100
   
   // STEP 3: Calculate human certainty (existing logic, no new parameters yet)  
   const humanCertainty = Math.max(60, Math.min(95, 80 - (fundamentalCertainty + newsCertainty) / 12)) // Experts more uncertain with complex situations

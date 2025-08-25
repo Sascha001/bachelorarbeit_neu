@@ -5,6 +5,14 @@ import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import React, { useState } from "react"
 import 'katex/dist/katex.min.css'
 
@@ -86,6 +94,14 @@ interface FeatureImportance {
   weight: number;
 }
 
+interface ModelUncertaintyParams {
+  epistemicUncertainty: { value: number; predictionVariance: number; meanPrediction: number };
+  aleatoricUncertainty: { value: number; confidenceInterval: number; maxExpectedVariance: number };
+  overfittingRisk: { value: number; trainLoss: number; testLoss: number };
+  robustness: { value: number; perturbationSensitivity: number; baselinePrediction: number };
+  explanationConsistency: { value: number; featureImportanceCorrelation: number };
+}
+
 interface TechnicalData {
   dataValidation: {
     fundamentalData: { score: number; status: string; issues: number };
@@ -98,6 +114,7 @@ interface TechnicalData {
     validationLoss: number;
     featureImportance: FeatureImportance[];
     predictionInterval: string;
+    uncertaintyParams: ModelUncertaintyParams;
   };
   humanFactors: {
     expertConsensus: number;
@@ -149,22 +166,29 @@ const getTechnicalData = (stock: string): TechnicalData => {
   const timeSeriesGaps = timeSeriesParams.continuity.gaps > 30 ? Math.floor(timeSeriesParams.continuity.gaps / 15) : 0
   const tradingAnomalies = tradingVolumeParams.anomalousSpikes.spikes
   
-  // Stock-specific model metrics and human factors (simplified for demo)
+  // Stock-specific model metrics with new uncertainty parameters
   const getModelMetrics = (stockSymbol: string) => {
     const baseAccuracy = fundamentalScore * 0.85 + timeSeriesScore * 0.15
     const baseValidationLoss = Math.max(0.01, (100 - baseAccuracy) / 1000)
     
+    // Get uncertainty parameters for this stock
+    const uncertaintyParams = getModelUncertaintyParams(stockSymbol)
+    
+    // Calculate new feature importance based on uncertainty framework (ChatGPT Framework)
+    const newFeatureImportance = [
+      { name: "Epistemische Unsicherheit", weight: 0.25 },
+      { name: "Aleatorische Unsicherheit", weight: 0.15 },
+      { name: "Overfitting-Risiko", weight: 0.20 },
+      { name: "Robustheit", weight: 0.20 },
+      { name: "Erklärungs-Konsistenz", weight: 0.20 }
+    ]
+    
     return {
       trainingAccuracy: Math.round(baseAccuracy * 10) / 10,
       validationLoss: Math.round(baseValidationLoss * 1000) / 1000,
-      featureImportance: [
-        { name: "Price Momentum", weight: 0.25 },
-        { name: "Volume Trend", weight: 0.20 },
-        { name: "Technical Indicators", weight: 0.20 },
-        { name: "Market Sentiment", weight: 0.20 },
-        { name: "Fundamental Ratios", weight: 0.15 }
-      ],
-      predictionInterval: `95% Confidence: Calculated based on ${stockSymbol} volatility`
+      featureImportance: newFeatureImportance,
+      predictionInterval: `±${uncertaintyParams.aleatoricUncertainty.confidenceInterval.toFixed(1)}% (95% Konfidenz)`,
+      uncertaintyParams: uncertaintyParams
     }
   }
   
@@ -210,6 +234,178 @@ const getStatusIcon = (status: string) => {
     case "poor": return <XCircle className="h-4 w-4 text-red-600" />
     default: return <Clock className="h-4 w-4 text-gray-600" />
   }
+}
+
+// Model Uncertainty Parameters Function
+export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams => {
+  const params: Record<string, ModelUncertaintyParams> = {
+    // AAPL: Stable Tech - High model certainty
+    AAPL: {
+      epistemicUncertainty: { value: 0.85, predictionVariance: 0.12, meanPrediction: 2.1 },
+      aleatoricUncertainty: { value: 0.75, confidenceInterval: 1.8, maxExpectedVariance: 3.2 },
+      overfittingRisk: { value: 0.90, trainLoss: 0.05, testLoss: 0.07 },
+      robustness: { value: 0.88, perturbationSensitivity: 0.15, baselinePrediction: 2.1 },
+      explanationConsistency: { value: 0.92, featureImportanceCorrelation: 0.89 }
+    },
+    MSFT: {
+      epistemicUncertainty: { value: 0.88, predictionVariance: 0.10, meanPrediction: 1.9 },
+      aleatoricUncertainty: { value: 0.78, confidenceInterval: 1.6, maxExpectedVariance: 2.9 },
+      overfittingRisk: { value: 0.92, trainLoss: 0.04, testLoss: 0.06 },
+      robustness: { value: 0.90, perturbationSensitivity: 0.12, baselinePrediction: 1.9 },
+      explanationConsistency: { value: 0.94, featureImportanceCorrelation: 0.91 }
+    },
+    GOOGL: {
+      epistemicUncertainty: { value: 0.82, predictionVariance: 0.15, meanPrediction: 2.3 },
+      aleatoricUncertainty: { value: 0.72, confidenceInterval: 2.1, maxExpectedVariance: 3.5 },
+      overfittingRisk: { value: 0.87, trainLoss: 0.06, testLoss: 0.08 },
+      robustness: { value: 0.85, perturbationSensitivity: 0.18, baselinePrediction: 2.3 },
+      explanationConsistency: { value: 0.89, featureImportanceCorrelation: 0.86 }
+    },
+    
+    // NVDA: Volatile Tech - Low model certainty
+    NVDA: {
+      epistemicUncertainty: { value: 0.65, predictionVariance: 0.35, meanPrediction: 3.2 },
+      aleatoricUncertainty: { value: 0.55, confidenceInterval: 4.2, maxExpectedVariance: 6.8 },
+      overfittingRisk: { value: 0.70, trainLoss: 0.12, testLoss: 0.18 },
+      robustness: { value: 0.60, perturbationSensitivity: 0.42, baselinePrediction: 3.2 },
+      explanationConsistency: { value: 0.68, featureImportanceCorrelation: 0.65 }
+    },
+    META: {
+      epistemicUncertainty: { value: 0.72, predictionVariance: 0.25, meanPrediction: 2.8 },
+      aleatoricUncertainty: { value: 0.65, confidenceInterval: 3.1, maxExpectedVariance: 4.9 },
+      overfittingRisk: { value: 0.75, trainLoss: 0.09, testLoss: 0.13 },
+      robustness: { value: 0.68, perturbationSensitivity: 0.32, baselinePrediction: 2.8 },
+      explanationConsistency: { value: 0.74, featureImportanceCorrelation: 0.71 }
+    },
+    AMZN: {
+      epistemicUncertainty: { value: 0.62, predictionVariance: 0.38, meanPrediction: 3.5 },
+      aleatoricUncertainty: { value: 0.52, confidenceInterval: 4.8, maxExpectedVariance: 7.2 },
+      overfittingRisk: { value: 0.68, trainLoss: 0.15, testLoss: 0.22 },
+      robustness: { value: 0.58, perturbationSensitivity: 0.45, baselinePrediction: 3.5 },
+      explanationConsistency: { value: 0.64, featureImportanceCorrelation: 0.61 }
+    },
+    
+    // Traditional US - High model certainty
+    "BRK.B": {
+      epistemicUncertainty: { value: 0.92, predictionVariance: 0.08, meanPrediction: 1.6 },
+      aleatoricUncertainty: { value: 0.85, confidenceInterval: 1.2, maxExpectedVariance: 2.1 },
+      overfittingRisk: { value: 0.95, trainLoss: 0.03, testLoss: 0.04 },
+      robustness: { value: 0.93, perturbationSensitivity: 0.09, baselinePrediction: 1.6 },
+      explanationConsistency: { value: 0.96, featureImportanceCorrelation: 0.94 }
+    },
+    JPM: {
+      epistemicUncertainty: { value: 0.90, predictionVariance: 0.09, meanPrediction: 1.7 },
+      aleatoricUncertainty: { value: 0.83, confidenceInterval: 1.4, maxExpectedVariance: 2.3 },
+      overfittingRisk: { value: 0.93, trainLoss: 0.04, testLoss: 0.05 },
+      robustness: { value: 0.91, perturbationSensitivity: 0.11, baselinePrediction: 1.7 },
+      explanationConsistency: { value: 0.94, featureImportanceCorrelation: 0.92 }
+    },
+    
+    // Traditional US Healthcare/Finance - Very high model certainty
+    JNJ: {
+      epistemicUncertainty: { value: 0.94, predictionVariance: 0.06, meanPrediction: 1.4 },
+      aleatoricUncertainty: { value: 0.87, confidenceInterval: 1.1, maxExpectedVariance: 1.9 },
+      overfittingRisk: { value: 0.96, trainLoss: 0.02, testLoss: 0.03 },
+      robustness: { value: 0.95, perturbationSensitivity: 0.07, baselinePrediction: 1.4 },
+      explanationConsistency: { value: 0.97, featureImportanceCorrelation: 0.95 }
+    },
+    V: {
+      epistemicUncertainty: { value: 0.91, predictionVariance: 0.08, meanPrediction: 1.7 },
+      aleatoricUncertainty: { value: 0.84, confidenceInterval: 1.3, maxExpectedVariance: 2.2 },
+      overfittingRisk: { value: 0.94, trainLoss: 0.03, testLoss: 0.04 },
+      robustness: { value: 0.92, perturbationSensitivity: 0.10, baselinePrediction: 1.7 },
+      explanationConsistency: { value: 0.95, featureImportanceCorrelation: 0.93 }
+    },
+    MA: {
+      epistemicUncertainty: { value: 0.89, predictionVariance: 0.09, meanPrediction: 1.8 },
+      aleatoricUncertainty: { value: 0.82, confidenceInterval: 1.4, maxExpectedVariance: 2.4 },
+      overfittingRisk: { value: 0.92, trainLoss: 0.04, testLoss: 0.05 },
+      robustness: { value: 0.90, perturbationSensitivity: 0.12, baselinePrediction: 1.8 },
+      explanationConsistency: { value: 0.93, featureImportanceCorrelation: 0.91 }
+    },
+    UNH: {
+      epistemicUncertainty: { value: 0.87, predictionVariance: 0.11, meanPrediction: 1.9 },
+      aleatoricUncertainty: { value: 0.80, confidenceInterval: 1.6, maxExpectedVariance: 2.7 },
+      overfittingRisk: { value: 0.90, trainLoss: 0.05, testLoss: 0.06 },
+      robustness: { value: 0.88, perturbationSensitivity: 0.14, baselinePrediction: 1.9 },
+      explanationConsistency: { value: 0.91, featureImportanceCorrelation: 0.89 }
+    },
+    HD: {
+      epistemicUncertainty: { value: 0.85, predictionVariance: 0.13, meanPrediction: 2.0 },
+      aleatoricUncertainty: { value: 0.78, confidenceInterval: 1.7, maxExpectedVariance: 2.9 },
+      overfittingRisk: { value: 0.88, trainLoss: 0.06, testLoss: 0.07 },
+      robustness: { value: 0.86, perturbationSensitivity: 0.16, baselinePrediction: 2.0 },
+      explanationConsistency: { value: 0.89, featureImportanceCorrelation: 0.87 }
+    },
+    PG: {
+      epistemicUncertainty: { value: 0.92, predictionVariance: 0.07, meanPrediction: 1.5 },
+      aleatoricUncertainty: { value: 0.85, confidenceInterval: 1.2, maxExpectedVariance: 2.0 },
+      overfittingRisk: { value: 0.95, trainLoss: 0.03, testLoss: 0.04 },
+      robustness: { value: 0.93, perturbationSensitivity: 0.08, baselinePrediction: 1.5 },
+      explanationConsistency: { value: 0.96, featureImportanceCorrelation: 0.94 }
+    },
+    KO: {
+      epistemicUncertainty: { value: 0.93, predictionVariance: 0.06, meanPrediction: 1.4 },
+      aleatoricUncertainty: { value: 0.86, confidenceInterval: 1.1, maxExpectedVariance: 1.8 },
+      overfittingRisk: { value: 0.96, trainLoss: 0.02, testLoss: 0.03 },
+      robustness: { value: 0.94, perturbationSensitivity: 0.07, baselinePrediction: 1.4 },
+      explanationConsistency: { value: 0.97, featureImportanceCorrelation: 0.95 }
+    },
+    
+    // German Stocks - Medium model certainty (mixed quality)
+    "SAP.DE": {
+      epistemicUncertainty: { value: 0.78, predictionVariance: 0.22, meanPrediction: 2.4 },
+      aleatoricUncertainty: { value: 0.72, confidenceInterval: 2.8, maxExpectedVariance: 4.2 },
+      overfittingRisk: { value: 0.82, trainLoss: 0.08, testLoss: 0.11 },
+      robustness: { value: 0.80, perturbationSensitivity: 0.25, baselinePrediction: 2.4 },
+      explanationConsistency: { value: 0.84, featureImportanceCorrelation: 0.81 }
+    },
+    "BMW.DE": {
+      epistemicUncertainty: { value: 0.70, predictionVariance: 0.28, meanPrediction: 2.9 },
+      aleatoricUncertainty: { value: 0.65, confidenceInterval: 3.4, maxExpectedVariance: 5.1 },
+      overfittingRisk: { value: 0.75, trainLoss: 0.11, testLoss: 0.16 },
+      robustness: { value: 0.72, perturbationSensitivity: 0.35, baselinePrediction: 2.9 },
+      explanationConsistency: { value: 0.76, featureImportanceCorrelation: 0.73 }
+    },
+    "SIE.DE": {
+      epistemicUncertainty: { value: 0.82, predictionVariance: 0.18, meanPrediction: 2.1 },
+      aleatoricUncertainty: { value: 0.76, confidenceInterval: 2.4, maxExpectedVariance: 3.6 },
+      overfittingRisk: { value: 0.86, trainLoss: 0.07, testLoss: 0.09 },
+      robustness: { value: 0.84, perturbationSensitivity: 0.20, baselinePrediction: 2.1 },
+      explanationConsistency: { value: 0.87, featureImportanceCorrelation: 0.84 }
+    },
+    "ALV.DE": {
+      epistemicUncertainty: { value: 0.85, predictionVariance: 0.15, meanPrediction: 1.8 },
+      aleatoricUncertainty: { value: 0.79, confidenceInterval: 2.1, maxExpectedVariance: 3.2 },
+      overfittingRisk: { value: 0.89, trainLoss: 0.05, testLoss: 0.07 },
+      robustness: { value: 0.87, perturbationSensitivity: 0.17, baselinePrediction: 1.8 },
+      explanationConsistency: { value: 0.90, featureImportanceCorrelation: 0.87 }
+    },
+    "BAS.DE": {
+      epistemicUncertainty: { value: 0.75, predictionVariance: 0.25, meanPrediction: 2.6 },
+      aleatoricUncertainty: { value: 0.68, confidenceInterval: 3.2, maxExpectedVariance: 4.8 },
+      overfittingRisk: { value: 0.78, trainLoss: 0.10, testLoss: 0.14 },
+      robustness: { value: 0.76, perturbationSensitivity: 0.30, baselinePrediction: 2.6 },
+      explanationConsistency: { value: 0.80, featureImportanceCorrelation: 0.77 }
+    },
+    
+    // International Stocks - Variable model certainty
+    "ASML.AS": {
+      epistemicUncertainty: { value: 0.79, predictionVariance: 0.21, meanPrediction: 2.5 },
+      aleatoricUncertainty: { value: 0.73, confidenceInterval: 2.9, maxExpectedVariance: 4.4 },
+      overfittingRisk: { value: 0.83, trainLoss: 0.08, testLoss: 0.11 },
+      robustness: { value: 0.81, perturbationSensitivity: 0.24, baselinePrediction: 2.5 },
+      explanationConsistency: { value: 0.85, featureImportanceCorrelation: 0.82 }
+    },
+    "NESN.SW": {
+      epistemicUncertainty: { value: 0.86, predictionVariance: 0.14, meanPrediction: 1.9 },
+      aleatoricUncertainty: { value: 0.80, confidenceInterval: 1.9, maxExpectedVariance: 3.0 },
+      overfittingRisk: { value: 0.89, trainLoss: 0.05, testLoss: 0.07 },
+      robustness: { value: 0.87, perturbationSensitivity: 0.16, baselinePrediction: 1.9 },
+      explanationConsistency: { value: 0.91, featureImportanceCorrelation: 0.88 }
+    }
+  }
+  return params[stock] || params.AAPL
 }
 
 // Fundamentaldaten parameters with calculated values
@@ -1065,6 +1261,170 @@ const FormulaTooltip = ({ param, stock, type = "fundamental" }: { param: string;
   )
 }
 
+// Function to create pop-up content for uncertainty parameters
+const getUncertaintyParameterPopup = (parameterName: string, selectedStock: string, uncertaintyParams: ModelUncertaintyParams) => {
+  const parameterMap: Record<string, {
+    title: string;
+    icon: React.ReactNode;
+    description: string;
+    importance: string;
+    formula: string;
+    currentValue: number;
+    rawData: any;
+  }> = {
+    "Epistemische Unsicherheit": {
+      title: "Epistemische Unsicherheit",
+      icon: <Brain className="h-6 w-6 text-purple-600" />,
+      description: "Unsicherheit über das Modellwissen selbst. Misst, ob das Modell genug Erfahrung mit ähnlichen Marktsituationen hat.",
+      importance: "Zeigt, ob das Modell für die aktuelle Marktsituation trainiert wurde. Besonders kritisch bei neuen Marktregimen oder extremen Ereignissen.",
+      formula: "E = 1 - \\frac{\\sigma_{\\hat{y}}}{\\mu_{\\hat{y}} + \\epsilon}",
+      currentValue: uncertaintyParams.epistemicUncertainty.value,
+      rawData: {
+        "Vorhersage-Varianz (σ)": uncertaintyParams.epistemicUncertainty.predictionVariance.toFixed(3),
+        "Mittlere Vorhersage (μ)": uncertaintyParams.epistemicUncertainty.meanPrediction.toFixed(2) + "%",
+        "Modell-Konfidenz": (uncertaintyParams.epistemicUncertainty.value * 100).toFixed(1) + "%"
+      }
+    },
+    "Aleatorische Unsicherheit": {
+      title: "Aleatorische Unsicherheit", 
+      icon: <Activity className="h-6 w-6 text-blue-600" />,
+      description: "Natürliche Zufälligkeit im Markt, die selbst das beste Modell nicht erklären kann (z.B. plötzliche News, Messrauschen).",
+      importance: "Unvermeidbare Unsicherheit durch Markt-Volatilität. Kann durch bessere Modelle nicht reduziert werden, nur quantifiziert.",
+      formula: "A = 1 - \\frac{\\text{mittlere Vorhersagevarianz}}{\\text{maximale erwartete Varianz}}",
+      currentValue: uncertaintyParams.aleatoricUncertainty.value,
+      rawData: {
+        "Konfidenzintervall": "±" + uncertaintyParams.aleatoricUncertainty.confidenceInterval.toFixed(1) + "%",
+        "Max. erwartete Varianz": uncertaintyParams.aleatoricUncertainty.maxExpectedVariance.toFixed(1),
+        "Markt-Vorhersagbarkeit": (uncertaintyParams.aleatoricUncertainty.value * 100).toFixed(1) + "%"
+      }
+    },
+    "Overfitting-Risiko": {
+      title: "Overfitting-Risiko",
+      icon: <AlertCircle className="h-6 w-6 text-orange-600" />,
+      description: "Wenn ein Modell zu komplex ist, 'merkt' es sich Trainingsdaten, anstatt Muster zu lernen. Im Test auf neuen Daten wird es viel schlechter.",
+      importance: "Kritisch für die Generalisierungsfähigkeit. Hohes Overfitting bedeutet schlechte Performance auf neuen Marktdaten.",
+      formula: "C = 1 - \\frac{|L_{train} - L_{test}|}{L_{train} + \\epsilon}",
+      currentValue: uncertaintyParams.overfittingRisk.value,
+      rawData: {
+        "Trainingsfehler": uncertaintyParams.overfittingRisk.trainLoss.toFixed(3),
+        "Testfehler": uncertaintyParams.overfittingRisk.testLoss.toFixed(3),
+        "Generalisierungsgüte": (uncertaintyParams.overfittingRisk.value * 100).toFixed(1) + "%"
+      }
+    },
+    "Robustheit": {
+      title: "Robustheit/Stabilität",
+      icon: <CheckCircle className="h-6 w-6 text-green-600" />,
+      description: "Misst, wie empfindlich das Modell auf kleine Änderungen in den Eingabedaten reagiert. Instabile Modelle ändern Empfehlungen bei minimalen Preisänderungen.",
+      importance: "Entscheidend für verlässliche Trading-Entscheidungen. Robuste Modelle geben konsistente Empfehlungen bei ähnlichen Marktbedingungen.",
+      formula: "R = 1 - \\frac{\\Delta\\hat{y}}{\\hat{y}}",
+      currentValue: uncertaintyParams.robustness.value,
+      rawData: {
+        "Störungs-Sensitivität": uncertaintyParams.robustness.perturbationSensitivity.toFixed(3),
+        "Baseline-Vorhersage": uncertaintyParams.robustness.baselinePrediction.toFixed(2) + "%",
+        "Stabilität": (uncertaintyParams.robustness.value * 100).toFixed(1) + "%"
+      }
+    },
+    "Erklärungs-Konsistenz": {
+      title: "Erklärungs-Konsistenz",
+      icon: <BarChart3 className="h-6 w-6 text-indigo-600" />,
+      description: "Selbst bei gleichen Eingaben können verschiedene Trainingsläufe unterschiedliche Erklärungen liefern ('warum' es eine Empfehlung gibt).",
+      importance: "Wichtig für Vertrauen und Nachvollziehbarkeit. Inkonsistente Erklärungen deuten auf instabile Feature-Wichtigkeiten hin.",
+      formula: "X = \\text{Korrelation}(FI_{run1}, FI_{run2})",
+      currentValue: uncertaintyParams.explanationConsistency.value,
+      rawData: {
+        "Feature-Korrelation": uncertaintyParams.explanationConsistency.featureImportanceCorrelation.toFixed(3),
+        "Erklärbarkeits-Score": (uncertaintyParams.explanationConsistency.value * 100).toFixed(1) + "%",
+        "Interpretierbarkeit": uncertaintyParams.explanationConsistency.value > 0.8 ? "Hoch" : uncertaintyParams.explanationConsistency.value > 0.6 ? "Mittel" : "Niedrig"
+      }
+    }
+  };
+
+  const param = parameterMap[parameterName];
+  if (!param) return <div>Parameter nicht gefunden</div>;
+
+  return (
+    <>
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-3">
+          {param.icon}
+          {param.title}
+          <Badge variant="outline" className="ml-auto">
+            {(param.currentValue * 100).toFixed(1)}%
+          </Badge>
+        </DialogTitle>
+        <DialogDescription>
+          Detaillierte Analyse für {selectedStock}
+        </DialogDescription>
+      </DialogHeader>
+      
+      <div className="grid grid-cols-3 gap-6 py-6">
+        {/* Spalte 1: Erklärung */}
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Was ist das?</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {param.description}
+            </p>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Warum wichtig?</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {param.importance}
+            </p>
+          </div>
+        </div>
+        
+        {/* Spalte 2: Mathematische Formel */}
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-semibold mb-3">Berechnung</h3>
+            <div className="formula-container bg-muted/30 p-4 rounded-lg">
+              <BlockMath math={param.formula} />
+            </div>
+          </div>
+          
+          <div className="text-xs text-muted-foreground space-y-1">
+            <p><strong>Wertebereich:</strong> 0.0 bis 1.0</p>
+            <p><strong>Höher = Besser:</strong> Mehr Sicherheit</p>
+            <p><strong>Niedriger = Schlechter:</strong> Mehr Unsicherheit</p>
+          </div>
+        </div>
+        
+        {/* Spalte 3: Aktuelle Werte */}
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-semibold mb-3">Aktuelle Werte für {selectedStock}</h3>
+            <div className="space-y-3">
+              {Object.entries(param.rawData).map(([key, value]) => (
+                <div key={key} className="flex justify-between py-2 px-3 bg-muted/20 rounded">
+                  <span className="text-sm font-medium">{key}:</span>
+                  <span className="text-sm">{value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="pt-4">
+            <div className="flex justify-between mb-2">
+              <span className="text-sm font-medium">Gesamtwertung:</span>
+              <span className={`text-sm font-bold ${
+                param.currentValue > 0.8 ? 'text-green-600' : 
+                param.currentValue > 0.6 ? 'text-yellow-600' : 'text-red-600'
+              }`}>
+                {param.currentValue > 0.8 ? 'Sehr gut' : 
+                 param.currentValue > 0.6 ? 'Gut' : 
+                 param.currentValue > 0.4 ? 'Mäßig' : 'Schlecht'}
+              </span>
+            </div>
+            <Progress value={param.currentValue * 100} className="h-3" />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
 export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProps) {
   const data = getTechnicalData(selectedStock)
   const [activeInfoBox, setActiveInfoBox] = useState<string | null>(null)
@@ -1268,39 +1628,99 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
             </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            {/* Model Performance Metrics */}
+            {/* Model Performance Metrics with Hover Tooltips */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center p-4 border rounded-lg">
                 <div className="text-2xl font-bold text-green-600">
                   {data.modelMetrics.trainingAccuracy}%
                 </div>
-                <p className="text-sm text-muted-foreground">Trainings-Genauigkeit</p>
+                <div className="flex items-center justify-center gap-1">
+                  <p className="text-sm text-muted-foreground">Trainings-Genauigkeit</p>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Info className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs">
+                        <p className="text-sm">
+                          Wie gut das Modell auf Trainingsdaten abschneidet. 
+                          Höhere Werte = bessere Performance auf historischen Daten. 
+                          Werte über 90% sind sehr gut.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
               </div>
               <div className="text-center p-4 border rounded-lg">
                 <div className="text-2xl font-bold text-blue-600">
                   {data.modelMetrics.validationLoss}
                 </div>
-                <p className="text-sm text-muted-foreground">Validierungsfehler</p>
+                <div className="flex items-center justify-center gap-1">
+                  <p className="text-sm text-muted-foreground">Validierungsfehler</p>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Info className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs">
+                        <p className="text-sm">
+                          Wie schlecht das Modell auf ungesehenen Testdaten abschneidet.
+                          Niedrigere Werte = bessere Generalisierung. 
+                          Werte unter 0.05 sind sehr gut.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
               </div>
               <div className="text-center p-4 border rounded-lg">
                 <div className="text-sm font-medium text-center text-primary">
                   {data.modelMetrics.predictionInterval}
                 </div>
-                <p className="text-sm text-muted-foreground">Prognoseintervall</p>
+                <div className="flex items-center justify-center gap-1">
+                  <p className="text-sm text-muted-foreground">Prognoseintervall</p>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Info className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs">
+                        <p className="text-sm">
+                          Unsicherheitsspanne um eine Vorhersage. 
+                          Beispiel: "Kurs steigt um 2% ±1.5%". 
+                          Schmalere Intervalle = präzisere Vorhersagen.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
               </div>
             </div>
 
-            {/* Feature Importance */}
+            {/* Feature Importance with Pop-up Details */}
             <div>
               <h4 className="font-medium mb-4 flex items-center gap-2">
                 <BarChart3 className="h-4 w-4" />
-                Feature-Wichtigkeit
+                Modellunsicherheits-Dimensionen (ChatGPT Framework)
               </h4>
               <div className="space-y-3">
                 {data.modelMetrics.featureImportance.map((feature: FeatureImportance, index: number) => (
                   <div key={index} className="space-y-1">
-                    <div className="flex justify-between text-sm">
-                      <span>{feature.name}</span>
+                    <div className="flex justify-between text-sm items-center">
+                      <div className="flex items-center gap-2">
+                        <span>{feature.name}</span>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <button className="p-1 rounded-full hover:bg-muted/50 transition-colors">
+                              <Info className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                            </button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-4xl">
+                            {getUncertaintyParameterPopup(feature.name, selectedStock, data.modelMetrics.uncertaintyParams)}
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                       <span className="font-medium">{(feature.weight * 100).toFixed(1)}%</span>
                     </div>
                     <Progress value={feature.weight * 100} className="h-2" />
