@@ -103,7 +103,7 @@ The main focus is uncertainty analysis in AI trading recommendations:
 ### Data Handling
 - Stock symbols use uppercase format (AAPL, TSLA, NVDA)
 - German language interface for all user-facing text
-- Percentage and currency formatting for financial data
+- Percentage and currency formatting for financial data with `.toFixed(2)` for currency amounts
 - Real-time data simulation with mock data
 
 ### Navigation and Routing
@@ -111,6 +111,25 @@ The main focus is uncertainty analysis in AI trading recommendations:
 - Sidebar navigation with collapsible icon mode
 - Stock search functionality integrated in header
 - Notification system with unread counts
+
+### Pop-up and Dialog Design Patterns
+- **Violet-Bloom Consistency**: All pop-up components use `bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg`
+- **DialogContent Styling**: Apply violet-bloom theme to all dialog containers
+- **Info-Box Borders**: All explanation sections require visible borders for better readability
+- **Parameter Boxes**: Individual parameter displays use consistent violet-bloom styling
+- **No Redundant Badges**: Avoid duplicate percentage displays in dialog headers when already shown in content
+
+### Event Handling Best Practices
+- **Tooltip/Dialog Conflicts**: Prevent event bubbling with proper component structure
+- **Tooltip Delays**: Remove `delayDuration` properties for immediate hover response
+- **Event Isolation**: Use proper component nesting to prevent conflicts
+- **Nested Interactive Elements**: Wrap in appropriate containers to prevent event conflicts
+
+### KaTeX Formula Rendering Guidelines
+- **Font Sizing**: Use appropriate font sizes to prevent overflow
+- **Container Sizing**: Ensure formulas fit within their containers
+- **Box Dimensions**: Use proper padding and spacing for readability
+- **Responsive Design**: Ensure formulas work across different screen sizes
 
 ## Important Development Notes
 

@@ -1424,14 +1424,14 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
       <div className="grid grid-cols-3 gap-6 py-6">
         {/* Spalte 1: Erklärung */}
         <div className="space-y-4">
-          <div>
+          <div className="bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg p-4">
             <h3 className="text-lg font-semibold mb-2">Was ist das?</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {param.description}
             </p>
           </div>
           
-          <div>
+          <div className="bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg p-4">
             <h3 className="text-lg font-semibold mb-2">Warum wichtig?</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {param.importance}
@@ -1982,7 +1982,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       return (
                         <>
                           {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                          <div className="mt-4 p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                             <p className="text-sm text-muted-foreground">
                               Die Fundamentaldaten-Qualität wird aus 5 kritischen Parametern berechnet: Vollständigkeit, Aktualität, Konsistenz, Genauigkeit und Stabilität der Finanzdaten.
                             </p>
@@ -2000,7 +2000,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             <h4 className="font-medium text-foreground">Detaillierte Parameter-Aufschlüsselung:</h4>
                             
                             {/* Completeness */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">1. Vollständigkeit (C)</span>
                                 <Tooltip>
@@ -2021,7 +2021,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Timeliness */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">2. Aktualität (T)</span>
                                 <Tooltip>
@@ -2042,7 +2042,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Consistency */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">3. Konsistenz (K)</span>
                                 <Tooltip>
@@ -2063,7 +2063,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Accuracy */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">4. Genauigkeit (A)</span>
                                 <Tooltip>
@@ -2084,7 +2084,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Stability */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">5. Stabilität (S)</span>
                                 <Tooltip>
@@ -2150,7 +2150,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       return (
                         <>
                           {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                          <div className="mt-4 p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                             <p className="text-sm text-muted-foreground">
                               Die Zeitreihen-Integrität bewertet die Qualität der Kursdaten über die Zeit anhand von 4 Dimensionen: Vollständigkeit, Ausreißer-Freiheit, Revision-Stabilität und Kontinuität.
                             </p>
@@ -2168,7 +2168,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             <h4 className="font-medium text-foreground">Detaillierte Parameter-Aufschlüsselung:</h4>
                             
                             {/* Completeness */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">1. Vollständigkeit (C)</span>
                                 <Tooltip>
@@ -2189,7 +2189,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Outlier Freedom */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">2. Ausreißer-Freiheit (O)</span>
                                 <Tooltip>
@@ -2210,7 +2210,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Revision Stability */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">3. Revision-Stabilität (R)</span>
                                 <Tooltip>
@@ -2231,7 +2231,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Continuity */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">4. Kontinuität (K)</span>
                                 <Tooltip>
@@ -2299,7 +2299,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       return (
                         <>
                           {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                          <div className="mt-4 p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                             <p className="text-sm text-muted-foreground">
                               Die Nachrichten-Verlässlichkeit bewertet die Qualität von Marktinformationen durch 4 gewichtete Dimensionen: Quellenseriosität, historische Trefferquote, Bestätigung durch mehrere Quellen und Verzerrungsanalyse.
                             </p>
@@ -2317,7 +2317,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             <h4 className="font-medium text-foreground">Detaillierte Parameter-Aufschlüsselung:</h4>
                             
                             {/* Source Reliability */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">1. Source Reliability (R)</span>
                                 <Tooltip>
@@ -2341,7 +2341,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Reputation Accuracy */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">2. Reputation Accuracy (P)</span>
                                 <Tooltip>
@@ -2365,7 +2365,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Cross-Source Consensus */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">3. Cross-Source Consensus (K)</span>
                                 <Tooltip>
@@ -2389,7 +2389,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Bias Check */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">4. Bias Check (1-B)</span>
                                 <Tooltip>
@@ -2478,7 +2478,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       return (
                         <>
                           {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                          <div className="mt-4 p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                             <p className="text-sm text-muted-foreground">
                               Die Handelsvolumen-Verteilung bewertet die Marktstruktur durch 3 gewichtete Dimensionen: Marktteilnehmer-Konzentration, Anomalous Spikes und Zeit-Stabilität des Handelsvolumens.
                             </p>
@@ -2496,7 +2496,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             <h4 className="font-medium text-foreground">Detaillierte Parameter-Aufschlüsselung:</h4>
                             
                             {/* Concentration */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">1. Konzentration (S)</span>
                                 <Tooltip>
@@ -2520,7 +2520,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Anomalous Spikes */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">2. Anomalous Spikes (A)</span>
                                 <Tooltip>
@@ -2544,7 +2544,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Time Stability */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">3. Stabilität (T)</span>
                                 <Tooltip>
@@ -2614,7 +2614,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                           </p>
                         </div>
                         
-                        <div className="mt-4 p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                        <div className="mt-4 p-4 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                           <h4 className="font-medium mb-2 text-blue-700">Wichtige Faktoren</h4>
                           <p className="text-sm text-muted-foreground">
                             Diese Sektion wird später mit spezifischen Faktoren befüllt, die diese Metrik beeinflussen.
