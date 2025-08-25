@@ -103,7 +103,7 @@ The main focus is uncertainty analysis in AI trading recommendations:
 ### Data Handling
 - Stock symbols use uppercase format (AAPL, TSLA, NVDA)
 - German language interface for all user-facing text
-- Percentage and currency formatting for financial data with `.toFixed(2)` for currency amounts
+- Percentage and currency formatting for financial data
 - Real-time data simulation with mock data
 
 ### Navigation and Routing
@@ -111,28 +111,6 @@ The main focus is uncertainty analysis in AI trading recommendations:
 - Sidebar navigation with collapsible icon mode
 - Stock search functionality integrated in header
 - Notification system with unread counts
-
-### Pop-up and Dialog Design Patterns
-- **Violet-Bloom Consistency**: All pop-up components use `bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg`
-- **DialogContent Styling**: Apply violet-bloom theme to all dialog containers
-- **Info-Box Borders**: All explanation sections require visible borders for better readability
-- **Parameter Boxes**: Individual parameter displays use consistent violet-bloom styling
-- **No Redundant Badges**: Avoid duplicate percentage displays in dialog headers when already shown in content
-
-### Event Handling Best Practices
-- **Tooltip/Dialog Conflicts**: Prevent event bubbling with `onPointerDown/Up` and `onClick` stopPropagation
-- **Tooltip Delays**: Remove `delayDuration` properties for immediate hover response
-- **Event Isolation**: Use explicit tooltip state control with `open={undefined}` when needed
-- **Nested Interactive Elements**: Wrap in `<span>` containers to prevent event conflicts
-
-### KaTeX Formula Rendering Guidelines
-- **Font Sizing**: Use smaller font sizes to prevent overflow:
-  - `.formula-container .katex { font-size: 0.8rem !important; }`
-  - `.formula-container-small .katex { font-size: 0.7rem !important; }`
-  - `.formula-container-large .katex { font-size: 0.75rem !important; }`
-- **Container Sizing**: Use `overflow-x-auto` and `justify-start` for long formulas
-- **Box Dimensions**: Reduce padding and min-height for compact display
-- **No Multi-line Breaking**: Keep formulas on single lines with horizontal scroll if needed
 
 ## Important Development Notes
 
