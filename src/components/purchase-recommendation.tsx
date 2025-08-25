@@ -111,7 +111,7 @@ const getPurchaseData = (stock: string): PurchaseData => {
   const recommendation = getRecommendation(overallCertainty, stock)
   
   // Calculate portfolio metrics based on uncertainty and stock characteristics
-  const calculatePortfolioMetrics = (certainty: number, stockSymbol: string) => {
+  const calculatePortfolioMetrics = (certainty: number) => {
     // Diversification: Higher for stocks with different risk profiles
     const isDifferentSector = stockData.sector !== 'Technology'
     const baseDiversification = isDifferentSector ? 85 : 75
@@ -172,7 +172,7 @@ const getPurchaseData = (stock: string): PurchaseData => {
     expectedReturn: getExpectedReturn(overallCertainty, recommendation),
     timeHorizon: getTimeHorizon(timeSeriesCertainty, newsCertainty),
     riskScore: Math.round(uncertaintyScore),
-    portfolioImpact: calculatePortfolioMetrics(overallCertainty, stock)
+    portfolioImpact: calculatePortfolioMetrics(overallCertainty)
   }
 }
 

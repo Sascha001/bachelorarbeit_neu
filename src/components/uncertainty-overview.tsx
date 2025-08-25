@@ -70,7 +70,7 @@ const getUncertaintyData = (stock: string) => {
   const humanUncertaintyPercent = Math.round(humanUncertaintyRaw)
   
   // Determine recommendation and confidence level
-  const getRecommendation = (uncertainty: number, stock: string) => {
+  const getRecommendation = (uncertainty: number) => {
     if (uncertainty < 25) return "BUY"
     if (uncertainty < 55) return "HOLD" 
     return "SELL"
@@ -88,7 +88,7 @@ const getUncertaintyData = (stock: string) => {
     dataUncertainty: dataUncertaintyPercent,      // Shows absolute percentage (0-100%)
     modelUncertainty: modelUncertaintyPercent,    // Shows absolute percentage (0-100%)  
     humanUncertainty: humanUncertaintyPercent,    // Shows absolute percentage (0-100%)
-    recommendation: getRecommendation(totalUncertainty, stock),
+    recommendation: getRecommendation(totalUncertainty),
     confidenceLevel: getConfidenceLevel(totalUncertainty)
   }
 }

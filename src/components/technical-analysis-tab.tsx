@@ -192,7 +192,7 @@ const getTechnicalData = (stock: string): TechnicalData => {
     }
   }
   
-  const getHumanFactors = (stockSymbol: string) => {
+  const getHumanFactors = () => {
     const baseConsensus = Math.min(95, fundamentalScore * 0.8 + newsScore * 0.2)
     const baseSentiment = Math.min(95, newsScore * 0.7 + tradingVolumeScore * 0.3)
     
@@ -212,7 +212,7 @@ const getTechnicalData = (stock: string): TechnicalData => {
       tradingVolume: { score: tradingVolumeScore, status: getStatus(tradingVolumeScore), anomalies: tradingAnomalies }
     },
     modelMetrics: getModelMetrics(stock),
-    humanFactors: getHumanFactors(stock)
+    humanFactors: getHumanFactors()
   }
 }
 
@@ -1270,7 +1270,7 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
     importance: string;
     formula: string;
     currentValue: number;
-    rawData: any;
+    rawData: Record<string, string | number>;
   }> = {
     "Epistemische Unsicherheit": {
       title: "Epistemische Unsicherheit",
@@ -1399,7 +1399,7 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
               {Object.entries(param.rawData).map(([key, value]) => (
                 <div key={key} className="flex justify-between py-2 px-3 bg-muted/20 rounded">
                   <span className="text-sm font-medium">{key}:</span>
-                  <span className="text-sm">{value}</span>
+                  <span className="text-sm">{String(value)}</span>
                 </div>
               ))}
             </div>
@@ -1688,7 +1688,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       <TooltipContent className="max-w-xs">
                         <p className="text-sm">
                           Unsicherheitsspanne um eine Vorhersage. 
-                          Beispiel: "Kurs steigt um 2% ±1.5%". 
+                          Beispiel: &quot;Kurs steigt um 2% ±1.5%&quot;. 
                           Schmalere Intervalle = präzisere Vorhersagen.
                         </p>
                       </TooltipContent>
