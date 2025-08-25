@@ -19,16 +19,18 @@ import 'katex/dist/katex.min.css'
 // Custom CSS for formula scaling and violet bloom scrollbar
 const formulaStyles = `
   .formula-container .katex {
-    font-size: 0.9rem !important;
+    font-size: 0.8rem !important;
   }
   .formula-container .katex .frac-line {
     border-bottom-width: 0.08em !important;
   }
   .formula-container-small .katex {
-    font-size: 0.8rem !important;
+    font-size: 0.7rem !important;
   }
   .formula-container-large .katex {
-    font-size: 1rem !important;
+    font-size: 0.75rem !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
   }
 
   /* Violet Bloom Scrollbar Styling */
@@ -1424,14 +1426,14 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
       <div className="grid grid-cols-3 gap-6 py-6">
         {/* Spalte 1: Erklärung */}
         <div className="space-y-4">
-          <div>
+          <div className="bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg p-4">
             <h3 className="text-lg font-semibold mb-2">Was ist das?</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {param.description}
             </p>
           </div>
           
-          <div>
+          <div className="bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg p-4">
             <h3 className="text-lg font-semibold mb-2">Warum wichtig?</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {param.importance}
@@ -1445,9 +1447,14 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
             <div className="flex items-center gap-2 mb-3">
               <h3 className="text-lg font-semibold">Berechnung</h3>
               <TooltipProvider key="inner-tooltip">
-                <Tooltip>
+                <Tooltip open={undefined}>
                   <TooltipTrigger asChild>
-                    <button className="p-1 rounded-full hover:bg-muted/50">
+                    <button 
+                      className="p-1 rounded-full hover:bg-muted/50"
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onPointerUp={(e) => e.stopPropagation()}
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <Info className="h-4 w-4 text-muted-foreground" />
                     </button>
                   </TooltipTrigger>
@@ -1982,7 +1989,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       return (
                         <>
                           {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                          <div className="mt-4 p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                             <p className="text-sm text-muted-foreground">
                               Die Fundamentaldaten-Qualität wird aus 5 kritischen Parametern berechnet: Vollständigkeit, Aktualität, Konsistenz, Genauigkeit und Stabilität der Finanzdaten.
                             </p>
@@ -2000,7 +2007,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             <h4 className="font-medium text-foreground">Detaillierte Parameter-Aufschlüsselung:</h4>
                             
                             {/* Completeness */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">1. Vollständigkeit (C)</span>
                                 <Tooltip>
@@ -2021,7 +2028,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Timeliness */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">2. Aktualität (T)</span>
                                 <Tooltip>
@@ -2042,7 +2049,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Consistency */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">3. Konsistenz (K)</span>
                                 <Tooltip>
@@ -2063,7 +2070,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Accuracy */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">4. Genauigkeit (A)</span>
                                 <Tooltip>
@@ -2084,7 +2091,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Stability */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">5. Stabilität (S)</span>
                                 <Tooltip>
@@ -2118,8 +2125,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                 <TooltipContent className="max-w-lg">
                                   <div className="space-y-3 p-2">
                                     <div className="font-semibold text-sm text-white">Fundamentaldaten Gesamtformel</div>
-                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                                      <div className="flex items-center justify-center min-h-[60px]">
+                                    <div className="bg-white p-2 rounded border text-black overflow-x-auto formula-container-large">
+                                      <div className="flex items-center justify-start min-h-[45px] w-full">
                                         <BlockMath math="\\text{Score} = \\frac{C + T + K + A + S}{5}" />
                                       </div>
                                     </div>
@@ -2131,8 +2138,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                               </Tooltip>
                             </div>
                             
-                            <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                              <div className="flex items-center justify-center min-h-[60px]">
+                            <div className="bg-white p-2 rounded border text-black overflow-x-auto formula-container-large">
+                              <div className="flex items-center justify-start min-h-[45px] w-full">
                                 <BlockMath math={`\\text{Aktuell} = \\frac{${(params.completeness.value * 100).toFixed(1)} + ${(params.timeliness.value * 100).toFixed(1)} + ${(params.consistency.value * 100).toFixed(1)} + ${(params.accuracy.value * 100).toFixed(1)} + ${(params.stability.value * 100).toFixed(1)}}{5} = ${overallScore}\\%`} />
                               </div>
                             </div>
@@ -2150,7 +2157,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       return (
                         <>
                           {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                          <div className="mt-4 p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                             <p className="text-sm text-muted-foreground">
                               Die Zeitreihen-Integrität bewertet die Qualität der Kursdaten über die Zeit anhand von 4 Dimensionen: Vollständigkeit, Ausreißer-Freiheit, Revision-Stabilität und Kontinuität.
                             </p>
@@ -2168,7 +2175,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             <h4 className="font-medium text-foreground">Detaillierte Parameter-Aufschlüsselung:</h4>
                             
                             {/* Completeness */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">1. Vollständigkeit (C)</span>
                                 <Tooltip>
@@ -2189,7 +2196,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Outlier Freedom */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">2. Ausreißer-Freiheit (O)</span>
                                 <Tooltip>
@@ -2210,7 +2217,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Revision Stability */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">3. Revision-Stabilität (R)</span>
                                 <Tooltip>
@@ -2231,7 +2238,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Continuity */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">4. Kontinuität (K)</span>
                                 <Tooltip>
@@ -2265,8 +2272,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                 <TooltipContent className="max-w-lg">
                                   <div className="space-y-3 p-2">
                                     <div className="font-semibold text-sm text-white">Zeitreihen-Integrität Gesamtformel</div>
-                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                                      <div className="flex items-center justify-center min-h-[60px]">
+                                    <div className="bg-white p-2 rounded border text-black overflow-x-auto formula-container-large">
+                                      <div className="flex items-center justify-start min-h-[45px] w-full">
                                         <BlockMath math="\\text{Score} = \\frac{C + O + R + K}{4}" />
                                       </div>
                                     </div>
@@ -2278,8 +2285,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                               </Tooltip>
                             </div>
                             
-                            <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                              <div className="flex items-center justify-center min-h-[60px]">
+                            <div className="bg-white p-2 rounded border text-black overflow-x-auto formula-container-large">
+                              <div className="flex items-center justify-start min-h-[45px] w-full">
                                 <BlockMath math={`\\text{Aktuell} = \\frac{${(params.completeness.value * 100).toFixed(1)} + ${(params.outlierFreedom.value * 100).toFixed(1)} + ${(params.revisionStability.value * 100).toFixed(1)} + ${(params.continuity.value * 100).toFixed(1)}}{4} = ${overallScore}\\%`} />
                               </div>
                             </div>
@@ -2299,7 +2306,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       return (
                         <>
                           {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                          <div className="mt-4 p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                             <p className="text-sm text-muted-foreground">
                               Die Nachrichten-Verlässlichkeit bewertet die Qualität von Marktinformationen durch 4 gewichtete Dimensionen: Quellenseriosität, historische Trefferquote, Bestätigung durch mehrere Quellen und Verzerrungsanalyse.
                             </p>
@@ -2317,7 +2324,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             <h4 className="font-medium text-foreground">Detaillierte Parameter-Aufschlüsselung:</h4>
                             
                             {/* Source Reliability */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">1. Source Reliability (R)</span>
                                 <Tooltip>
@@ -2341,7 +2348,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Reputation Accuracy */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">2. Reputation Accuracy (P)</span>
                                 <Tooltip>
@@ -2365,7 +2372,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Cross-Source Consensus */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">3. Cross-Source Consensus (K)</span>
                                 <Tooltip>
@@ -2389,7 +2396,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Bias Check */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">4. Bias Check (1-B)</span>
                                 <Tooltip>
@@ -2426,8 +2433,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                 <TooltipContent className="max-w-lg">
                                   <div className="space-y-3 p-2">
                                     <div className="font-semibold text-sm text-white">Nachrichten-Verlässlichkeit Gesamtformel</div>
-                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                                      <div className="flex items-center justify-center min-h-[60px]">
+                                    <div className="bg-white p-2 rounded border text-black overflow-x-auto formula-container-large">
+                                      <div className="flex items-center justify-start min-h-[45px] w-full">
                                         <BlockMath math="Q_{news} = w_1 \\cdot R + w_2 \\cdot P + w_3 \\cdot K + w_4 \\cdot (1-B)" />
                                       </div>
                                     </div>
@@ -2478,7 +2485,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       return (
                         <>
                           {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                          <div className="mt-4 p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                             <p className="text-sm text-muted-foreground">
                               Die Handelsvolumen-Verteilung bewertet die Marktstruktur durch 3 gewichtete Dimensionen: Marktteilnehmer-Konzentration, Anomalous Spikes und Zeit-Stabilität des Handelsvolumens.
                             </p>
@@ -2496,7 +2503,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             <h4 className="font-medium text-foreground">Detaillierte Parameter-Aufschlüsselung:</h4>
                             
                             {/* Concentration */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">1. Konzentration (S)</span>
                                 <Tooltip>
@@ -2520,7 +2527,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Anomalous Spikes */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">2. Anomalous Spikes (A)</span>
                                 <Tooltip>
@@ -2544,7 +2551,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             </div>
 
                             {/* Time Stability */}
-                            <div className="p-3 bg-muted/30 rounded-lg">
+                            <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">3. Stabilität (T)</span>
                                 <Tooltip>
@@ -2581,8 +2588,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                 <TooltipContent className="max-w-lg">
                                   <div className="space-y-3 p-2">
                                     <div className="font-semibold text-sm text-white">Handelsvolumen-Verteilung Gesamtformel</div>
-                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                                      <div className="flex items-center justify-center min-h-[60px]">
+                                    <div className="bg-white p-2 rounded border text-black overflow-x-auto formula-container-large">
+                                      <div className="flex items-center justify-start min-h-[45px] w-full">
                                         <BlockMath math="Q_{volume} = w_1 \\cdot S + w_2 \\cdot A + w_3 \\cdot T" />
                                       </div>
                                     </div>
@@ -2594,8 +2601,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                               </Tooltip>
                             </div>
                             
-                            <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                              <div className="flex items-center justify-center min-h-[60px]">
+                            <div className="bg-white p-2 rounded border text-black overflow-x-auto formula-container-large">
+                              <div className="flex items-center justify-start min-h-[45px] w-full">
                                 <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${params.concentration.value.toFixed(3)} + ${w2} \\cdot ${params.anomalousSpikes.value.toFixed(3)} + ${w3} \\cdot ${params.timeStability.value.toFixed(3)} = ${(overallScoreNum/100).toFixed(3)}`} />
                               </div>
                             </div>
@@ -2614,7 +2621,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                           </p>
                         </div>
                         
-                        <div className="mt-4 p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                        <div className="mt-4 p-4 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                           <h4 className="font-medium mb-2 text-blue-700">Wichtige Faktoren</h4>
                           <p className="text-sm text-muted-foreground">
                             Diese Sektion wird später mit spezifischen Faktoren befüllt, die diese Metrik beeinflussen.
