@@ -1445,9 +1445,14 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
             <div className="flex items-center gap-2 mb-3">
               <h3 className="text-lg font-semibold">Berechnung</h3>
               <TooltipProvider key="inner-tooltip">
-                <Tooltip>
+                <Tooltip open={undefined}>
                   <TooltipTrigger asChild>
-                    <button className="p-1 rounded-full hover:bg-muted/50">
+                    <button 
+                      className="p-1 rounded-full hover:bg-muted/50"
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onPointerUp={(e) => e.stopPropagation()}
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <Info className="h-4 w-4 text-muted-foreground" />
                     </button>
                   </TooltipTrigger>
@@ -1462,15 +1467,17 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <div className="formula-container bg-muted/30 p-4 rounded-lg">
+            <div className="formula-container bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg p-4">
               <BlockMath math={getCalculationWithRealValues(parameterName, param.rawData)} />
             </div>
           </div>
           
-          <div className="text-xs text-muted-foreground space-y-1">
-            <p><strong>Wertebereich:</strong> 0.0 bis 1.0</p>
-            <p><strong>Höher = Besser:</strong> Mehr Sicherheit</p>
-            <p><strong>Niedriger = Schlechter:</strong> Mehr Unsicherheit</p>
+          <div className="bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg p-3">
+            <div className="text-xs text-muted-foreground space-y-1">
+              <p><strong>Wertebereich:</strong> 0.0 bis 1.0</p>
+              <p><strong>Höher = Besser:</strong> Mehr Sicherheit</p>
+              <p><strong>Niedriger = Schlechter:</strong> Mehr Unsicherheit</p>
+            </div>
           </div>
         </div>
         
@@ -1805,7 +1812,12 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                 <span>
                                   <Dialog>
                                     <DialogTrigger asChild>
-                                      <button className="p-1 rounded-full hover:bg-muted/50 transition-colors">
+                                      <button 
+                                        className="p-1 rounded-full hover:bg-muted/50 transition-colors"
+                                        onPointerDown={(e) => e.stopPropagation()}
+                                        onPointerUp={(e) => e.stopPropagation()}
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
                                         <Info className="h-3 w-3 text-muted-foreground hover:text-foreground" />
                                       </button>
                                     </DialogTrigger>
