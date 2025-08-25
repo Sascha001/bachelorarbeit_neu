@@ -1432,15 +1432,15 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
 
   return (
     <>
-      <DialogHeader>
-        <DialogTitle className="flex items-center gap-3">
+      <div className="space-y-4 mb-6">
+        <div className="flex items-center gap-3">
           {param.icon}
-          {param.title}
-        </DialogTitle>
-        <DialogDescription>
+          <h3 className="text-xl font-semibold">{param.title}</h3>
+        </div>
+        <p className="text-sm text-muted-foreground">
           Detaillierte Analyse für {selectedStock}
-        </DialogDescription>
-      </DialogHeader>
+        </p>
+      </div>
       
       <div className="grid grid-cols-3 gap-6 py-6">
         {/* Spalte 1: Erklärung */}
