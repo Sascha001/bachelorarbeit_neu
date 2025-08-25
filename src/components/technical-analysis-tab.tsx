@@ -1415,9 +1415,6 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
         <DialogTitle className="flex items-center gap-3">
           {param.icon}
           {param.title}
-          <Badge variant="outline" className={`ml-auto ${getStatusColor(getStatus(param.currentValue * 100))}`}>
-            {(param.currentValue * 100).toFixed(1)}%
-          </Badge>
         </DialogTitle>
         <DialogDescription>
           Detaillierte Analyse für {selectedStock}
@@ -1447,8 +1444,8 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
           <div>
             <div className="flex items-center gap-2 mb-3">
               <h3 className="text-lg font-semibold">Berechnung</h3>
-              <TooltipProvider>
-                <Tooltip delayDuration={300}>
+              <TooltipProvider key="inner-tooltip">
+                <Tooltip>
                   <TooltipTrigger asChild>
                     <button className="p-1 rounded-full hover:bg-muted/50">
                       <Info className="h-4 w-4 text-muted-foreground" />
@@ -1483,7 +1480,7 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
             <h3 className="text-lg font-semibold mb-3">Aktuelle Werte für {selectedStock}</h3>
             <div className="space-y-3">
               {Object.entries(param.rawData).map(([key, value]) => (
-                <div key={key} className="flex justify-between py-2 px-3 bg-muted/20 rounded">
+                <div key={key} className="flex justify-between py-2 px-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                   <span className="text-sm font-medium">{key}:</span>
                   <span className="text-sm">{String(value)}</span>
                 </div>
@@ -1494,14 +1491,19 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
           <div className="pt-4">
             <div className="flex justify-between mb-2">
               <span className="text-sm font-medium">Gesamtwertung:</span>
-              <span className={`text-sm font-bold ${
-                param.currentValue > 0.8 ? 'text-green-600' : 
-                param.currentValue > 0.6 ? 'text-yellow-600' : 'text-red-600'
-              }`}>
-                {param.currentValue > 0.8 ? 'Sehr gut' : 
-                 param.currentValue > 0.6 ? 'Gut' : 
-                 param.currentValue > 0.4 ? 'Mäßig' : 'Schlecht'}
-              </span>
+              <div className="text-right">
+                <span className={`text-sm font-bold ${
+                  param.currentValue > 0.8 ? 'text-green-600' : 
+                  param.currentValue > 0.6 ? 'text-yellow-600' : 'text-red-600'
+                }`}>
+                  {param.currentValue > 0.8 ? 'Sehr gut' : 
+                   param.currentValue > 0.6 ? 'Gut' : 
+                   param.currentValue > 0.4 ? 'Mäßig' : 'Schlecht'}
+                </span>
+                <div className={`text-lg font-bold mt-1 ${getStatusColor(getStatus(param.currentValue * 100)).split(' ')[0]}`}>
+                  {(param.currentValue * 100).toFixed(1)}%
+                </div>
+              </div>
             </div>
             <Progress value={param.currentValue * 100} className="h-3" />
           </div>
@@ -1798,7 +1800,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                         <span>{feature.name}</span>
                         <div className="relative">
                           <TooltipProvider>
-                            <Tooltip delayDuration={300}>
+                            <Tooltip>
                               <TooltipTrigger asChild>
                                 <span>
                                   <Dialog>
@@ -1807,7 +1809,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                         <Info className="h-3 w-3 text-muted-foreground hover:text-foreground" />
                                       </button>
                                     </DialogTrigger>
-                                    <DialogContent className="max-w-4xl">
+                                    <DialogContent className="max-w-4xl bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
                                       {getUncertaintyParameterPopup(feature.name, selectedStock, data.modelMetrics.uncertaintyParams)}
                                     </DialogContent>
                                   </Dialog>
