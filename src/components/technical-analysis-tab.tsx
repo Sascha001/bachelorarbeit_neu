@@ -1796,25 +1796,25 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     <div className="flex justify-between text-sm items-center">
                       <div className="flex items-center gap-2">
                         <span>{feature.name}</span>
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Dialog>
+                                <DialogTrigger asChild>
                                   <button className="p-1 rounded-full hover:bg-muted/50 transition-colors">
                                     <Info className="h-3 w-3 text-muted-foreground hover:text-foreground" />
                                   </button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Für nähere Information klicken Sie auf das Icon</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          </DialogTrigger>
-                          <DialogContent className="max-w-4xl">
-                            {getUncertaintyParameterPopup(feature.name, selectedStock, data.modelMetrics.uncertaintyParams)}
-                          </DialogContent>
-                        </Dialog>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-4xl">
+                                  {getUncertaintyParameterPopup(feature.name, selectedStock, data.modelMetrics.uncertaintyParams)}
+                                </DialogContent>
+                              </Dialog>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Für nähere Information klicken Sie auf das Icon</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </div>
                       <span className="font-medium">{getUncertaintyValue(feature.name, data.modelMetrics.uncertaintyParams).toFixed(1)}%</span>
                     </div>

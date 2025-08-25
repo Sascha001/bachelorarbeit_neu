@@ -277,7 +277,7 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                   </div>
                   <div className="p-3 border-2 border-primary rounded-lg bg-primary/5">
                     <div className="text-sm text-primary font-medium">Empfohlen</div>
-                    <div className="text-2xl font-bold text-primary">€{data.recommendedAmount}</div>
+                    <div className="text-2xl font-bold text-primary">€{data.recommendedAmount.toFixed(2)}</div>
                   </div>
                   <div className="p-3 border rounded-lg">
                     <div className="text-sm text-muted-foreground">Maximum</div>
@@ -297,7 +297,7 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                     onChange={(e) => setPurchaseAmount(Number(e.target.value) || 0)}
                     min={data.minAmount}
                     max={data.maxAmount}
-                    placeholder={`Empfohlen: €${data.recommendedAmount}`}
+                    placeholder={`Empfohlen: €${data.recommendedAmount.toFixed(2)}`}
                     className="flex-1"
                   />
                   <div className="text-sm text-muted-foreground whitespace-nowrap">
@@ -438,7 +438,7 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                       </div>
                       <div>
                         <Label>Betrag</Label>
-                        <div className="font-medium">€{purchaseAmount || data.recommendedAmount}</div>
+                        <div className="font-medium">€{(purchaseAmount || data.recommendedAmount).toFixed(2)}</div>
                       </div>
                       <div>
                         <Label>Anzahl Aktien</Label>
