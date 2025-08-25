@@ -124,6 +124,49 @@ interface TechnicalData {
   };
 }
 
+// Status based on score - Global helper functions
+const getStatus = (score: number) => {
+  if (score >= 90) return "excellent"
+  if (score >= 80) return "good" 
+  if (score >= 70) return "fair"
+  return "poor"
+}
+
+// For validation loss (lower is better)
+const getValidationLossStatus = (loss: number) => {
+  if (loss <= 0.02) return "excellent"
+  if (loss <= 0.05) return "good"
+  if (loss <= 0.10) return "fair"
+  return "poor"
+}
+
+// Get uncertainty value (1 - certainty) for each dimension
+const getUncertaintyValue = (parameterName: string, uncertaintyParams: ModelUncertaintyParams) => {
+  switch (parameterName) {
+    case "Epistemische Unsicherheit":
+      return (1 - uncertaintyParams.epistemicUncertainty.value) * 100;
+    case "Aleatorische Unsicherheit":
+      return (1 - uncertaintyParams.aleatoricUncertainty.value) * 100;
+    case "Overfitting-Risiko":
+      return (1 - uncertaintyParams.overfittingRisk.value) * 100;
+    case "Robustheit":
+      return (1 - uncertaintyParams.robustness.value) * 100;
+    case "Erklärungs-Konsistenz":
+      return (1 - uncertaintyParams.explanationConsistency.value) * 100;
+    default:
+      return 50; // fallback
+  }
+}
+
+// For prediction interval (narrower is better)
+const getPredictionIntervalStatus = (intervalString: string) => {
+  const intervalValue = parseFloat(intervalString.replace(/[±%\(\)]/g, '').split(' ')[0]);
+  if (intervalValue <= 1.0) return "excellent"
+  if (intervalValue <= 2.0) return "good"
+  if (intervalValue <= 4.0) return "fair"
+  return "poor"
+}
+
 const getTechnicalData = (stock: string): TechnicalData => {
   // Calculate actual scores from parameter functions
   const fundamentalParams = getFundamentalDataParams(stock)
@@ -151,14 +194,6 @@ const getTechnicalData = (stock: string): TechnicalData => {
   const tradingVolumeScore = Math.round((0.4 * tradingVolumeParams.concentration.value + 
                                         0.3 * tradingVolumeParams.anomalousSpikes.value + 
                                         0.3 * tradingVolumeParams.timeStability.value) * 100)
-  
-  // Status based on score
-  const getStatus = (score: number) => {
-    if (score >= 90) return "excellent"
-    if (score >= 80) return "good" 
-    if (score >= 70) return "fair"
-    return "poor"
-  }
   
   // Calculate derived metrics
   const fundamentalIssues = Math.max(0, Math.floor((100 - fundamentalScore) / 10))
@@ -1261,6 +1296,38 @@ const FormulaTooltip = ({ param, stock, type = "fundamental" }: { param: string;
   )
 }
 
+// Function to get real values calculation formulas
+const getCalculationWithRealValues = (parameterName: string, rawData: Record<string, string | number>) => {
+  switch (parameterName) {
+    case "Epistemische Unsicherheit":
+      const varianceVal = Object.values(rawData)[0];
+      const meanVal = Object.values(rawData)[1];
+      return `E = 1 - \\frac{${varianceVal}}{${meanVal.toString().replace('%', '')} + 0.01} = ${Object.values(rawData)[2]}`;
+    
+    case "Aleatorische Unsicherheit":
+      const confInterval = Object.values(rawData)[0];
+      const maxVariance = Object.values(rawData)[1];
+      return `A = 1 - \\frac{${confInterval.toString().replace('±', '').replace('%', '')}}{${maxVariance}} = ${Object.values(rawData)[2]}`;
+    
+    case "Overfitting-Risiko":
+      const trainLoss = Object.values(rawData)[0];
+      const testLoss = Object.values(rawData)[1];
+      return `C = 1 - \\frac{|${trainLoss} - ${testLoss}|}{${trainLoss} + 0.001} = ${Object.values(rawData)[2]}`;
+    
+    case "Robustheit":
+      const sensitivity = Object.values(rawData)[0];
+      const baseline = Object.values(rawData)[1];
+      return `R = 1 - \\frac{${sensitivity}}{${baseline.toString().replace('%', '')}} = ${Object.values(rawData)[2]}`;
+    
+    case "Erklärungs-Konsistenz":
+      const correlation = Object.values(rawData)[0];
+      return `X = \\text{Korrelation}(FI_{run1}, FI_{run2}) = ${correlation} = ${Object.values(rawData)[1]}`;
+    
+    default:
+      return "Formel nicht verfügbar";
+  }
+}
+
 // Function to create pop-up content for uncertainty parameters
 const getUncertaintyParameterPopup = (parameterName: string, selectedStock: string, uncertaintyParams: ModelUncertaintyParams) => {
   const parameterMap: Record<string, {
@@ -1348,7 +1415,7 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
         <DialogTitle className="flex items-center gap-3">
           {param.icon}
           {param.title}
-          <Badge variant="outline" className="ml-auto">
+          <Badge variant="outline" className={`ml-auto ${getStatusColor(getStatus(param.currentValue * 100))}`}>
             {(param.currentValue * 100).toFixed(1)}%
           </Badge>
         </DialogTitle>
@@ -1375,12 +1442,31 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
           </div>
         </div>
         
-        {/* Spalte 2: Mathematische Formel */}
+        {/* Spalte 2: Berechnung mit echten Werten */}
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-semibold mb-3">Berechnung</h3>
+            <div className="flex items-center gap-2 mb-3">
+              <h3 className="text-lg font-semibold">Berechnung</h3>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button className="p-1 rounded-full hover:bg-muted/50">
+                      <Info className="h-4 w-4 text-muted-foreground" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-lg">
+                    <div className="space-y-2 p-2">
+                      <div className="font-semibold text-sm text-white">Generelle Formel</div>
+                      <div className="formula-container bg-muted/30 p-2 rounded">
+                        <BlockMath math={param.formula} />
+                      </div>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             <div className="formula-container bg-muted/30 p-4 rounded-lg">
-              <BlockMath math={param.formula} />
+              <BlockMath math={getCalculationWithRealValues(parameterName, param.rawData)} />
             </div>
           </div>
           
@@ -1631,7 +1717,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
             {/* Model Performance Metrics with Hover Tooltips */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center p-4 border rounded-lg">
-                <div className="text-2xl font-bold text-green-600">
+                <div className={`text-2xl font-bold ${getStatusColor(getStatus(data.modelMetrics.trainingAccuracy)).split(' ')[0]}`}>
                   {data.modelMetrics.trainingAccuracy}%
                 </div>
                 <div className="flex items-center justify-center gap-1">
@@ -1653,7 +1739,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                 </div>
               </div>
               <div className="text-center p-4 border rounded-lg">
-                <div className="text-2xl font-bold text-blue-600">
+                <div className={`text-2xl font-bold ${getStatusColor(getValidationLossStatus(data.modelMetrics.validationLoss)).split(' ')[0]}`}>
                   {data.modelMetrics.validationLoss}
                 </div>
                 <div className="flex items-center justify-center gap-1">
@@ -1675,7 +1761,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                 </div>
               </div>
               <div className="text-center p-4 border rounded-lg">
-                <div className="text-sm font-medium text-center text-primary">
+                <div className={`text-sm font-bold text-center ${getStatusColor(getPredictionIntervalStatus(data.modelMetrics.predictionInterval)).split(' ')[0]}`}>
                   {data.modelMetrics.predictionInterval}
                 </div>
                 <div className="flex items-center justify-center gap-1">
@@ -1702,7 +1788,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
             <div>
               <h4 className="font-medium mb-4 flex items-center gap-2">
                 <BarChart3 className="h-4 w-4" />
-                Modellunsicherheits-Dimensionen (ChatGPT Framework)
+                Modellunsicherheits-Dimensionen
               </h4>
               <div className="space-y-3">
                 {data.modelMetrics.featureImportance.map((feature: FeatureImportance, index: number) => (
@@ -1712,18 +1798,30 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                         <span>{feature.name}</span>
                         <Dialog>
                           <DialogTrigger asChild>
-                            <button className="p-1 rounded-full hover:bg-muted/50 transition-colors">
-                              <Info className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                            </button>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button className="p-1 rounded-full hover:bg-muted/50 transition-colors">
+                                    <Info className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Für nähere Information klicken Sie auf das Icon</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                           </DialogTrigger>
                           <DialogContent className="max-w-4xl">
                             {getUncertaintyParameterPopup(feature.name, selectedStock, data.modelMetrics.uncertaintyParams)}
                           </DialogContent>
                         </Dialog>
                       </div>
-                      <span className="font-medium">{(feature.weight * 100).toFixed(1)}%</span>
+                      <span className="font-medium">{getUncertaintyValue(feature.name, data.modelMetrics.uncertaintyParams).toFixed(1)}%</span>
                     </div>
-                    <Progress value={feature.weight * 100} className="h-2" />
+                    <Progress 
+                      value={getUncertaintyValue(feature.name, data.modelMetrics.uncertaintyParams)} 
+                      className={`h-2`}
+                    />
                   </div>
                 ))}
               </div>
