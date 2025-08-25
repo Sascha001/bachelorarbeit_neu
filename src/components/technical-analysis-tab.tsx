@@ -1116,6 +1116,27 @@ const getInfoBoxContent = (metric: string) => {
     tradingVolume: {
       title: "Handelsvolumen-Verteilung Berechnung",
       content: "Die Handelsvolumen-Verteilung bewertet drei kritische Dimensionen: Marktteilnehmer-Konzentration (HHI), Anomalous Spikes und Zeit-Stabilität."
+    },
+    // Modellunsicherheits-Parameter
+    "Epistemische Unsicherheit": {
+      title: "Epistemische Unsicherheit – Modellwissen",
+      content: "Epistemische Unsicherheit entsteht durch begrenzte Trainingsdaten und Modellkomplexität. Sie kann durch mehr Daten reduziert werden und zeigt, wie sicher sich das Modell bei seinen Vorhersagen ist."
+    },
+    "Aleatorische Unsicherheit": {
+      title: "Aleatorische Unsicherheit – Marktvolatilität",
+      content: "Aleatorische Unsicherheit stammt aus der inhärenten Zufälligkeit der Finanzmärkte. Sie ist irreduzibel und spiegelt die natürliche Volatilität der Aktienkurse wider."
+    },
+    "Overfitting-Risiko": {
+      title: "Overfitting-Risiko – Generalisierungsfähigkeit", 
+      content: "Overfitting-Risiko misst, wie gut das Modell auf neue, ungesehene Daten generalisiert. Hohe Werte deuten auf Überanpassung an Trainingsdaten hin."
+    },
+    "Robustheit": {
+      title: "Robustheit/Stabilität – Eingabesensitivität",
+      content: "Robustheit misst, wie empfindlich das Modell auf kleine Änderungen in den Eingabedaten reagiert. Instabile Modelle ändern Empfehlungen bei minimalen Preisänderungen."
+    },
+    "Erklärungs-Konsistenz": {
+      title: "Erklärungs-Konsistenz – Interpretierbarkeit",
+      content: "Selbst bei gleichen Eingaben können verschiedene Trainingsläufe unterschiedliche Erklärungen liefern ('warum' es eine Empfehlung gibt). Wichtig für Vertrauen und Nachvollziehbarkeit."
     }
   }
   return infoContent[metric] || { title: "Information", content: "Keine Informationen verfügbar." }
@@ -1805,34 +1826,19 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     <div className="flex justify-between text-sm items-center">
                       <div className="flex items-center gap-2">
                         <span>{feature.name}</span>
-                        <div className="relative">
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <span>
-                                  <Dialog>
-                                    <DialogTrigger asChild>
-                                      <button 
-                                        className="p-1 rounded-full hover:bg-muted/50 transition-colors"
-                                        onPointerDown={(e) => e.stopPropagation()}
-                                        onPointerUp={(e) => e.stopPropagation()}
-                                        onClick={(e) => e.stopPropagation()}
-                                      >
-                                        <Info className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                                      </button>
-                                    </DialogTrigger>
-                                    <DialogContent className="max-w-4xl bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
-                                      {getUncertaintyParameterPopup(feature.name, selectedStock, data.modelMetrics.uncertaintyParams)}
-                                    </DialogContent>
-                                  </Dialog>
-                                </span>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Für nähere Information klicken Sie auf das Icon</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button 
+                              onClick={() => handleInfoClick(feature.name)}
+                              className="ml-1 p-1 rounded-full hover:bg-muted/50 transition-colors"
+                            >
+                              <Info className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Für nähere Information klicken Sie auf das Icon</p>
+                          </TooltipContent>
+                        </Tooltip>
                       </div>
                       <span className="font-medium">{getUncertaintyValue(feature.name, data.modelMetrics.uncertaintyParams).toFixed(1)}%</span>
                     </div>
@@ -2616,8 +2622,29 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       )
                     })()}
 
+                    {/* Modellunsicherheits-Parameter Details */}
+                    {["Epistemische Unsicherheit", "Aleatorische Unsicherheit", "Overfitting-Risiko", "Robustheit", "Erklärungs-Konsistenz"].includes(activeInfoBox || '') && (() => {
+                      const uncertaintyParams = getModelUncertaintyParams(selectedStock)
+                      const parameterName = activeInfoBox as string
+                      return (
+                        <>
+                          {/* Short intro text */}
+                          <div className="mt-4 p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
+                            <p className="text-sm text-muted-foreground">
+                              {getInfoBoxContent(parameterName).content}
+                            </p>
+                          </div>
+                          
+                          {/* Parameter-spezifische Details mit getUncertaintyParameterPopup */}
+                          <div className="mt-6">
+                            {getUncertaintyParameterPopup(parameterName, selectedStock, uncertaintyParams)}
+                          </div>
+                        </>
+                      )
+                    })()}
+
                     {/* Other metrics placeholder */}
-                    {activeInfoBox !== 'fundamentalData' && activeInfoBox !== 'timeSeriesIntegrity' && activeInfoBox !== 'newsReliability' && activeInfoBox !== 'tradingVolume' && (
+                    {activeInfoBox !== 'fundamentalData' && activeInfoBox !== 'timeSeriesIntegrity' && activeInfoBox !== 'newsReliability' && activeInfoBox !== 'tradingVolume' && !["Epistemische Unsicherheit", "Aleatorische Unsicherheit", "Overfitting-Risiko", "Robustheit", "Erklärungs-Konsistenz"].includes(activeInfoBox || '') && (
                       <>
                         <div className="mt-8 p-4 bg-muted/30 rounded-lg">
                           <h4 className="font-medium mb-2 text-foreground">Berechnungsdetails</h4>
