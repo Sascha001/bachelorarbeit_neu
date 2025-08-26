@@ -20,37 +20,69 @@ const getUncertaintyData = (stock: string) => {
   const timeSeriesParams = getTimeSeriesIntegrityParams(stock)
   const tradingVolumeParams = getTradingVolumeParams(stock)
   
-  // Calculate individual dimension certainties (higher score = lower uncertainty)
-  const fundamentalCertainty = (0.2 * fundamentalParams.completeness.value + 
-                               0.2 * fundamentalParams.timeliness.value + 
-                               0.2 * fundamentalParams.consistency.value + 
-                               0.2 * fundamentalParams.accuracy.value + 
-                               0.2 * fundamentalParams.stability.value) * 100
+  // Calculate individual dimension certainties using calculation functions (higher score = lower uncertainty)
+  const fundamentalCalculated = {
+    completeness: 1 - (fundamentalParams.completeness.missingValues / fundamentalParams.completeness.totalValues),
+    timeliness: Math.max(0, 1 - (fundamentalParams.timeliness.daysOld / fundamentalParams.timeliness.maxAcceptableDays)),
+    consistency: 1 - (fundamentalParams.consistency.inconsistentEntries / fundamentalParams.consistency.totalEntries),
+    accuracy: fundamentalParams.accuracy.accurateReports / fundamentalParams.accuracy.totalReports,
+    stability: 1 - (fundamentalParams.stability.revisions / fundamentalParams.stability.totalDataPoints)
+  };
+  const fundamentalCertainty = (0.2 * fundamentalCalculated.completeness + 
+                               0.2 * fundamentalCalculated.timeliness + 
+                               0.2 * fundamentalCalculated.consistency + 
+                               0.2 * fundamentalCalculated.accuracy + 
+                               0.2 * fundamentalCalculated.stability) * 100
   
-  const newsCertainty = (0.3 * newsParams.sourceReliability.value + 
-                        0.3 * newsParams.reputationAccuracy.value + 
-                        0.25 * newsParams.crossSourceConsensus.value + 
-                        0.15 * newsParams.biasCheck.value) * 100
+  const newsCalculated = {
+    sourceReliability: newsParams.sourceReliability.averageReliability,
+    reputationAccuracy: 1 - (newsParams.reputationAccuracy.falseNews / newsParams.reputationAccuracy.totalNews),
+    crossSourceConsensus: newsParams.crossSourceConsensus.confirmedNews / newsParams.crossSourceConsensus.totalNews,
+    biasCheck: 1 - (newsParams.biasCheck.biasIndex / newsParams.biasCheck.maxBiasValue)
+  };
+  const newsCertainty = (0.3 * newsCalculated.sourceReliability + 
+                        0.3 * newsCalculated.reputationAccuracy + 
+                        0.25 * newsCalculated.crossSourceConsensus + 
+                        0.15 * newsCalculated.biasCheck) * 100
   
-  const timeSeriesCertainty = (0.25 * timeSeriesParams.completeness.value + 
-                              0.25 * timeSeriesParams.outlierFreedom.value + 
-                              0.25 * timeSeriesParams.revisionStability.value + 
-                              0.25 * timeSeriesParams.continuity.value) * 100
+  const timeSeriesCalculated = {
+    completeness: 1 - (timeSeriesParams.completeness.missingTimepoints / timeSeriesParams.completeness.expectedTimepoints),
+    outlierFreedom: 1 - (timeSeriesParams.outlierFreedom.outliers / timeSeriesParams.outlierFreedom.totalObservations),
+    revisionStability: 1 - (timeSeriesParams.revisionStability.revisedValues / timeSeriesParams.revisionStability.totalValues),
+    continuity: 1 - (timeSeriesParams.continuity.gaps / timeSeriesParams.continuity.totalIntervals)
+  };
+  const timeSeriesCertainty = (0.25 * timeSeriesCalculated.completeness + 
+                              0.25 * timeSeriesCalculated.outlierFreedom + 
+                              0.25 * timeSeriesCalculated.revisionStability + 
+                              0.25 * timeSeriesCalculated.continuity) * 100
   
-  const tradingVolumeCertainty = (0.4 * tradingVolumeParams.concentration.value + 
-                                 0.3 * tradingVolumeParams.anomalousSpikes.value + 
-                                 0.3 * tradingVolumeParams.timeStability.value) * 100
+  const tradingVolumeCalculated = {
+    concentration: 1 - (tradingVolumeParams.concentration.topTradersVolume / tradingVolumeParams.concentration.totalVolume),
+    anomalousSpikes: 1 - (tradingVolumeParams.anomalousSpikes.spikes / tradingVolumeParams.anomalousSpikes.totalTradingDays),
+    timeStability: 1 - (tradingVolumeParams.timeStability.varianceCoefficient / tradingVolumeParams.timeStability.maxVarianceCoefficient)
+  };
+  const tradingVolumeCertainty = (0.4 * tradingVolumeCalculated.concentration + 
+                                 0.3 * tradingVolumeCalculated.anomalousSpikes + 
+                                 0.3 * tradingVolumeCalculated.timeStability) * 100
   
   // STEP 1: Calculate average certainty for data dimension (4 parameters)
   const dataCertainty = (fundamentalCertainty + newsCertainty + timeSeriesCertainty + tradingVolumeCertainty) / 4
   
   // STEP 2: Calculate model certainty using ChatGPT Framework
   const modelParams = getModelUncertaintyParams(stock)
-  const modelCertainty = (0.25 * modelParams.epistemicUncertainty.value + 
-                         0.15 * modelParams.aleatoricUncertainty.value + 
-                         0.20 * modelParams.overfittingRisk.value + 
-                         0.20 * modelParams.robustness.value + 
-                         0.20 * modelParams.explanationConsistency.value) * 100
+  
+  // Calculate the actual values using the calculation functions
+  const epistemicValue = 1 - (modelParams.epistemicUncertainty.predictionStdDev / (modelParams.epistemicUncertainty.meanPrediction + modelParams.epistemicUncertainty.epsilon))
+  const aleatoricValue = 1 - (modelParams.aleatoricUncertainty.meanPredictionVariance / modelParams.aleatoricUncertainty.maxExpectedVariance)
+  const overfittingValue = 1 - (Math.abs(modelParams.overfittingRisk.trainLoss - modelParams.overfittingRisk.testLoss) / (modelParams.overfittingRisk.trainLoss + modelParams.overfittingRisk.epsilon))
+  const robustnessValue = 1 - (modelParams.robustness.meanPerturbationChange / modelParams.robustness.baselinePrediction)
+  const explanationValue = (modelParams.explanationConsistency.featureImportanceCorrelation + 1) / 2
+  
+  const modelCertainty = (0.25 * epistemicValue + 
+                         0.15 * aleatoricValue + 
+                         0.20 * overfittingValue + 
+                         0.20 * robustnessValue + 
+                         0.20 * explanationValue) * 100
   
   // STEP 3: Calculate human certainty (existing logic, no new parameters yet)  
   const humanCertainty = Math.max(60, Math.min(95, 80 - (fundamentalCertainty + newsCertainty) / 12)) // Experts more uncertain with complex situations

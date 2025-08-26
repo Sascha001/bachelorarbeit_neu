@@ -46,26 +46,50 @@ const getSimplifiedData = (stock: string): SimplifiedData => {
   const timeSeriesParams = getTimeSeriesIntegrityParams(stock)
   const tradingVolumeParams = getTradingVolumeParams(stock)
   
-  // Calculate dimension certainties
-  const fundamentalCertainty = (0.2 * fundamentalParams.completeness.value + 
-                               0.2 * fundamentalParams.timeliness.value + 
-                               0.2 * fundamentalParams.consistency.value + 
-                               0.2 * fundamentalParams.accuracy.value + 
-                               0.2 * fundamentalParams.stability.value) * 100
+  // Calculate dimension certainties using calculation functions
+  const fundamentalCalculated = {
+    completeness: 1 - (fundamentalParams.completeness.missingValues / fundamentalParams.completeness.totalValues),
+    timeliness: Math.max(0, 1 - (fundamentalParams.timeliness.daysOld / fundamentalParams.timeliness.maxAcceptableDays)),
+    consistency: 1 - (fundamentalParams.consistency.inconsistentEntries / fundamentalParams.consistency.totalEntries),
+    accuracy: fundamentalParams.accuracy.accurateReports / fundamentalParams.accuracy.totalReports,
+    stability: 1 - (fundamentalParams.stability.revisions / fundamentalParams.stability.totalDataPoints)
+  };
+  const fundamentalCertainty = (0.2 * fundamentalCalculated.completeness + 
+                               0.2 * fundamentalCalculated.timeliness + 
+                               0.2 * fundamentalCalculated.consistency + 
+                               0.2 * fundamentalCalculated.accuracy + 
+                               0.2 * fundamentalCalculated.stability) * 100
   
-  const newsCertainty = (0.3 * newsParams.sourceReliability.value + 
-                        0.3 * newsParams.reputationAccuracy.value + 
-                        0.25 * newsParams.crossSourceConsensus.value + 
-                        0.15 * newsParams.biasCheck.value) * 100
+  const newsCalculated = {
+    sourceReliability: newsParams.sourceReliability.averageReliability,
+    reputationAccuracy: 1 - (newsParams.reputationAccuracy.falseNews / newsParams.reputationAccuracy.totalNews),
+    crossSourceConsensus: newsParams.crossSourceConsensus.confirmedNews / newsParams.crossSourceConsensus.totalNews,
+    biasCheck: 1 - (newsParams.biasCheck.biasIndex / newsParams.biasCheck.maxBiasValue)
+  };
+  const newsCertainty = (0.3 * newsCalculated.sourceReliability + 
+                        0.3 * newsCalculated.reputationAccuracy + 
+                        0.25 * newsCalculated.crossSourceConsensus + 
+                        0.15 * newsCalculated.biasCheck) * 100
   
-  const timeSeriesCertainty = (0.25 * timeSeriesParams.completeness.value + 
-                              0.25 * timeSeriesParams.outlierFreedom.value + 
-                              0.25 * timeSeriesParams.revisionStability.value + 
-                              0.25 * timeSeriesParams.continuity.value) * 100
+  const timeSeriesCalculated = {
+    completeness: 1 - (timeSeriesParams.completeness.missingTimepoints / timeSeriesParams.completeness.expectedTimepoints),
+    outlierFreedom: 1 - (timeSeriesParams.outlierFreedom.outliers / timeSeriesParams.outlierFreedom.totalObservations),
+    revisionStability: 1 - (timeSeriesParams.revisionStability.revisedValues / timeSeriesParams.revisionStability.totalValues),
+    continuity: 1 - (timeSeriesParams.continuity.gaps / timeSeriesParams.continuity.totalIntervals)
+  };
+  const timeSeriesCertainty = (0.25 * timeSeriesCalculated.completeness + 
+                              0.25 * timeSeriesCalculated.outlierFreedom + 
+                              0.25 * timeSeriesCalculated.revisionStability + 
+                              0.25 * timeSeriesCalculated.continuity) * 100
   
-  const tradingVolumeCertainty = (0.4 * tradingVolumeParams.concentration.value + 
-                                 0.3 * tradingVolumeParams.anomalousSpikes.value + 
-                                 0.3 * tradingVolumeParams.timeStability.value) * 100
+  const tradingVolumeCalculated = {
+    concentration: 1 - (tradingVolumeParams.concentration.topTradersVolume / tradingVolumeParams.concentration.totalVolume),
+    anomalousSpikes: 1 - (tradingVolumeParams.anomalousSpikes.spikes / tradingVolumeParams.anomalousSpikes.totalTradingDays),
+    timeStability: 1 - (tradingVolumeParams.timeStability.varianceCoefficient / tradingVolumeParams.timeStability.maxVarianceCoefficient)
+  };
+  const tradingVolumeCertainty = (0.4 * tradingVolumeCalculated.concentration + 
+                                 0.3 * tradingVolumeCalculated.anomalousSpikes + 
+                                 0.3 * tradingVolumeCalculated.timeStability) * 100
   
   const dataCertainty = (fundamentalCertainty + newsCertainty + timeSeriesCertainty + tradingVolumeCertainty) / 4
   const confidenceLevel = Math.round(dataCertainty)
