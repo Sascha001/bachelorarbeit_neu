@@ -70,11 +70,11 @@ All commands should be run from the `frontend-app/` directory, not the repositor
 
 #### Uncertainty Visualization
 The main focus is uncertainty analysis in AI trading recommendations:
-- **Model Uncertainty**: AI model confidence levels
-- **Data Uncertainty**: Data quality and reliability metrics  
+- **Model Uncertainty**: ChatGPT Framework with 5 dimensions (Epistemische/Aleatorische Unsicherheit, Overfitting-Risiko, Robustheit, Erklärungs-Konsistenz)
+- **Data Uncertainty**: Data quality metrics across 4 parameters (Fundamentaldaten, News-Verlässlichkeit, Zeitreihen-Integrität, Handelsvolumen)  
 - **Expert Assessment**: Human expert input integration
-- **Risk Management**: Volatility and risk alerts
-- **Trading Recommendations**: Buy/sell/hold signals with confidence levels
+- **Risk Management**: Volatility and risk alerts with uncertainty quantification
+- **Trading Recommendations**: Buy/sell/hold signals with confidence levels and uncertainty boundaries
 
 #### Dashboard Components
 - Portfolio value and performance metrics
@@ -114,22 +114,31 @@ The main focus is uncertainty analysis in AI trading recommendations:
 
 ### Pop-up and Dialog Design Patterns
 - **Violet-Bloom Consistency**: All pop-up components use `bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg`
-- **DialogContent Styling**: Apply violet-bloom theme to all dialog containers
+- **Info-Box System**: Use Info-Box pattern instead of nested Dialog structures for better event handling
+- **Vertical Layout Structure**: Follow consistent vertical flow: Intro → Parameters → Score → Formula
+- **Parameter Lists**: Use numbered parameter displays (1. 2. 3.) with badges for values
 - **Info-Box Borders**: All explanation sections require visible borders for better readability
-- **Parameter Boxes**: Individual parameter displays use consistent violet-bloom styling
-- **No Redundant Badges**: Avoid duplicate percentage displays in dialog headers when already shown in content
+- **No Redundant Badges**: Avoid duplicate percentage displays when already shown in content
+
+### Info-Box Architecture
+- **Unified System**: Both Datenunsicherheit and Modellunsicherheit use identical Info-Box patterns
+- **Event Handler**: Use `handleInfoClick` for consistent behavior across all uncertainty components
+- **Content Structure**: Intro text + Parameter breakdown + Formula section with hover tooltips
+- **Avoid Dialog Nesting**: Never nest Dialog components within Tooltip structures
+- **Universal Components**: Use standard HTML elements (h3, p, div) instead of Dialog-specific components
 
 ### Event Handling Best Practices
-- **Tooltip/Dialog Conflicts**: Prevent event bubbling with proper component structure
-- **Tooltip Delays**: Remove `delayDuration` properties for immediate hover response
-- **Event Isolation**: Use proper component nesting to prevent conflicts
-- **Nested Interactive Elements**: Wrap in appropriate containers to prevent event conflicts
+- **No Nested Dialogs**: Avoid `Tooltip → Dialog → Tooltip` structures that cause event conflicts
+- **Info-Box Pattern**: Use slide-in Info-Box system for detailed parameter explanations
+- **Tooltip Independence**: Inner tooltips (generelle Formel) must work independently of outer click events
+- **Event Isolation**: Use Info-Box system to prevent event bubbling issues
+- **Immediate Response**: Remove `delayDuration` properties for immediate hover response
 
 ### KaTeX Formula Rendering Guidelines
-- **Font Sizing**: Use appropriate font sizes to prevent overflow
-- **Container Sizing**: Ensure formulas fit within their containers
-- **Box Dimensions**: Use proper padding and spacing for readability
-- **Responsive Design**: Ensure formulas work across different screen sizes
+- **Font Sizing**: Use smaller font sizes to prevent overflow: `.formula-container { font-size: 0.8rem !important; }`
+- **Container Sizing**: Use `overflow-x-auto` and proper padding for formula containers
+- **Box Dimensions**: Ensure formulas stay within violet-bloom bordered containers
+- **Responsive Design**: Use horizontal scroll for long formulas rather than line breaking
 
 ## Important Development Notes
 
@@ -146,5 +155,13 @@ The project uses specific versions:
 - Uses mock notification data that matches validation page items
 - Stock data and trading information are simulated for development
 - Real-time updates are simulated through React state management
+- Uncertainty parameters use realistic mathematical formulations with KaTeX rendering
 
-This application serves as a bachelor's thesis project focused on uncertainty visualization in AI trading systems, emphasizing user experience and clear presentation of complex uncertainty metrics.
+### UI/UX Architecture Decisions
+- **Info-Box over Dialogs**: Replaced nested Dialog systems with slide-in Info-Boxes for better event handling
+- **Vertical Layout Consistency**: Both Datenunsicherheit and Modellunsicherheit follow identical vertical structures
+- **Mathematical Formula Integration**: KaTeX formulas are embedded with hover tooltips for detailed explanations
+- **Consistent Border Design**: All info sections use violet-bloom borders for visual hierarchy
+- **Event-Driven Interactions**: Click Info-Icon → Info-Box slides in → Inner tooltips work independently
+
+This application serves as a bachelor's thesis project focused on uncertainty visualization in AI trading systems, emphasizing user experience and clear presentation of complex uncertainty metrics through consistent Info-Box architecture and violet-bloom design patterns.

@@ -1436,6 +1436,26 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
         <div className="flex items-center gap-3">
           {param.icon}
           <h3 className="text-xl font-semibold">{param.title}</h3>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button className="p-1 rounded-full hover:bg-muted/50">
+                  <Info className="h-4 w-4 text-muted-foreground" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-lg">
+                <div className="space-y-2 p-2">
+                  <div className="font-semibold text-sm text-white">Beschreibung</div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {param.description}
+                  </p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    <strong>Bedeutung:</strong> {param.importance}
+                  </p>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
         <p className="text-sm text-muted-foreground">
           Detaillierte Analyse für {selectedStock}
@@ -1443,16 +1463,6 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
       </div>
       
       <div className="space-y-6 py-6">
-        {/* Intro-Text */}
-        <div className="bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg p-4">
-          <h4 className="font-medium text-foreground mb-2">Beschreibung</h4>
-          <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-            {param.description}
-          </p>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            <strong>Bedeutung:</strong> {param.importance}
-          </p>
-        </div>
         
         {/* Parameter-Aufschlüsselung */}
         <div className="space-y-4">
@@ -1462,7 +1472,6 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
             <div key={key} className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <span className="font-medium">{index + 1}. {key}</span>
-                <Badge className="ml-auto">{String(value)}</Badge>
               </div>
               <div className="text-sm text-muted-foreground">
                 Aktueller Wert für {selectedStock}
@@ -1471,30 +1480,11 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
           ))}
         </div>
         
-        {/* Gesamtbewertung */}
-        <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
-          <h4 className="font-semibold mb-2 text-primary">Gesamtscore: {(param.currentValue * 100).toFixed(1)}%</h4>
-          <p className="text-sm text-muted-foreground mb-3">
-            Bewertung für {selectedStock}
-          </p>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium">Qualitätsbewertung:</span>
-            <span className={`text-sm font-bold ${
-              param.currentValue > 0.8 ? 'text-green-600' : 
-              param.currentValue > 0.6 ? 'text-yellow-600' : 'text-red-600'
-            }`}>
-              {param.currentValue > 0.8 ? 'Sehr gut' : 
-               param.currentValue > 0.6 ? 'Gut' : 
-               param.currentValue > 0.4 ? 'Mäßig' : 'Schlecht'}
-            </span>
-          </div>
-        </div>
-
         {/* Formel-Sektion */}
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <h4 className="font-medium text-foreground">Berechnung</h4>
-            <TooltipProvider>
+            <TooltipProvider key="inner-tooltip">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button className="p-1 rounded-full hover:bg-muted/50">
@@ -1517,6 +1507,29 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
             <div className="formula-container">
               <BlockMath math={getCalculationWithRealValues(parameterName, param.rawData)} />
             </div>
+          </div>
+        </div>
+
+        {/* Gesamtbewertung */}
+        <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+          <h4 className="font-semibold mb-2 text-primary">Gesamtscore: 
+            <span className={`ml-2 ${getStatusColor(getStatus(param.currentValue * 100))}`}>
+              {(param.currentValue * 100).toFixed(1)}%
+            </span>
+          </h4>
+          <p className="text-sm text-muted-foreground mb-3">
+            Bewertung für {selectedStock}
+          </p>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium">Qualitätsbewertung:</span>
+            <span className={`text-sm font-bold ${
+              param.currentValue > 0.8 ? 'text-green-600' : 
+              param.currentValue > 0.6 ? 'text-yellow-600' : 'text-red-600'
+            }`}>
+              {param.currentValue > 0.8 ? 'Sehr gut' : 
+               param.currentValue > 0.6 ? 'Gut' : 
+               param.currentValue > 0.4 ? 'Mäßig' : 'Schlecht'}
+            </span>
           </div>
         </div>
       </div>
