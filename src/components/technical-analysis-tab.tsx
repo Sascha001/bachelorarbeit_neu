@@ -62,7 +62,7 @@ const formulaStyles = `
     background: hsl(270 20% 98%);
   }
 `
-import { BlockMath } from 'react-katex'
+import { BlockMath, InlineMath } from 'react-katex'
 import { 
   Database, 
   Brain, 
@@ -324,9 +324,9 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         meanPerturbationChange: 0.003,  // Δŷ = 0.3% average change after perturbations
         baselinePrediction: 0.021       // ŷ = 2.1% baseline prediction (decimal)
       },
-      // X = (0.89 + 1)/2 = 0.945 (normalize correlation from [-1,1] to [0,1], then round to 0.92)
+      // X = (0.89 + 1)/2 = 0.945 (normalize correlation from [-1,1] to [0,1])
       explanationConsistency: { 
-        value: 0.92,
+        value: 0.95,  // X = (0.89 + 1)/2 = 1.89/2 = 0.95 (AAPL)
         featureImportanceCorrelation: 0.89  // ρ = 0.89 (strong positive correlation)
       }
     },
@@ -355,7 +355,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.019
       },
       explanationConsistency: { 
-        value: 0.94,
+        value: 0.96,  // X = (0.91 + 1)/2 = 1.91/2 = 0.96 (MSFT)
         featureImportanceCorrelation: 0.91
       }
     },
@@ -388,7 +388,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.035        // ŷ = 3.5% as DECIMAL (was incorrectly 3.5)
       },
       explanationConsistency: { 
-        value: 0.64,
+        value: 0.81,  // X = (0.61 + 1)/2 = 1.61/2 = 0.81 (AMZN)
         featureImportanceCorrelation: 0.61
       }
     },
@@ -422,9 +422,9 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         meanPerturbationChange: 0.0014,  // Δŷ = 0.14% average change (very stable)
         baselinePrediction: 0.016        // ŷ = 1.6% baseline prediction (decimal)
       },
-      // X = (0.94 + 1)/2 = 0.97 (set to 0.96)
+      // X = (0.94 + 1)/2 = 0.97
       explanationConsistency: { 
-        value: 0.96,
+        value: 0.97,  // X = (0.94 + 1)/2 = 1.94/2 = 0.97 (BRK.B)
         featureImportanceCorrelation: 0.94  // ρ = 0.94 (very strong correlation)
       }
     },
@@ -456,9 +456,9 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         meanPerturbationChange: 0.0019,  // Δŷ = 0.19% average change
         baselinePrediction: 0.017        // ŷ = 1.7% baseline prediction (decimal)
       },
-      // X = (0.92 + 1)/2 = 0.96 (set to 0.94)
+      // X = (0.92 + 1)/2 = 0.96
       explanationConsistency: { 
-        value: 0.94,
+        value: 0.96,  // X = (0.92 + 1)/2 = 1.92/2 = 0.96 (JPM)
         featureImportanceCorrelation: 0.92  // ρ = 0.92 (strong correlation)
       }
     },
@@ -490,7 +490,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.023        // ŷ = 2.3% baseline prediction
       },
       explanationConsistency: { 
-        value: 0.89,
+        value: 0.93,  // X = (0.86 + 1)/2 = 1.86/2 = 0.93 (GOOGL)
         featureImportanceCorrelation: 0.86
       }
     },
@@ -520,7 +520,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.028        // ŷ = 2.8% baseline prediction
       },
       explanationConsistency: { 
-        value: 0.71,
+        value: 0.86,  // X = (0.71 + 1)/2 = 1.71/2 = 0.86 (META)
         featureImportanceCorrelation: 0.71
       }
     },
@@ -550,7 +550,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.032        // ŷ = 3.2% baseline prediction
       },
       explanationConsistency: { 
-        value: 0.62,
+        value: 0.79,  // X = (0.58 + 1)/2 = 1.58/2 = 0.79 (NVDA)
         featureImportanceCorrelation: 0.58
       }
     },
@@ -580,7 +580,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.041        // ŷ = 4.1% baseline prediction
       },
       explanationConsistency: { 
-        value: 0.55,
+        value: 0.71,  // X = (0.42 + 1)/2 = 1.42/2 = 0.71 (TSLA)
         featureImportanceCorrelation: 0.42
       }
     },
@@ -612,7 +612,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.018
       },
       explanationConsistency: { 
-        value: 0.93,
+        value: 0.95,  // X = (0.90 + 1)/2 = 1.90/2 = 0.95 (JNJ)
         featureImportanceCorrelation: 0.90
       }
     },
@@ -642,7 +642,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.020
       },
       explanationConsistency: { 
-        value: 0.91,
+        value: 0.94,  // X = (0.87 + 1)/2 = 1.87/2 = 0.94 (V)
         featureImportanceCorrelation: 0.87
       }
     },
@@ -672,7 +672,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.021
       },
       explanationConsistency: { 
-        value: 0.89,
+        value: 0.93,  // X = (0.85 + 1)/2 = 1.85/2 = 0.93 (MA)
         featureImportanceCorrelation: 0.85
       }
     },
@@ -702,7 +702,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.019
       },
       explanationConsistency: { 
-        value: 0.92,
+        value: 0.94,  // X = (0.88 + 1)/2 = 1.88/2 = 0.94 (UNH)
         featureImportanceCorrelation: 0.88
       }
     },
@@ -732,7 +732,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.024
       },
       explanationConsistency: { 
-        value: 0.86,
+        value: 0.91,  // X = (0.82 + 1)/2 = 1.82/2 = 0.91 (HD)
         featureImportanceCorrelation: 0.82
       }
     },
@@ -762,7 +762,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.017
       },
       explanationConsistency: { 
-        value: 0.94,
+        value: 0.96,  // X = (0.91 + 1)/2 = 1.91/2 = 0.96 (PG)
         featureImportanceCorrelation: 0.91
       }
     },
@@ -792,7 +792,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.015
       },
       explanationConsistency: { 
-        value: 0.95,
+        value: 0.97,  // X = (0.93 + 1)/2 = 1.93/2 = 0.97 (KO)
         featureImportanceCorrelation: 0.93
       }
     },
@@ -824,7 +824,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.026
       },
       explanationConsistency: { 
-        value: 0.81,
+        value: 0.88,  // X = (0.76 + 1)/2 = 1.76/2 = 0.88
         featureImportanceCorrelation: 0.76
       }
     },
@@ -854,7 +854,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.034
       },
       explanationConsistency: { 
-        value: 0.69,
+        value: 0.83,  // X = (0.65 + 1)/2 = 1.65/2 = 0.83 (BMW.DE)
         featureImportanceCorrelation: 0.65
       }
     },
@@ -884,7 +884,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.022
       },
       explanationConsistency: { 
-        value: 0.84,
+        value: 0.90,  // X = (0.79 + 1)/2 = 1.79/2 = 0.90 (SIE.DE)
         featureImportanceCorrelation: 0.79
       }
     },
@@ -914,7 +914,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.020
       },
       explanationConsistency: { 
-        value: 0.90,
+        value: 0.93,  // X = (0.86 + 1)/2 = 1.86/2 = 0.93 (ALV.DE)
         featureImportanceCorrelation: 0.86
       }
     },
@@ -944,7 +944,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.029
       },
       explanationConsistency: { 
-        value: 0.74,
+        value: 0.85,  // X = (0.69 + 1)/2 = 1.69/2 = 0.85 (BAS.DE)
         featureImportanceCorrelation: 0.69
       }
     },
@@ -976,7 +976,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.031
       },
       explanationConsistency: { 
-        value: 0.73,
+        value: 0.84,  // X = (0.68 + 1)/2 = 1.68/2 = 0.84 (ASML.AS)
         featureImportanceCorrelation: 0.68
       }
     },
@@ -1006,7 +1006,7 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
         baselinePrediction: 0.018
       },
       explanationConsistency: { 
-        value: 0.92,
+        value: 0.95,  // X = (0.89 + 1)/2 = 1.89/2 = 0.95 (NESN.SW)
         featureImportanceCorrelation: 0.89
       }
     }
@@ -1888,6 +1888,36 @@ const FormulaTooltip = ({ param, stock, type = "fundamental" }: { param: string;
   )
 }
 
+// Function to render parameter names with KaTeX symbols
+const renderParameterName = (paramName: string): React.ReactNode => {
+  const symbolMap: Record<string, { text: string; symbol: string }> = {
+    "Standardabweichung (σ_ŷ)": { text: "Standardabweichung", symbol: "\\sigma_{\\hat{y}}" },
+    "Mittlere Vorhersage (μ_ŷ)": { text: "Mittlere Vorhersage", symbol: "\\mu_{\\hat{y}}" },
+    "Mittlere Perturbation (Δŷ)": { text: "Mittlere Perturbation", symbol: "\\Delta\\hat{y}" },
+    "Baseline-Vorhersage (ŷ)": { text: "Baseline-Vorhersage", symbol: "\\hat{y}" },
+    "Feature-Korrelation (ρ)": { text: "Feature-Korrelation", symbol: "\\rho" },
+    "Trainingsfehler (L_train)": { text: "Trainingsfehler", symbol: "L_{train}" },
+    "Testfehler (L_test)": { text: "Testfehler", symbol: "L_{test}" },
+    "Epistemische Unsicherheit (E)": { text: "Epistemische Unsicherheit", symbol: "E" },
+    "Aleatorische Unsicherheit (A)": { text: "Aleatorische Unsicherheit", symbol: "A" },
+    "Overfitting-Score (C)": { text: "Overfitting-Score", symbol: "C" },
+    "Robustheit (R)": { text: "Robustheit", symbol: "R" },
+    "Erklärungs-Konsistenz (X)": { text: "Erklärungs-Konsistenz", symbol: "X" }
+  }
+
+  const mapping = symbolMap[paramName]
+  if (mapping) {
+    return (
+      <span>
+        {mapping.text} (<InlineMath math={mapping.symbol} />)
+      </span>
+    )
+  }
+  
+  // Fallback for parameters without symbols
+  return paramName
+}
+
 // Function to get real values calculation formulas - updated for ChatGPT Framework
 const getCalculationWithRealValues = (parameterName: string, rawData: Record<string, string | number>) => {
   switch (parameterName) {
@@ -1904,7 +1934,7 @@ const getCalculationWithRealValues = (parameterName: string, rawData: Record<str
       const meanVar = Object.values(rawData)[0];     // Mittlere Vorhersagevarianz
       const maxVar = Object.values(rawData)[1];      // Maximale erwartete Varianz  
       const aleatoricScore = Object.values(rawData)[2]; // A Score
-      return `A = 1 - \\frac{\\text{mittlere Varianz}}{\\text{max. erwartete Varianz}} = 1 - \\frac{${meanVar}}{${maxVar}} = ${aleatoricScore}`;
+      return `A = 1 - \\frac{\\sigma_{pred}^2}{\\sigma_{max}^2} = 1 - \\frac{${meanVar}}{${maxVar}} = ${aleatoricScore}`;
     
     case "Overfitting-Risiko":
       // C = 1 - |L_train - L_test|/(L_train + ε)
@@ -1993,7 +2023,7 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
       icon: <Activity className="h-6 w-6 text-blue-600" />,
       description: "Natürliche Zufälligkeit im Markt, die selbst das beste Modell nicht erklären kann (z.B. plötzliche News, Messrauschen).",
       importance: "Unvermeidbare Unsicherheit durch Markt-Volatilität. Kann durch bessere Modelle nicht reduziert werden, nur quantifiziert.",
-      formula: "A = 1 - \\frac{\\text{mittlere Vorhersagevarianz}}{\\text{maximale erwartete Varianz}}",
+      formula: "A = 1 - \\frac{\\sigma_{pred}^2}{\\sigma_{max}^2}",
       currentValue: uncertaintyParams.aleatoricUncertainty.value,
       rawData: {
         "Mittlere Vorhersagevarianz": uncertaintyParams.aleatoricUncertainty.meanPredictionVariance.toFixed(4),
@@ -2032,7 +2062,7 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
       icon: <BarChart3 className="h-6 w-6 text-indigo-600" />,
       description: "Selbst bei gleichen Eingaben können verschiedene Trainingsläufe unterschiedliche Erklärungen liefern ('warum' es eine Empfehlung gibt).",
       importance: "Wichtig für Vertrauen und Nachvollziehbarkeit. Inkonsistente Erklärungen deuten auf instabile Feature-Wichtigkeiten hin.",
-      formula: "X = \\text{Korrelation}(FI_{run1}, FI_{run2})",
+      formula: "X = \\frac{\\rho + 1}{2}",
       currentValue: uncertaintyParams.explanationConsistency.value,
       rawData: {
         "Feature-Korrelation (ρ)": uncertaintyParams.explanationConsistency.featureImportanceCorrelation.toFixed(3),
@@ -2086,7 +2116,7 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
           {Object.entries(param.rawData).map(([key, value], index) => (
             <div key={key} className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
-                <span className="font-medium">{index + 1}. {key}</span>
+                <span className="font-medium">{index + 1}. {renderParameterName(key)}</span>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
