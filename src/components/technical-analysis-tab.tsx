@@ -5,14 +5,7 @@ import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+// Dialog components removed as they're no longer used - replaced with Info-Box pattern
 import React, { useState } from "react"
 import 'katex/dist/katex.min.css'
 
@@ -1349,6 +1342,39 @@ const getCalculationWithRealValues = (parameterName: string, rawData: Record<str
   }
 }
 
+// Function to get specific parameter explanations for hover tooltips
+const getParameterExplanation = (parameterName: string, dimensionName: string): string => {
+  const explanations: Record<string, Record<string, string>> = {
+    "Epistemische Unsicherheit": {
+      "Vorhersage-Varianz (σ)": "Misst wie stark die Vorhersagen des Modells schwanken. Niedrige Werte bedeuten konsistentere Vorhersagen.",
+      "Mittlere Vorhersage (μ)": "Der durchschnittliche Kurs-Vorhersagewert des Modells für diese Aktie. Zeigt die erwartete Kursentwicklung.",
+      "Modell-Konfidenz": "Wie sicher sich das Modell bei seinen Vorhersagen ist. Höhere Werte = höhere Sicherheit des Modells."
+    },
+    "Aleatorische Unsicherheit": {
+      "Konfidenzintervall": "Der Bereich, in dem die tatsächliche Kursentwicklung mit 95% Wahrscheinlichkeit liegen wird.",
+      "Max. erwartete Varianz": "Die maximale Schwankungsbreite, die aufgrund von Marktvolatilität erwartet wird.",
+      "Markt-Vorhersagbarkeit": "Wie gut der Markt für diese Aktie grundsätzlich vorhersagbar ist. Höhere Werte = berechenbarerer Markt."
+    },
+    "Overfitting-Risiko": {
+      "Trainingsfehler": "Wie gut das Modell auf den Trainingsdaten performt. Sehr niedrige Werte können auf Überanpassung hindeuten.",
+      "Testfehler": "Wie gut das Modell auf neuen, ungesehenen Daten performt. Wichtiger als der Trainingsfehler.",
+      "Generalisierungsgüte": "Wie gut das Modell auf neue Daten verallgemeinern kann. Höhere Werte = bessere Übertragbarkeit."
+    },
+    "Robustheit": {
+      "Störungs-Sensitivität": "Wie empfindlich das Modell auf kleine Datenänderungen reagiert. Niedrige Werte = robusteres Modell.",
+      "Baseline-Vorhersage": "Die Grundvorhersage des Modells ohne Störungen. Referenzwert für Stabilitätsmessungen.",
+      "Stabilität": "Wie konstant die Modellergebnisse bei ähnlichen Eingaben sind. Höhere Werte = stabileres Modell."
+    },
+    "Erklärungs-Konsistenz": {
+      "Feature-Korrelation": "Wie konsistent das Modell dieselben Faktoren als wichtig bewertet. Höhere Werte = verlässlichere Erklärungen.",
+      "Erklärbarkeits-Score": "Gesamtbewertung der Interpretierbarkeit des Modells. Höhere Werte = nachvollziehbarere Entscheidungen.",
+      "Interpretierbarkeit": "Qualitative Bewertung wie gut die Modellentscheidungen verstanden werden können."
+    }
+  }
+  
+  return explanations[dimensionName]?.[parameterName] || "Erklärung für diesen Parameter ist noch nicht verfügbar."
+}
+
 // Function to create pop-up content for uncertainty parameters
 const getUncertaintyParameterPopup = (parameterName: string, selectedStock: string, uncertaintyParams: ModelUncertaintyParams) => {
   const parameterMap: Record<string, {
@@ -1472,9 +1498,25 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
             <div key={key} className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <span className="font-medium">{index + 1}. {key}</span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button className="p-1 rounded-full hover:bg-muted/50 transition-colors">
+                        <Info className="h-3 w-3 text-muted-foreground hover:text-primary" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-sm">
+                      <div className="p-2">
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          {getParameterExplanation(key, parameterName)}
+                        </p>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
               <div className="text-sm text-muted-foreground">
-                Aktueller Wert für {selectedStock}
+                Aktueller Wert: <span className="font-medium text-foreground">{value}</span> für {selectedStock}
               </div>
             </div>
           ))}
