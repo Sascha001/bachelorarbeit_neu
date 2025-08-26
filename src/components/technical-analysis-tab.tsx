@@ -1531,7 +1531,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="outlierFreedom" stock={selectedStock} type="timeSeries" */}
                                   </TooltipContent>
                                 </Tooltip>
-                                <Badge className="ml-auto">{(params.outlierFreedom.value * 100).toFixed(1)}%</Badge>
+                                <Badge className="ml-auto">{(calculatedValues.outlierFreedom * 100).toFixed(1)}%</Badge>
                               </div>
                               <div className="text-sm text-muted-foreground">
                                 {params.outlierFreedom.totalObservations - params.outlierFreedom.outliers} von {params.outlierFreedom.totalObservations} Beobachtungen ohne Ausreißer
@@ -1552,7 +1552,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="revisionStability" stock={selectedStock} type="timeSeries" */}
                                   </TooltipContent>
                                 </Tooltip>
-                                <Badge className="ml-auto">{(params.revisionStability.value * 100).toFixed(1)}%</Badge>
+                                <Badge className="ml-auto">{(calculatedValues.revisionStability * 100).toFixed(1)}%</Badge>
                               </div>
                               <div className="text-sm text-muted-foreground">
                                 {params.revisionStability.totalValues - params.revisionStability.revisedValues} von {params.revisionStability.totalValues} Werten ohne Revision
@@ -1573,7 +1573,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="continuity" stock={selectedStock} type="timeSeries" */}
                                   </TooltipContent>
                                 </Tooltip>
-                                <Badge className="ml-auto">{(params.continuity.value * 100).toFixed(1)}%</Badge>
+                                <Badge className="ml-auto">{(calculatedValues.continuity * 100).toFixed(1)}%</Badge>
                               </div>
                               <div className="text-sm text-muted-foreground">
                                 {params.continuity.totalIntervals - params.continuity.gaps} von {params.continuity.totalIntervals} Intervallen ohne Gaps
@@ -1609,7 +1609,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             
                             <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
                               <div className="flex items-center justify-center min-h-[60px]">
-                                <BlockMath math={`\\text{Aktuell} = \\frac{${(calculatedValues.completeness * 100).toFixed(1)} + ${(params.outlierFreedom.value * 100).toFixed(1)} + ${(params.revisionStability.value * 100).toFixed(1)} + ${(params.continuity.value * 100).toFixed(1)}}{4} = ${overallScore}\\%`} />
+                                <BlockMath math={`\\text{Aktuell} = \\frac{${(calculatedValues.completeness * 100).toFixed(1)} + ${(calculatedValues.outlierFreedom * 100).toFixed(1)} + ${(calculatedValues.revisionStability * 100).toFixed(1)} + ${(calculatedValues.continuity * 100).toFixed(1)}}{4} = ${overallScore}\\%`} />
                               </div>
                             </div>
                           </div>
@@ -1620,9 +1620,10 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     {/* News Reliability Details */}
                     {activeInfoBox === 'newsReliability' && (() => {
                       const params = getNewsReliabilityParams(selectedStock)
+                      const calculatedValues = calculateAllNewsReliability(params)
                       // Weighted calculation: w1=0.3, w2=0.3, w3=0.25, w4=0.15
                       const w1 = 0.3, w2 = 0.3, w3 = 0.25, w4 = 0.15
-                      const overallScoreNum = (w1 * params.sourceReliability.value + w2 * params.reputationAccuracy.value + w3 * params.crossSourceConsensus.value + w4 * params.biasCheck.value) * 100
+                      const overallScoreNum = (w1 * calculatedValues.sourceReliability + w2 * calculatedValues.reputationAccuracy + w3 * calculatedValues.crossSourceConsensus + w4 * calculatedValues.biasCheck) * 100
                       const overallScore = overallScoreNum.toFixed(1)
                       
                       return (
@@ -1659,7 +1660,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="sourceReliability" stock={selectedStock} type="newsReliability" */}
                                   </TooltipContent>
                                 </Tooltip>
-                                <Badge className="ml-auto">{(params.sourceReliability.value * 100).toFixed(1)}%</Badge>
+                                <Badge className="ml-auto">{(calculatedValues.sourceReliability * 100).toFixed(1)}%</Badge>
                               </div>
                               <div className="text-sm text-muted-foreground">
                                 {params.sourceReliability.totalSources} Quellen analysiert, durchschnittliche Verlässlichkeit: {(params.sourceReliability.averageReliability * 100).toFixed(1)}%
@@ -1683,7 +1684,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="reputationAccuracy" stock={selectedStock} type="newsReliability" */}
                                   </TooltipContent>
                                 </Tooltip>
-                                <Badge className="ml-auto">{(params.reputationAccuracy.value * 100).toFixed(1)}%</Badge>
+                                <Badge className="ml-auto">{(calculatedValues.reputationAccuracy * 100).toFixed(1)}%</Badge>
                               </div>
                               <div className="text-sm text-muted-foreground">
                                 {params.reputationAccuracy.falseNews} widerlegte Nachrichten von {params.reputationAccuracy.totalNews} geprüften
@@ -1707,7 +1708,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="crossSourceConsensus" stock={selectedStock} type="newsReliability" */}
                                   </TooltipContent>
                                 </Tooltip>
-                                <Badge className="ml-auto">{(params.crossSourceConsensus.value * 100).toFixed(1)}%</Badge>
+                                <Badge className="ml-auto">{(calculatedValues.crossSourceConsensus * 100).toFixed(1)}%</Badge>
                               </div>
                               <div className="text-sm text-muted-foreground">
                                 {params.crossSourceConsensus.confirmedNews} von {params.crossSourceConsensus.totalNews} wichtigen News wurden bestätigt
@@ -1731,7 +1732,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="biasCheck" stock={selectedStock} type="newsReliability" */}
                                   </TooltipContent>
                                 </Tooltip>
-                                <Badge className="ml-auto">{(params.biasCheck.value * 100).toFixed(1)}%</Badge>
+                                <Badge className="ml-auto">{(calculatedValues.biasCheck * 100).toFixed(1)}%</Badge>
                               </div>
                               <div className="text-sm text-muted-foreground">
                                 Bias-Index: {params.biasCheck.biasIndex} (NLP-Sentiment-Analyse)
@@ -1777,7 +1778,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                               
                               <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
                                 <div className="flex items-center justify-center min-h-[60px]">
-                                  <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${params.sourceReliability.value} + ${w2} \\cdot ${params.reputationAccuracy.value} + ${w3} \\cdot ${params.crossSourceConsensus.value} + ${w4} \\cdot ${params.biasCheck.value} = ${(overallScoreNum/100).toFixed(3)}`} />
+                                  <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${calculatedValues.sourceReliability} + ${w2} \\cdot ${calculatedValues.reputationAccuracy} + ${w3} \\cdot ${calculatedValues.crossSourceConsensus} + ${w4} \\cdot ${calculatedValues.biasCheck} = ${(overallScoreNum/100).toFixed(3)}`} />
                                 </div>
                               </div>
                             </div>
@@ -1791,8 +1792,9 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       if (activeInfoBox !== 'tradingVolume') return null
                       
                       const params = getTradingVolumeParams(selectedStock)
+                      const calculatedValues = calculateAllTradingVolume(params)
                       const w1 = 0.4, w2 = 0.3, w3 = 0.3 // Gewichtungen
-                      const overallScoreNum = (w1 * params.concentration.value + w2 * params.anomalousSpikes.value + w3 * params.timeStability.value) * 100
+                      const overallScoreNum = (w1 * calculatedValues.concentration + w2 * calculatedValues.anomalousSpikes + w3 * calculatedValues.timeStability) * 100
                       const overallScore = overallScoreNum.toFixed(1)
                       
                       // Farblogik für Score-Qualität
@@ -1838,10 +1840,10 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="concentration" stock={selectedStock} type="tradingVolume" */}
                                   </TooltipContent>
                                 </Tooltip>
-                                <Badge className="ml-auto">{(params.concentration.value * 100).toFixed(1)}%</Badge>
+                                <Badge className="ml-auto">{(calculatedValues.concentration * 100).toFixed(1)}%</Badge>
                               </div>
                               <div className="text-sm text-muted-foreground">
-                                {params.concentration.mainActors} Hauptakteure mit HHI = {params.concentration.hhi.toFixed(2)}
+                                Top-Trader-Anteil: {(params.concentration.topTradersVolume * 100).toFixed(1)}% von {params.concentration.totalVolume * 100}%
                               </div>
                               <div className="text-xs text-muted-foreground mt-1">
                                 Gewichtung: {w1 * 100}% - Dominanter Einfluss auf Marktstruktur
@@ -1862,10 +1864,10 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="anomalousSpikes" stock={selectedStock} type="tradingVolume" */}
                                   </TooltipContent>
                                 </Tooltip>
-                                <Badge className="ml-auto">{(params.anomalousSpikes.value * 100).toFixed(1)}%</Badge>
+                                <Badge className="ml-auto">{(calculatedValues.anomalousSpikes * 100).toFixed(1)}%</Badge>
                               </div>
                               <div className="text-sm text-muted-foreground">
-                                {params.anomalousSpikes.spikes} Spike-Zeitpunkte von {params.anomalousSpikes.totalDays} Handelstagen ({((params.anomalousSpikes.spikes / params.anomalousSpikes.totalDays) * 100).toFixed(1)}%)
+                                {params.anomalousSpikes.spikes} Spike-Zeitpunkte von {params.anomalousSpikes.totalTradingDays} Handelstagen ({((params.anomalousSpikes.spikes / params.anomalousSpikes.totalTradingDays) * 100).toFixed(1)}%)
                               </div>
                               <div className="text-xs text-muted-foreground mt-1">
                                 Gewichtung: {w2 * 100}% - Erkennung von Marktmanipulation
@@ -1886,10 +1888,10 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="timeStability" stock={selectedStock} type="tradingVolume" */}
                                   </TooltipContent>
                                 </Tooltip>
-                                <Badge className="ml-auto">{(params.timeStability.value * 100).toFixed(1)}%</Badge>
+                                <Badge className="ml-auto">{(calculatedValues.timeStability * 100).toFixed(1)}%</Badge>
                               </div>
                               <div className="text-sm text-muted-foreground">
-                                σ = {(params.timeStability.stdev * params.timeStability.avgVolume / 1000000).toFixed(1)}M Aktien, μ = {(params.timeStability.avgVolume / 1000000).toFixed(1)}M Aktien (CV = {params.timeStability.stdev.toFixed(2)})
+                                Variationskoeffizient: {params.timeStability.varianceCoefficient.toFixed(2)} von max. {params.timeStability.maxVarianceCoefficient.toFixed(2)}
                               </div>
                               <div className="text-xs text-muted-foreground mt-1">
                                 Gewichtung: {w3 * 100}% - Vorhersagbarkeit des Handelsvolumens
@@ -1925,7 +1927,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                             
                             <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
                               <div className="flex items-center justify-center min-h-[60px]">
-                                <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${params.concentration.value.toFixed(3)} + ${w2} \\cdot ${params.anomalousSpikes.value.toFixed(3)} + ${w3} \\cdot ${params.timeStability.value.toFixed(3)} = ${(overallScoreNum/100).toFixed(3)}`} />
+                                <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${calculatedValues.concentration.toFixed(3)} + ${w2} \\cdot ${calculatedValues.anomalousSpikes.toFixed(3)} + ${w3} \\cdot ${calculatedValues.timeStability.toFixed(3)} = ${(overallScoreNum/100).toFixed(3)}`} />
                               </div>
                             </div>
                           </div>
