@@ -1350,8 +1350,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`C = 1 - \\frac{${params.completeness.missingValues}}{${params.completeness.totalValues}} = ${(calculatedValues.completeness).toFixed(3)}`} />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`C = 1 - \\frac{${params.completeness.missingValues}}{${params.completeness.totalValues}} = ${(calculatedValues.completeness).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1391,8 +1391,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`T = \\max(0, 1 - \\frac{${params.timeliness.daysOld}}{${params.timeliness.maxAcceptableDays}}) = ${(calculatedValues.timeliness).toFixed(3)}`} />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`T = \\max(0, 1 - \\frac{${params.timeliness.daysOld}}{${params.timeliness.maxAcceptableDays}}) = ${(calculatedValues.timeliness).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1432,8 +1432,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`K = 1 - \\frac{${params.consistency.inconsistentEntries}}{${params.consistency.totalEntries}} = ${(calculatedValues.consistency).toFixed(3)}`} />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`K = 1 - \\frac{${params.consistency.inconsistentEntries}}{${params.consistency.totalEntries}} = ${(calculatedValues.consistency).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1473,8 +1473,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`A = \\frac{${params.accuracy.accurateReports}}{${params.accuracy.totalReports}} = ${(calculatedValues.accuracy).toFixed(3)}`} />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`A = \\frac{${params.accuracy.accurateReports}}{${params.accuracy.totalReports}} = ${(calculatedValues.accuracy).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1514,8 +1514,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`S = 1 - \\frac{${params.stability.revisions}}{${params.stability.totalDataPoints}} = ${(calculatedValues.stability).toFixed(3)}`} />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`S = 1 - \\frac{${params.stability.revisions}}{${params.stability.totalDataPoints}} = ${(calculatedValues.stability).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1619,8 +1619,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`C = 1 - \\frac{${params.completeness.missingTimepoints}}{${params.completeness.expectedTimepoints}} = ${(calculatedValues.completeness).toFixed(3)}`} />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`C = 1 - \\frac{${params.completeness.missingTimepoints}}{${params.completeness.expectedTimepoints}} = ${(calculatedValues.completeness).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1660,8 +1660,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`O = 1 - \\frac{${params.outlierFreedom.outliers}}{${params.outlierFreedom.totalObservations}} = ${(calculatedValues.outlierFreedom).toFixed(3)}`} />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`O = 1 - \\frac{${params.outlierFreedom.outliers}}{${params.outlierFreedom.totalObservations}} = ${(calculatedValues.outlierFreedom).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1701,8 +1701,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`R = 1 - \\frac{${params.revisionStability.revisedValues}}{${params.revisionStability.totalValues}} = ${(calculatedValues.revisionStability).toFixed(3)}`} />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`R = 1 - \\frac{${params.revisionStability.revisedValues}}{${params.revisionStability.totalValues}} = ${(calculatedValues.revisionStability).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1742,8 +1742,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`K = 1 - \\frac{${params.continuity.gaps}}{${params.continuity.totalIntervals}} = ${(calculatedValues.continuity).toFixed(3)}`} />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`K = 1 - \\frac{${params.continuity.gaps}}{${params.continuity.totalIntervals}} = ${(calculatedValues.continuity).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1849,8 +1849,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`R = ${(calculatedValues.sourceReliability).toFixed(3)}`} />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`R = ${(calculatedValues.sourceReliability).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1893,8 +1893,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`P = 1 - \\frac{${params.reputationAccuracy.falseNews}}{${params.reputationAccuracy.totalNews}} = ${(calculatedValues.reputationAccuracy).toFixed(3)}`} />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`P = 1 - \\frac{${params.reputationAccuracy.falseNews}}{${params.reputationAccuracy.totalNews}} = ${(calculatedValues.reputationAccuracy).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1937,8 +1937,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`K = \\frac{${params.crossSourceConsensus.confirmedNews}}{${params.crossSourceConsensus.totalNews}} = ${(calculatedValues.crossSourceConsensus).toFixed(3)}`} />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`K = \\frac{${params.crossSourceConsensus.confirmedNews}}{${params.crossSourceConsensus.totalNews}} = ${(calculatedValues.crossSourceConsensus).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1981,8 +1981,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`B = 1 - \\frac{${params.biasCheck.biasIndex}}{${params.biasCheck.maxBiasValue}} = ${(calculatedValues.biasCheck).toFixed(3)}`} />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`B = 1 - \\frac{${params.biasCheck.biasIndex}}{${params.biasCheck.maxBiasValue}} = ${(calculatedValues.biasCheck).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -2110,8 +2110,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`S = 1 - \\frac{${params.concentration.topTradersVolume}}{${params.concentration.totalVolume}} = ${(calculatedValues.concentration).toFixed(3)}`} />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`S = 1 - \\frac{${params.concentration.topTradersVolume}}{${params.concentration.totalVolume}} = ${(calculatedValues.concentration).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -2154,8 +2154,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`A = 1 - \\frac{${params.anomalousSpikes.spikes}}{${params.anomalousSpikes.totalTradingDays}} = ${(calculatedValues.anomalousSpikes).toFixed(3)}`} />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`A = 1 - \\frac{${params.anomalousSpikes.spikes}}{${params.anomalousSpikes.totalTradingDays}} = ${(calculatedValues.anomalousSpikes).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
