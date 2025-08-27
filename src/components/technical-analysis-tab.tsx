@@ -1338,7 +1338,15 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span>
+                                    <div className="space-y-2 p-2">
+                                      <div className="font-semibold text-sm text-white">Vollständigkeit (Fundamentaldaten)</div>
+                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                        <InlineMath math="C = 1 - \\frac{\\text{Fehlende Werte}}{\\text{Gesamte Werte}}" />
+                                      </div>
+                                      <div className="text-xs text-gray-200">
+                                        Misst den Anteil verfügbarer Fundamentaldaten. Höhere Werte bedeuten weniger fehlende Daten.
+                                      </div>
+                                    </div>
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(calculatedValues.completeness * 100).toFixed(1)}%</Badge>
@@ -1359,7 +1367,15 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span>
+                                    <div className="space-y-2 p-2">
+                                      <div className="font-semibold text-sm text-white">Aktualität (Fundamentaldaten)</div>
+                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                        <InlineMath math="T = \\max(0, 1 - \\frac{\\text{Tage alt}}{\\text{Max. akzeptable Tage}})" />
+                                      </div>
+                                      <div className="text-xs text-gray-200">
+                                        Bewertet wie aktuell die Fundamentaldaten sind. Neuere Daten erhalten höhere Bewertungen.
+                                      </div>
+                                    </div>
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(calculatedValues.timeliness * 100).toFixed(1)}%</Badge>
@@ -1380,7 +1396,15 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="consistency" stock={selectedStock} */}
+                                    <div className="space-y-2 p-2">
+                                      <div className="font-semibold text-sm text-white">Konsistenz (Fundamentaldaten)</div>
+                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                        <InlineMath math="K = 1 - \\frac{\\text{Inkonsistente Einträge}}{\\text{Gesamte Einträge}}" />
+                                      </div>
+                                      <div className="text-xs text-gray-200">
+                                        Misst interne Konsistenz der Daten. Höhere Werte zeigen weniger Widersprueche an.
+                                      </div>
+                                    </div>
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(calculatedValues.consistency * 100).toFixed(1)}%</Badge>
@@ -1401,7 +1425,15 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="accuracy" stock={selectedStock} */}
+                                    <div className="space-y-2 p-2">
+                                      <div className="font-semibold text-sm text-white">Genauigkeit (Fundamentaldaten)</div>
+                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                        <InlineMath math="A = \\frac{\\text{Genaue Berichte}}{\\text{Gesamte Berichte}}" />
+                                      </div>
+                                      <div className="text-xs text-gray-200">
+                                        Misst die Richtigkeit der Fundamentaldaten durch Vergleich mit verifizierten Quellen.
+                                      </div>
+                                    </div>
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(calculatedValues.accuracy * 100).toFixed(1)}%</Badge>
@@ -1422,7 +1454,15 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="stability" stock={selectedStock} */}
+                                    <div className="space-y-2 p-2">
+                                      <div className="font-semibold text-sm text-white">Stabilität (Fundamentaldaten)</div>
+                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                        <InlineMath math="S = 1 - \\frac{\\text{Revisionen}}{\\text{Gesamte Datenpunkte}}" />
+                                      </div>
+                                      <div className="text-xs text-gray-200">
+                                        Misst wie oft Daten nachträglich korrigiert wurden. Weniger Revisionen bedeuten stabilere Daten.
+                                      </div>
+                                    </div>
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(calculatedValues.stability * 100).toFixed(1)}%</Badge>
@@ -1507,7 +1547,15 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="completeness" stock={selectedStock} type="timeSeries" */}
+                                    <div className="space-y-2 p-2">
+                                      <div className="font-semibold text-sm text-white">Vollständigkeit (Zeitreihen)</div>
+                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                        <InlineMath math="C = 1 - \\frac{\\text{Fehlende Zeitpunkte}}{\\text{Erwartete Zeitpunkte}}" />
+                                      </div>
+                                      <div className="text-xs text-gray-200">
+                                        Misst Lücken in der Zeitreihe. Höhere Werte bedeuten vollständigere Datenreihen.
+                                      </div>
+                                    </div>
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(calculatedValues.completeness * 100).toFixed(1)}%</Badge>
@@ -1528,7 +1576,15 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="outlierFreedom" stock={selectedStock} type="timeSeries" */}
+                                    <div className="space-y-2 p-2">
+                                      <div className="font-semibold text-sm text-white">Ausreißerfreiheit (Zeitreihen)</div>
+                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                        <InlineMath math="O = 1 - \\frac{\\text{Ausreißer}}{\\text{Gesamte Beobachtungen}}" />
+                                      </div>
+                                      <div className="text-xs text-gray-200">
+                                        Bewertet das Vorhandensein statistischer Ausreißer. Höhere Werte zeigen sauberere Daten.
+                                      </div>
+                                    </div>
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(calculatedValues.outlierFreedom * 100).toFixed(1)}%</Badge>
@@ -1549,7 +1605,15 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="revisionStability" stock={selectedStock} type="timeSeries" */}
+                                    <div className="space-y-2 p-2">
+                                      <div className="font-semibold text-sm text-white">Revisionsstabilität (Zeitreihen)</div>
+                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                        <InlineMath math="R = 1 - \\frac{\\text{Revidierte Werte}}{\\text{Gesamte Werte}}" />
+                                      </div>
+                                      <div className="text-xs text-gray-200">
+                                        Misst nachträgliche Korrekturen der Zeitreihe. Stabile Daten haben weniger Revisionen.
+                                      </div>
+                                    </div>
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(calculatedValues.revisionStability * 100).toFixed(1)}%</Badge>
@@ -1570,7 +1634,15 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="continuity" stock={selectedStock} type="timeSeries" */}
+                                    <div className="space-y-2 p-2">
+                                      <div className="font-semibold text-sm text-white">Kontinuität (Zeitreihen)</div>
+                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                        <InlineMath math="K = 1 - \\frac{\\text{Lücken}}{\\text{Gesamte Intervalle}}" />
+                                      </div>
+                                      <div className="text-xs text-gray-200">
+                                        Misst zeitliche Lücken in der Datenreihe. Höhere Werte bedeuten kontinuierlichere Daten.
+                                      </div>
+                                    </div>
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(calculatedValues.continuity * 100).toFixed(1)}%</Badge>
@@ -1657,7 +1729,15 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="sourceReliability" stock={selectedStock} type="newsReliability" */}
+                                    <div className="space-y-2 p-2">
+                                      <div className="font-semibold text-sm text-white">Quellenseriosität (News)</div>
+                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                        <InlineMath math="Q = \\text{Durchschnittliche Verlässlichkeit}" />
+                                      </div>
+                                      <div className="text-xs text-gray-200">
+                                        Bewertet die Glaubwürdigkeit der Nachrichtenquellen (Reuters=0.98, Bloomberg=0.95).
+                                      </div>
+                                    </div>
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(calculatedValues.sourceReliability * 100).toFixed(1)}%</Badge>
@@ -1681,7 +1761,15 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="reputationAccuracy" stock={selectedStock} type="newsReliability" */}
+                                    <div className="space-y-2 p-2">
+                                      <div className="font-semibold text-sm text-white">Historische Trefferquote (News)</div>
+                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                        <InlineMath math="H = 1 - \\frac{\\text{Falsche News}}{\\text{Gesamte News}}" />
+                                      </div>
+                                      <div className="text-xs text-gray-200">
+                                        Misst die Genauigkeit vergangener Nachrichten. Höhere Werte = weniger Falschmeldungen.
+                                      </div>
+                                    </div>
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(calculatedValues.reputationAccuracy * 100).toFixed(1)}%</Badge>
@@ -1705,7 +1793,15 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="crossSourceConsensus" stock={selectedStock} type="newsReliability" */}
+                                    <div className="space-y-2 p-2">
+                                      <div className="font-semibold text-sm text-white">Quellenübereinstimmung (News)</div>
+                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                        <InlineMath math="Ü = \\frac{\\text{Bestätigte News}}{\\text{Gesamte News}}" />
+                                      </div>
+                                      <div className="text-xs text-gray-200">
+                                        Misst Konsens zwischen unabhängigen Quellen. Höhere Werte = bessere Bestätigung.
+                                      </div>
+                                    </div>
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(calculatedValues.crossSourceConsensus * 100).toFixed(1)}%</Badge>
@@ -1729,7 +1825,15 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="biasCheck" stock={selectedStock} type="newsReliability" */}
+                                    <div className="space-y-2 p-2">
+                                      <div className="font-semibold text-sm text-white">Verzerrungsanalyse (News)</div>
+                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                        <InlineMath math="B = 1 - \\frac{\\text{Bias-Index}}{\\text{Max. Bias-Wert}}" />
+                                      </div>
+                                      <div className="text-xs text-gray-200">
+                                        Erkennt systematische Verzerrungen in der Berichterstattung. Höhere Werte = neutralere Quellen.
+                                      </div>
+                                    </div>
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(calculatedValues.biasCheck * 100).toFixed(1)}%</Badge>
@@ -1837,7 +1941,15 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="concentration" stock={selectedStock} type="tradingVolume" */}
+                                    <div className="space-y-2 p-2">
+                                      <div className="font-semibold text-sm text-white">Konzentration (Handelsvolumen)</div>
+                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                        <InlineMath math="K = 1 - \\frac{\\text{Top-Trader Volumen}}{\\text{Gesamtvolumen}}" />
+                                      </div>
+                                      <div className="text-xs text-gray-200">
+                                        Misst Marktverteilung. Höhere Werte bedeuten weniger Marktkonzentration bei Großinvestoren.
+                                      </div>
+                                    </div>
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(calculatedValues.concentration * 100).toFixed(1)}%</Badge>
@@ -1861,7 +1973,15 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="anomalousSpikes" stock={selectedStock} type="tradingVolume" */}
+                                    <div className="space-y-2 p-2">
+                                      <div className="font-semibold text-sm text-white">Anomale Spitzen (Handelsvolumen)</div>
+                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                        <InlineMath math="A = 1 - \\frac{\\text{Volumenspitzen}}{\\text{Gesamte Handelstage}}" />
+                                      </div>
+                                      <div className="text-xs text-gray-200">
+                                        Erkennt ungewöhnliche Handelsaktivität. Höhere Werte = normalere Volumenmuster.
+                                      </div>
+                                    </div>
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(calculatedValues.anomalousSpikes * 100).toFixed(1)}%</Badge>
@@ -1885,7 +2005,15 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <span className="text-xs text-muted-foreground">Formel-Tooltip temporär deaktiviert</span> {/*<FormulaTooltip param="timeStability" stock={selectedStock} type="tradingVolume" */}
+                                    <div className="space-y-2 p-2">
+                                      <div className="font-semibold text-sm text-white">Zeitstabilität (Handelsvolumen)</div>
+                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                        <InlineMath math="Z = 1 - \\frac{\\text{Variationskoeffizient}}{\\text{Max. Variationskoeffizient}}" />
+                                      </div>
+                                      <div className="text-xs text-gray-200">
+                                        Misst zeitliche Schwankungen im Handelsvolumen. Höhere Werte = stabilere Volumenentwicklung.
+                                      </div>
+                                    </div>
                                   </TooltipContent>
                                 </Tooltip>
                                 <Badge className="ml-auto">{(calculatedValues.timeStability * 100).toFixed(1)}%</Badge>
