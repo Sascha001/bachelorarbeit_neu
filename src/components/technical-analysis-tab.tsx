@@ -1344,7 +1344,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="C = 1 - \\frac{\\text{Fehlende Werte}}{\\text{Gesamte erwartete Werte}}" />
+                                          <InlineMath math="C = 1 - \\frac{M}{N}" />
                                         </div>
                                       </div>
                                       
@@ -1356,7 +1356,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       </div>
                                       
                                       <div className="text-xs text-gray-200">
-                                        Misst den Anteil verfügbarer Fundamentaldaten. Höhere Werte bedeuten weniger fehlende Daten.
+                                        Misst den Anteil verfügbarer Fundamentaldaten. M = Fehlende Werte, N = Gesamte erwartete Werte. Höhere Werte bedeuten weniger fehlende Daten.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1385,7 +1385,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="T = \\max(0, 1 - \\frac{\\text{Verzögerung in Tagen}}{\\text{Maximaltoleranz}})" />
+                                          <InlineMath math="T = \\max(0, 1 - \\frac{d}{d_{max}})" />
                                         </div>
                                       </div>
                                       
@@ -1397,7 +1397,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       </div>
                                       
                                       <div className="text-xs text-gray-200">
-                                        Bewertet wie aktuell die Fundamentaldaten sind. Neuere Daten erhalten höhere Bewertungen.
+                                        Bewertet wie aktuell die Fundamentaldaten sind. d = Verzögerung in Tagen, d_max = Maximaltoleranz. Neuere Daten erhalten höhere Bewertungen.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1426,7 +1426,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="K = 1 - \\frac{\\text{Durchschnittliche Abweichung}}{\\text{Referenzwert}}" />
+                                          <InlineMath math="K = 1 - \\frac{I}{E}" />
                                         </div>
                                       </div>
                                       
@@ -1438,7 +1438,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       </div>
                                       
                                       <div className="text-xs text-gray-200">
-                                        Misst interne Konsistenz der Daten. Höhere Werte zeigen weniger Widersprueche an.
+                                        Misst interne Konsistenz der Daten. I = Inkonsistente Einträge, E = Gesamte Einträge. Höhere Werte zeigen weniger Widersprueche an.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1467,7 +1467,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="A = \\frac{\\text{Genaue Berichte}}{\\text{Gesamte Berichte}}" />
+                                          <InlineMath math="A = \\frac{R}{N}" />
                                         </div>
                                       </div>
                                       
@@ -1479,7 +1479,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       </div>
                                       
                                       <div className="text-xs text-gray-200">
-                                        Misst die Richtigkeit der Fundamentaldaten durch Vergleich mit verifizierten Quellen.
+                                        Misst die Richtigkeit der Fundamentaldaten durch Vergleich mit verifizierten Quellen. R = Richtige Berichte, N = Gesamte Berichte.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1508,7 +1508,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="S = 1 - \\frac{\\text{Anzahl Revisionen}}{\\text{Gesamte Anzahl Datenpunkte}}" />
+                                          <InlineMath math="S = 1 - \\frac{Rev}{D}" />
                                         </div>
                                       </div>
                                       
@@ -1520,7 +1520,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       </div>
                                       
                                       <div className="text-xs text-gray-200">
-                                        Misst wie oft Daten nachträglich korrigiert wurden. Weniger Revisionen bedeuten stabilere Daten.
+                                        Misst wie oft Daten nachträglich korrigiert wurden. Rev = Anzahl Revisionen, D = Gesamte Datenpunkte. Weniger Revisionen bedeuten stabilere Daten.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1613,7 +1613,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="C = 1 - \\frac{\\text{fehlende Zeitpunkte}}{\\text{gesamte erwartete Zeitpunkte}}" />
+                                          <InlineMath math="C = 1 - \\frac{M}{E}" />
                                         </div>
                                       </div>
                                       
@@ -1625,7 +1625,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       </div>
                                       
                                       <div className="text-xs text-gray-200">
-                                        Misst Lücken in der Zeitreihe. Höhere Werte bedeuten vollständigere Datenreihen.
+                                        Misst Lücken in der Zeitreihe. M = Fehlende Zeitpunkte, E = Erwartete Zeitpunkte. Höhere Werte bedeuten vollständigere Datenreihen.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1654,7 +1654,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="O = 1 - \\frac{\\text{Anzahl Ausreißer}}{\\text{Gesamtanzahl Beobachtungen}}" />
+                                          <InlineMath math="O = 1 - \\frac{Out}{Obs}" />
                                         </div>
                                       </div>
                                       
@@ -1666,7 +1666,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       </div>
                                       
                                       <div className="text-xs text-gray-200">
-                                        Bewertet das Vorhandensein statistischer Ausreißer. Höhere Werte zeigen sauberere Daten.
+                                        Bewertet das Vorhandensein statistischer Ausreißer. Out = Ausreißer, Obs = Beobachtungen. Höhere Werte zeigen sauberere Daten.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1695,7 +1695,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="R = 1 - \\frac{\\text{revidierte Werte}}{\\text{gesamte Werte}}" />
+                                          <InlineMath math="R = 1 - \\frac{Rev}{Tot}" />
                                         </div>
                                       </div>
                                       
@@ -1707,7 +1707,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       </div>
                                       
                                       <div className="text-xs text-gray-200">
-                                        Misst nachträgliche Korrekturen der Zeitreihe. Stabile Daten haben weniger Revisionen.
+                                        Misst nachträgliche Korrekturen der Zeitreihe. Rev = Revidierte Werte, Tot = Gesamte Werte. Stabile Daten haben weniger Revisionen.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1736,7 +1736,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="K = 1 - \\frac{\\text{Anzahl an Gaps}}{\\text{Gesamtanzahl Intervalle}}" />
+                                          <InlineMath math="K = 1 - \\frac{G}{I}" />
                                         </div>
                                       </div>
                                       
@@ -1748,7 +1748,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       </div>
                                       
                                       <div className="text-xs text-gray-200">
-                                        Misst zeitliche Lücken in der Datenreihe. Höhere Werte bedeuten kontinuierlichere Daten.
+                                        Misst zeitliche Lücken in der Datenreihe. G = Gaps, I = Gesamte Intervalle. Höhere Werte bedeuten kontinuierlichere Daten.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1843,7 +1843,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="R = \\frac{\\sum \\text{Gewichtete Zuverlässigkeit der Quellen}}{\\text{Anzahl Nachrichten}}" />
+                                          <InlineMath math="R = \\frac{\\sum w_i \\cdot r_i}{N}" />
                                         </div>
                                       </div>
                                       
@@ -1855,7 +1855,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       </div>
                                       
                                       <div className="text-xs text-gray-200">
-                                        Bewertet die Glaubwürdigkeit der Nachrichtenquellen (Reuters=0.98, Bloomberg=0.95).
+                                        Bewertet die Glaubwürdigkeit der Nachrichtenquellen. w_i = Gewichtung, r_i = Zuverlässigkeit, N = Anzahl Nachrichten (Reuters=0.98, Bloomberg=0.95).
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1887,7 +1887,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="P = 1 - \\frac{\\text{Anzahl widerlegter Nachrichten}}{\\text{Gesamtanzahl Nachrichten}}" />
+                                          <InlineMath math="P = 1 - \\frac{F}{N}" />
                                         </div>
                                       </div>
                                       
@@ -1899,7 +1899,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       </div>
                                       
                                       <div className="text-xs text-gray-200">
-                                        Misst die Genauigkeit vergangener Nachrichten. Höhere Werte = weniger Falschmeldungen.
+                                        Misst die Genauigkeit vergangener Nachrichten. F = Falsche Nachrichten, N = Gesamte Nachrichten. Höhere Werte = weniger Falschmeldungen.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1931,7 +1931,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="K = \\frac{\\text{Anzahl bestätigter Nachrichten}}{\\text{Gesamtanzahl Nachrichten}}" />
+                                          <InlineMath math="K = \\frac{C}{N}" />
                                         </div>
                                       </div>
                                       
@@ -1943,7 +1943,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       </div>
                                       
                                       <div className="text-xs text-gray-200">
-                                        Misst Konsens zwischen unabhängigen Quellen. Höhere Werte = bessere Bestätigung.
+                                        Misst Konsens zwischen unabhängigen Quellen. C = Bestätigte Nachrichten, N = Gesamte Nachrichten. Höhere Werte = bessere Bestätigung.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1975,7 +1975,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="B = 1 - \\frac{\\text{Bias-Index}}{\\text{Max-Bias-Wert}}" />
+                                          <InlineMath math="B = 1 - \\frac{Bias}{Max}" />
                                         </div>
                                       </div>
                                       
@@ -1987,7 +1987,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       </div>
                                       
                                       <div className="text-xs text-gray-200">
-                                        Erkennt systematische Verzerrungen in der Berichterstattung. Höhere Werte = neutralere Quellen.
+                                        Erkennt systematische Verzerrungen in der Berichterstattung. Bias = Normierter Bias-Index, Max = Maximaler Bias-Wert. Höhere Werte = neutralere Quellen.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -2148,7 +2148,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="A = 1 - \\frac{\\text{Anzahl Spike-Zeitpunkte}}{\\text{Gesamtanzahl Zeitpunkte}}" />
+                                          <InlineMath math="A = 1 - \\frac{Spikes}{Days}" />
                                         </div>
                                       </div>
                                       
@@ -2160,7 +2160,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       </div>
                                       
                                       <div className="text-xs text-gray-200">
-                                        Erkennt ungewöhnliche Handelsaktivität. Höhere Werte = normalere Volumenmuster.
+                                        Erkennt ungewöhnliche Handelsaktivität. Spikes = Anomale Volumenspitzen, Days = Handelstage. Höhere Werte = normalere Volumenmuster.
                                       </div>
                                     </div>
                                   </TooltipContent>
