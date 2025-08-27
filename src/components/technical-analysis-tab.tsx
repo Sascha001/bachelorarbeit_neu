@@ -1343,8 +1343,10 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="C = 1 - \\frac{M}{N}" />
+                                        <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
+                                          <div className="flex items-center justify-center min-h-[40px]">
+                                            <BlockMath math="C = 1 - \\frac{\\text{Fehlende Werte}}{\\text{Gesamte Werte}}" />
+                                          </div>
                                         </div>
                                       </div>
                                       
@@ -1356,7 +1358,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       </div>
                                       
                                       <div className="text-xs text-gray-200">
-                                        Misst den Anteil verfügbarer Fundamentaldaten. M = Fehlende Werte, N = Gesamte erwartete Werte. Höhere Werte bedeuten weniger fehlende Daten.
+                                        Misst den Anteil verfügbarer Fundamentaldaten. Höhere Werte bedeuten weniger fehlende Daten.
                                       </div>
                                     </div>
                                   </TooltipContent>
