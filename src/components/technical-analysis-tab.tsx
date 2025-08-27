@@ -1384,8 +1384,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="T = \\max(0, 1 - \\frac{d}{d_{max}})" />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="T = \\max(0, 1 - \\frac{\\text{Tage alt}}{\\text{Max. akzeptable Tage}})" />
                                         </div>
                                       </div>
                                       
@@ -1425,8 +1425,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="K = 1 - \\frac{I}{E}" />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="K = 1 - \\frac{\\text{Inkonsistente Einträge}}{\\text{Gesamte Einträge}}" />
                                         </div>
                                       </div>
                                       
@@ -1466,8 +1466,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="A = \\frac{R}{N}" />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="A = \\frac{\\text{Genaue Berichte}}{\\text{Gesamte Berichte}}" />
                                         </div>
                                       </div>
                                       
@@ -1507,8 +1507,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="S = 1 - \\frac{Rev}{D}" />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="S = 1 - \frac{\text{Revisionen}}{\text{Datenpunkte}}" />
                                         </div>
                                       </div>
                                       
@@ -1612,8 +1612,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="C = 1 - \\frac{M}{E}" />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="C = 1 - \frac{\text{Fehlende Zeitpunkte}}{\text{Erwartete Zeitpunkte}}" />
                                         </div>
                                       </div>
                                       
@@ -1653,8 +1653,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="O = 1 - \\frac{Out}{Obs}" />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="O = 1 - \\frac{\\text{Ausreißer}}{\\text{Beobachtungen}}" />
                                         </div>
                                       </div>
                                       
@@ -1694,8 +1694,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="R = 1 - \\frac{Rev}{Tot}" />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="R = 1 - \\frac{\\text{Revisionen}}{\\text{Total}}" />
                                         </div>
                                       </div>
                                       
@@ -1735,8 +1735,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="K = 1 - \\frac{G}{I}" />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="K = 1 - \frac{\text{Lücken}}{\text{Intervalle}}" />
                                         </div>
                                       </div>
                                       
@@ -1842,8 +1842,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="R = \\frac{\\sum w_i \\cdot r_i}{N}" />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="R = \frac{\sum \text{Gewichtung} \cdot \text{Zuverlässigkeit}}{\text{Anzahl Quellen}}" />
                                         </div>
                                       </div>
                                       
@@ -1886,8 +1886,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="P = 1 - \\frac{F}{N}" />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="P = 1 - \\frac{\\text{Falsche Nachrichten}}{\\text{Gesamte Nachrichten}}" />
                                         </div>
                                       </div>
                                       
@@ -1930,8 +1930,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="K = \\frac{C}{N}" />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="K = \\frac{\\text{Bestätigte Nachrichten}}{\\text{Gesamte Nachrichten}}" />
                                         </div>
                                       </div>
                                       
@@ -1974,8 +1974,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="B = 1 - \\frac{Bias}{Max}" />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="B = 1 - \\frac{\\text{Bias-Index}}{\\text{Max-Bias}}" />
                                         </div>
                                       </div>
                                       
@@ -2102,8 +2102,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="S = 1 - HHI" />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="S = 1 - \\text{HHI-Index}" />
                                         </div>
                                         <div className="text-xs text-gray-200">HHI = Herfindahl-Hirschman Index</div>
                                       </div>
@@ -2147,8 +2147,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math="A = 1 - \\frac{Spikes}{Days}" />
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="A = 1 - \\frac{\\text{Anomale Spitzen}}{\\text{Handelstage}}" />
                                         </div>
                                       </div>
                                       
@@ -2186,11 +2186,16 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
+                                    <div className="space-y-3 p-2">
                                       <div className="font-semibold text-sm text-white">Zeitstabilität (Handelsvolumen)</div>
-                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                        <InlineMath math="Z = 1 - \\frac{CV}{CV_{max}}" />
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="T = 1 - \frac{\text{Variationskoeffizient}}{\text{Max-Variation}}" />
+                                        </div>
                                       </div>
+                                      
                                       <div className="text-xs text-gray-200">
                                         CV = Variationskoeffizient, CV_max = max. Wert. Höhere Werte = stabilere Entwicklung.
                                       </div>
