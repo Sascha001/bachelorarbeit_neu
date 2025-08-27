@@ -1338,13 +1338,25 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
+                                    <div className="space-y-3 p-2">
                                       <div className="font-semibold text-sm text-white">Vollständigkeit (Fundamentaldaten)</div>
-                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                        <InlineMath math="C = 1 - \\frac{M}{N}" />
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math="C = 1 - \\frac{\\text{Fehlende Werte}}{\\text{Gesamte erwartete Werte}}" />
+                                        </div>
                                       </div>
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math={`C = 1 - \\frac{${params.completeness.missingValues}}{${params.completeness.totalValues}} = ${(calculatedValues.completeness).toFixed(3)}`} />
+                                        </div>
+                                      </div>
+                                      
                                       <div className="text-xs text-gray-200">
-                                        M = fehlende Werte, N = gesamte Werte. Höhere Werte bedeuten weniger fehlende Daten.
+                                        Misst den Anteil verfügbarer Fundamentaldaten. Höhere Werte bedeuten weniger fehlende Daten.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1367,13 +1379,25 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
+                                    <div className="space-y-3 p-2">
                                       <div className="font-semibold text-sm text-white">Aktualität (Fundamentaldaten)</div>
-                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                        <InlineMath math="T = \\max(0, 1 - \\frac{d}{d_{max}})" />
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math="T = \\max(0, 1 - \\frac{\\text{Verzögerung in Tagen}}{\\text{Maximaltoleranz}})" />
+                                        </div>
                                       </div>
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math={`T = \\max(0, 1 - \\frac{${params.timeliness.daysOld}}{${params.timeliness.maxAcceptableDays}}) = ${(calculatedValues.timeliness).toFixed(3)}`} />
+                                        </div>
+                                      </div>
+                                      
                                       <div className="text-xs text-gray-200">
-                                        d = Tage alt, d_max = max. akzeptable Tage. Neuere Daten erhalten höhere Bewertungen.
+                                        Bewertet wie aktuell die Fundamentaldaten sind. Neuere Daten erhalten höhere Bewertungen.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1396,13 +1420,25 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
+                                    <div className="space-y-3 p-2">
                                       <div className="font-semibold text-sm text-white">Konsistenz (Fundamentaldaten)</div>
-                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                        <InlineMath math="K = 1 - \\frac{I}{E}" />
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math="K = 1 - \\frac{\\text{Durchschnittliche Abweichung}}{\\text{Referenzwert}}" />
+                                        </div>
                                       </div>
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math={`K = 1 - \\frac{${params.consistency.inconsistentEntries}}{${params.consistency.totalEntries}} = ${(calculatedValues.consistency).toFixed(3)}`} />
+                                        </div>
+                                      </div>
+                                      
                                       <div className="text-xs text-gray-200">
-                                        I = inkonsistente Einträge, E = gesamte Einträge. Höhere Werte = weniger Widersprueche.
+                                        Misst interne Konsistenz der Daten. Höhere Werte zeigen weniger Widersprueche an.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1425,13 +1461,25 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
+                                    <div className="space-y-3 p-2">
                                       <div className="font-semibold text-sm text-white">Genauigkeit (Fundamentaldaten)</div>
-                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                        <InlineMath math="A = \\frac{R_{acc}}{R_{total}}" />
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math="A = \\frac{\\text{Genaue Berichte}}{\\text{Gesamte Berichte}}" />
+                                        </div>
                                       </div>
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math={`A = \\frac{${params.accuracy.accurateReports}}{${params.accuracy.totalReports}} = ${(calculatedValues.accuracy).toFixed(3)}`} />
+                                        </div>
+                                      </div>
+                                      
                                       <div className="text-xs text-gray-200">
-                                        R_acc = genaue Berichte, R_total = gesamte Berichte. Richtigkeit durch Quellenvergleich.
+                                        Misst die Richtigkeit der Fundamentaldaten durch Vergleich mit verifizierten Quellen.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1454,13 +1502,25 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
+                                    <div className="space-y-3 p-2">
                                       <div className="font-semibold text-sm text-white">Stabilität (Fundamentaldaten)</div>
-                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                        <InlineMath math="S = 1 - \\frac{R}{D}" />
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math="S = 1 - \\frac{\\text{Anzahl Revisionen}}{\\text{Gesamte Anzahl Datenpunkte}}" />
+                                        </div>
                                       </div>
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math={`S = 1 - \\frac{${params.stability.revisions}}{${params.stability.totalDataPoints}} = ${(calculatedValues.stability).toFixed(3)}`} />
+                                        </div>
+                                      </div>
+                                      
                                       <div className="text-xs text-gray-200">
-                                        R = Revisionen, D = Gesamte Datenpunkte. Weniger Revisionen bedeuten stabilere Daten.
+                                        Misst wie oft Daten nachträglich korrigiert wurden. Weniger Revisionen bedeuten stabilere Daten.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1547,13 +1607,25 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
+                                    <div className="space-y-3 p-2">
                                       <div className="font-semibold text-sm text-white">Vollständigkeit (Zeitreihen)</div>
-                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                        <InlineMath math="C = 1 - \\frac{T_{miss}}{T_{exp}}" />
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math="C = 1 - \\frac{\\text{fehlende Zeitpunkte}}{\\text{gesamte erwartete Zeitpunkte}}" />
+                                        </div>
                                       </div>
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math={`C = 1 - \\frac{${timeSeriesParams.completeness.missingTimepoints}}{${timeSeriesParams.completeness.expectedTimepoints}} = ${(timeSeriesCalculated.completeness).toFixed(3)}`} />
+                                        </div>
+                                      </div>
+                                      
                                       <div className="text-xs text-gray-200">
-                                        T_miss = fehlende Zeitpunkte, T_exp = erwartete Zeitpunkte. Höhere Werte = vollständigere Datenreihen.
+                                        Misst Lücken in der Zeitreihe. Höhere Werte bedeuten vollständigere Datenreihen.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1576,13 +1648,25 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
+                                    <div className="space-y-3 p-2">
                                       <div className="font-semibold text-sm text-white">Ausreißerfreiheit (Zeitreihen)</div>
-                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                        <InlineMath math="O = 1 - \\frac{n_{out}}{n_{obs}}" />
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math="O = 1 - \\frac{\\text{Anzahl Ausreißer}}{\\text{Gesamtanzahl Beobachtungen}}" />
+                                        </div>
                                       </div>
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math={`O = 1 - \\frac{${timeSeriesParams.outlierFreedom.outliers}}{${timeSeriesParams.outlierFreedom.totalObservations}} = ${(timeSeriesCalculated.outlierFreedom).toFixed(3)}`} />
+                                        </div>
+                                      </div>
+                                      
                                       <div className="text-xs text-gray-200">
-                                        n_out = Ausreißer, n_obs = gesamte Beobachtungen. Höhere Werte = sauberere Daten.
+                                        Bewertet das Vorhandensein statistischer Ausreißer. Höhere Werte zeigen sauberere Daten.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1605,13 +1689,25 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
+                                    <div className="space-y-3 p-2">
                                       <div className="font-semibold text-sm text-white">Revisionsstabilität (Zeitreihen)</div>
-                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                        <InlineMath math="R = 1 - \\frac{V_{rev}}{V_{tot}}" />
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math="R = 1 - \\frac{\\text{revidierte Werte}}{\\text{gesamte Werte}}" />
+                                        </div>
                                       </div>
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math={`R = 1 - \\frac{${timeSeriesParams.revisionStability.revisedValues}}{${timeSeriesParams.revisionStability.totalValues}} = ${(timeSeriesCalculated.revisionStability).toFixed(3)}`} />
+                                        </div>
+                                      </div>
+                                      
                                       <div className="text-xs text-gray-200">
-                                        V_rev = revidierte Werte, V_tot = gesamte Werte. Stabile Daten haben weniger Revisionen.
+                                        Misst nachträgliche Korrekturen der Zeitreihe. Stabile Daten haben weniger Revisionen.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1634,13 +1730,25 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
+                                    <div className="space-y-3 p-2">
                                       <div className="font-semibold text-sm text-white">Kontinuität (Zeitreihen)</div>
-                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                        <InlineMath math="K = 1 - \\frac{G}{I_{tot}}" />
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math="K = 1 - \\frac{\\text{Anzahl an Gaps}}{\\text{Gesamtanzahl Intervalle}}" />
+                                        </div>
                                       </div>
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math={`K = 1 - \\frac{${timeSeriesParams.continuity.gaps}}{${timeSeriesParams.continuity.totalIntervals}} = ${(timeSeriesCalculated.continuity).toFixed(3)}`} />
+                                        </div>
+                                      </div>
+                                      
                                       <div className="text-xs text-gray-200">
-                                        G = Lücken, I_tot = gesamte Intervalle. Höhere Werte = kontinuierlichere Daten.
+                                        Misst zeitliche Lücken in der Datenreihe. Höhere Werte bedeuten kontinuierlichere Daten.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1729,13 +1837,25 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
+                                    <div className="space-y-3 p-2">
                                       <div className="font-semibold text-sm text-white">Quellenseriosität (News)</div>
-                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                        <InlineMath math="Q = \\bar{r}" />
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math="R = \\frac{\\sum \\text{Gewichtete Zuverlässigkeit der Quellen}}{\\text{Anzahl Nachrichten}}" />
+                                        </div>
                                       </div>
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math={`R = ${(newsCalculated.sourceReliability).toFixed(3)}`} />
+                                        </div>
+                                      </div>
+                                      
                                       <div className="text-xs text-gray-200">
-                                        r̄ = durchschnittliche Verlässlichkeit aller Quellen (Reuters=0.98, Bloomberg=0.95).
+                                        Bewertet die Glaubwürdigkeit der Nachrichtenquellen (Reuters=0.98, Bloomberg=0.95).
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1761,13 +1881,25 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
+                                    <div className="space-y-3 p-2">
                                       <div className="font-semibold text-sm text-white">Historische Trefferquote (News)</div>
-                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                        <InlineMath math="H = 1 - \\frac{N_{false}}{N_{total}}" />
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math="P = 1 - \\frac{\\text{Anzahl widerlegter Nachrichten}}{\\text{Gesamtanzahl Nachrichten}}" />
+                                        </div>
                                       </div>
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math={`P = 1 - \\frac{${newsParams.reputationAccuracy.falseNews}}{${newsParams.reputationAccuracy.totalNews}} = ${(newsCalculated.reputationAccuracy).toFixed(3)}`} />
+                                        </div>
+                                      </div>
+                                      
                                       <div className="text-xs text-gray-200">
-                                        N_false = falsche News, N_total = gesamte News. Höhere Werte = weniger Falschmeldungen.
+                                        Misst die Genauigkeit vergangener Nachrichten. Höhere Werte = weniger Falschmeldungen.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1793,13 +1925,25 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
+                                    <div className="space-y-3 p-2">
                                       <div className="font-semibold text-sm text-white">Quellenübereinstimmung (News)</div>
-                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                        <InlineMath math="Ü = \\frac{N_{conf}}{N_{total}}" />
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math="K = \\frac{\\text{Anzahl bestätigter Nachrichten}}{\\text{Gesamtanzahl Nachrichten}}" />
+                                        </div>
                                       </div>
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math={`K = \\frac{${newsParams.crossSourceConsensus.confirmedNews}}{${newsParams.crossSourceConsensus.totalNews}} = ${(newsCalculated.crossSourceConsensus).toFixed(3)}`} />
+                                        </div>
+                                      </div>
+                                      
                                       <div className="text-xs text-gray-200">
-                                        N_conf = bestätigte News, N_total = gesamte News. Höhere Werte = bessere Bestätigung.
+                                        Misst Konsens zwischen unabhängigen Quellen. Höhere Werte = bessere Bestätigung.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1825,13 +1969,25 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
+                                    <div className="space-y-3 p-2">
                                       <div className="font-semibold text-sm text-white">Verzerrungsanalyse (News)</div>
-                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                        <InlineMath math="B = 1 - \\frac{b}{b_{max}}" />
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math="B = 1 - \\frac{\\text{Bias-Index}}{\\text{Max-Bias-Wert}}" />
+                                        </div>
                                       </div>
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math={`B = 1 - \\frac{${newsParams.biasCheck.biasIndex}}{${newsParams.biasCheck.maxBiasValue}} = ${(newsCalculated.biasCheck).toFixed(3)}`} />
+                                        </div>
+                                      </div>
+                                      
                                       <div className="text-xs text-gray-200">
-                                        b = Bias-Index, b_max = max. Bias-Wert. Höhere Werte = neutralere Quellen.
+                                        Erkennt systematische Verzerrungen in der Berichterstattung. Höhere Werte = neutralere Quellen.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1941,13 +2097,26 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
+                                    <div className="space-y-3 p-2">
                                       <div className="font-semibold text-sm text-white">Konzentration (Handelsvolumen)</div>
-                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                        <InlineMath math="K = 1 - \\frac{V_{top}}{V_{total}}" />
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math="S = 1 - HHI" />
+                                        </div>
+                                        <div className="text-xs text-gray-200">HHI = Herfindahl-Hirschman Index</div>
                                       </div>
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math={`S = 1 - \\frac{${tradingVolumeParams.concentration.topTradersVolume}}{${tradingVolumeParams.concentration.totalVolume}} = ${(tradingVolumeCalculated.concentration).toFixed(3)}`} />
+                                        </div>
+                                      </div>
+                                      
                                       <div className="text-xs text-gray-200">
-                                        V_top = Top-Trader Volumen, V_total = Gesamtvolumen. Höhere Werte = weniger Konzentration.
+                                        Misst Marktverteilung. Höhere Werte bedeuten weniger Marktkonzentration bei Großinvestoren.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1973,13 +2142,25 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
-                                    <div className="space-y-2 p-2">
+                                    <div className="space-y-3 p-2">
                                       <div className="font-semibold text-sm text-white">Anomale Spitzen (Handelsvolumen)</div>
-                                      <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                        <InlineMath math="A = 1 - \\frac{S}{D_{total}}" />
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math="A = 1 - \\frac{\\text{Anzahl Spike-Zeitpunkte}}{\\text{Gesamtanzahl Zeitpunkte}}" />
+                                        </div>
                                       </div>
+                                      
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="bg-white p-2 rounded border text-black overflow-hidden">
+                                          <InlineMath math={`A = 1 - \\frac{${tradingVolumeParams.anomalousSpikes.volumeSpikes}}{${tradingVolumeParams.anomalousSpikes.totalTradingDays}} = ${(tradingVolumeCalculated.anomalousSpikes).toFixed(3)}`} />
+                                        </div>
+                                      </div>
+                                      
                                       <div className="text-xs text-gray-200">
-                                        S = Volumenspitzen, D_total = gesamte Handelstage. Höhere Werte = normalere Muster.
+                                        Erkennt ungewöhnliche Handelsaktivität. Höhere Werte = normalere Volumenmuster.
                                       </div>
                                     </div>
                                   </TooltipContent>
