@@ -1620,7 +1620,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`C = 1 - \\frac{${timeSeriesParams.completeness.missingTimepoints}}{${timeSeriesParams.completeness.expectedTimepoints}} = ${(timeSeriesCalculated.completeness).toFixed(3)}`} />
+                                          <InlineMath math={`C = 1 - \\frac{${params.completeness.missingTimepoints}}{${params.completeness.expectedTimepoints}} = ${(calculatedValues.completeness).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1661,7 +1661,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`O = 1 - \\frac{${timeSeriesParams.outlierFreedom.outliers}}{${timeSeriesParams.outlierFreedom.totalObservations}} = ${(timeSeriesCalculated.outlierFreedom).toFixed(3)}`} />
+                                          <InlineMath math={`O = 1 - \\frac{${params.outlierFreedom.outliers}}{${params.outlierFreedom.totalObservations}} = ${(calculatedValues.outlierFreedom).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1702,7 +1702,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`R = 1 - \\frac{${timeSeriesParams.revisionStability.revisedValues}}{${timeSeriesParams.revisionStability.totalValues}} = ${(timeSeriesCalculated.revisionStability).toFixed(3)}`} />
+                                          <InlineMath math={`R = 1 - \\frac{${params.revisionStability.revisedValues}}{${params.revisionStability.totalValues}} = ${(calculatedValues.revisionStability).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1743,7 +1743,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`K = 1 - \\frac{${timeSeriesParams.continuity.gaps}}{${timeSeriesParams.continuity.totalIntervals}} = ${(timeSeriesCalculated.continuity).toFixed(3)}`} />
+                                          <InlineMath math={`K = 1 - \\frac{${params.continuity.gaps}}{${params.continuity.totalIntervals}} = ${(calculatedValues.continuity).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1850,7 +1850,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`R = ${(newsCalculated.sourceReliability).toFixed(3)}`} />
+                                          <InlineMath math={`R = ${(calculatedValues.sourceReliability).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1894,7 +1894,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`P = 1 - \\frac{${newsParams.reputationAccuracy.falseNews}}{${newsParams.reputationAccuracy.totalNews}} = ${(newsCalculated.reputationAccuracy).toFixed(3)}`} />
+                                          <InlineMath math={`P = 1 - \\frac{${params.reputationAccuracy.falseNews}}{${params.reputationAccuracy.totalNews}} = ${(calculatedValues.reputationAccuracy).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1938,7 +1938,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`K = \\frac{${newsParams.crossSourceConsensus.confirmedNews}}{${newsParams.crossSourceConsensus.totalNews}} = ${(newsCalculated.crossSourceConsensus).toFixed(3)}`} />
+                                          <InlineMath math={`K = \\frac{${params.crossSourceConsensus.confirmedNews}}{${params.crossSourceConsensus.totalNews}} = ${(calculatedValues.crossSourceConsensus).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -1982,7 +1982,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`B = 1 - \\frac{${newsParams.biasCheck.biasIndex}}{${newsParams.biasCheck.maxBiasValue}} = ${(newsCalculated.biasCheck).toFixed(3)}`} />
+                                          <InlineMath math={`B = 1 - \\frac{${params.biasCheck.biasIndex}}{${params.biasCheck.maxBiasValue}} = ${(calculatedValues.biasCheck).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -2111,7 +2111,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`S = 1 - \\frac{${tradingVolumeParams.concentration.topTradersVolume}}{${tradingVolumeParams.concentration.totalVolume}} = ${(tradingVolumeCalculated.concentration).toFixed(3)}`} />
+                                          <InlineMath math={`S = 1 - \\frac{${params.concentration.topTradersVolume}}{${params.concentration.totalVolume}} = ${(calculatedValues.concentration).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
@@ -2155,7 +2155,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="bg-white p-2 rounded border text-black overflow-hidden">
-                                          <InlineMath math={`A = 1 - \\frac{${tradingVolumeParams.anomalousSpikes.volumeSpikes}}{${tradingVolumeParams.anomalousSpikes.totalTradingDays}} = ${(tradingVolumeCalculated.anomalousSpikes).toFixed(3)}`} />
+                                          <InlineMath math={`A = 1 - \\frac{${params.anomalousSpikes.spikes}}{${params.anomalousSpikes.totalTradingDays}} = ${(calculatedValues.anomalousSpikes).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
