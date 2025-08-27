@@ -176,6 +176,37 @@ const calculateAllTradingVolume = (params: TradingVolumeParams) => ({
   timeStability: 1 - (params.timeStability.varianceCoefficient / params.timeStability.maxVarianceCoefficient)
 });
 
+// Human Uncertainty Calculation Functions
+const calculatePerceivedUncertainty = (params: HumanUncertaintyParams['perceivedUncertainty']): number => {
+  // P = (likert_response - 1) / (max_scale - 1)
+  return (params.likertResponse - 1) / (params.maxScale - 1);
+};
+
+const calculateHumanEpistemicUncertainty = (params: HumanUncertaintyParams['epistemicUncertainty']): number => {
+  // E_human = unclear_answers / total_questions
+  return params.unclearAnswers / params.totalQuestions;
+};
+
+const calculateHumanAleatoricUncertainty = (params: HumanUncertaintyParams['aleatoricUncertainty']): number => {
+  // A_human = 1 - (consistency_score / max_possible_consistency)
+  return 1 - (params.consistencyScore / params.maxPossibleConsistency);
+};
+
+const calculateHumanDecisionStability = (params: HumanUncertaintyParams['decisionStability']): number => {
+  // S_human = max(0, 1 - (decision_change / input_change))
+  // For uncertainty calculation, we use (1 - S_human) to represent instability
+  if (params.inputChange === 0) return 0; // Handle division by zero
+  const stability = Math.max(0, 1 - (params.decisionChange / params.inputChange));
+  return 1 - stability; // Return instability for uncertainty measure
+};
+
+const calculateAllHumanUncertainty = (params: HumanUncertaintyParams): HumanUncertaintyCalculated => ({
+  perceivedUncertainty: calculatePerceivedUncertainty(params.perceivedUncertainty),
+  epistemicUncertainty: calculateHumanEpistemicUncertainty(params.epistemicUncertainty),
+  aleatoricUncertainty: calculateHumanAleatoricUncertainty(params.aleatoricUncertainty),
+  decisionStability: calculateHumanDecisionStability(params.decisionStability)
+});
+
 interface TechnicalData {
   dataValidation: {
     fundamentalData: { score: number; status: string; issues: number };
@@ -379,6 +410,32 @@ interface TradingVolumeParams {
   concentration: { topTradersVolume: number; totalVolume: number };
   anomalousSpikes: { spikes: number; totalTradingDays: number };
   timeStability: { varianceCoefficient: number; maxVarianceCoefficient: number };
+}
+
+interface HumanUncertaintyParams {
+  perceivedUncertainty: { 
+    likertResponse: number; // 1-5 Likert scale
+    maxScale: 5;
+  };
+  epistemicUncertainty: { 
+    unclearAnswers: number; // Number of "unclear"/"don't know" responses
+    totalQuestions: number; // Total questions asked
+  };
+  aleatoricUncertainty: { 
+    consistencyScore: number; // Consistency score on similar questions
+    maxPossibleConsistency: number; // Maximum possible consistency score
+  };
+  decisionStability: { 
+    decisionChange: number; // Magnitude of decision change (0-1)
+    inputChange: number; // Magnitude of input change that caused it (0-1)
+  };
+}
+
+interface HumanUncertaintyCalculated {
+  perceivedUncertainty: number;
+  epistemicUncertainty: number;
+  aleatoricUncertainty: number;
+  decisionStability: number;
 }
 
 // Data Uncertainty Calculation Functions
@@ -850,6 +907,40 @@ export const getTradingVolumeParams = (_stock: string): TradingVolumeParams => {
   return defaultParams;
 };
 
+export const getHumanUncertaintyParams = (stock: string): HumanUncertaintyParams => {
+  // Stock-specific variations for realistic mock data
+  const stockVariations: Record<string, Partial<HumanUncertaintyParams>> = {
+    'AAPL': {
+      perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
+      epistemicUncertainty: { unclearAnswers: 2, totalQuestions: 10 },
+      aleatoricUncertainty: { consistencyScore: 8, maxPossibleConsistency: 10 },
+      decisionStability: { decisionChange: 0.15, inputChange: 0.05 }
+    },
+    'TSLA': {
+      perceivedUncertainty: { likertResponse: 4, maxScale: 5 },
+      epistemicUncertainty: { unclearAnswers: 4, totalQuestions: 12 },
+      aleatoricUncertainty: { consistencyScore: 6, maxPossibleConsistency: 10 },
+      decisionStability: { decisionChange: 0.3, inputChange: 0.1 }
+    },
+    'NVDA': {
+      perceivedUncertainty: { likertResponse: 2, maxScale: 5 },
+      epistemicUncertainty: { unclearAnswers: 1, totalQuestions: 8 },
+      aleatoricUncertainty: { consistencyScore: 9, maxPossibleConsistency: 10 },
+      decisionStability: { decisionChange: 0.1, inputChange: 0.08 }
+    }
+  };
+
+  // Default parameters if stock not found
+  const defaultParams: HumanUncertaintyParams = {
+    perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
+    epistemicUncertainty: { unclearAnswers: 3, totalQuestions: 10 },
+    aleatoricUncertainty: { consistencyScore: 7, maxPossibleConsistency: 10 },
+    decisionStability: { decisionChange: 0.2, inputChange: 0.1 }
+  };
+
+  return { ...defaultParams, ...stockVariations[stock] } as HumanUncertaintyParams;
+};
+
 export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProps) {
   const data = getTechnicalData(selectedStock)
   const [activeInfoBox, setActiveInfoBox] = useState<string | null>(null)
@@ -1162,63 +1253,6 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
           </div>
         </CardContent>
           </Card>
-        </TabsContent>
-
-        {/* Human Uncertainty Tab */}
-        <TabsContent value="human" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-green-600" />
-                Menschliche Faktoren & Experteneinschätzung
-              </CardTitle>
-              <CardDescription>
-                Analyse der menschlichen Unsicherheitsfaktoren
-              </CardDescription>
-            </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Experten-Konsens</span>
-                  <span className="font-medium">{data.humanFactors.expertConsensus}%</span>
-                </div>
-                <Progress value={data.humanFactors.expertConsensus} className="h-2" />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Markt-Sentiment</span>
-                  <span className="font-medium">{data.humanFactors.marketSentiment}%</span>
-                </div>
-                <Progress value={data.humanFactors.marketSentiment} className="h-2" />
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Analysten-Verlässlichkeit</span>
-                  <span className="font-medium">{data.humanFactors.analystReliability}%</span>
-                </div>
-                <Progress value={data.humanFactors.analystReliability} className="h-2" />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Verhaltens-Bias</span>
-                  <span className="font-medium text-red-600">{data.humanFactors.behavioralBias}%</span>
-                </div>
-                <Progress value={data.humanFactors.behavioralBias} className="h-2" />
-                <p className="text-xs text-muted-foreground">
-                  Niedrigere Werte sind besser
-                </p>
-              </div>
-            </div>
-          </div>
-            </CardContent>
-          </Card>
 
           {/* Uncertainty Heatmap Visualization */}
           <Card>
@@ -1265,6 +1299,191 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                 <span>Mittel (21-40%)</span>
                 <span>Hoch (41%+)</span>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Human Uncertainty Tab */}
+        <TabsContent value="human" className="space-y-6">
+          <Card className="violet-bloom-card">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5 text-green-600" />
+                Menschliche Unsicherheit
+              </CardTitle>
+              <CardDescription>
+                Analyse der menschlichen Unsicherheitsfaktoren bei Entscheidungsfindung
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {(() => {
+                const humanParams = getHumanUncertaintyParams(selectedStock)
+                const humanCalculated = calculateAllHumanUncertainty(humanParams)
+                
+                // Weighted overall score calculation
+                const w1 = 0.30, w2 = 0.25, w3 = 0.25, w4 = 0.20
+                const overallScoreNum = (w1 * humanCalculated.perceivedUncertainty + 
+                                       w2 * humanCalculated.epistemicUncertainty + 
+                                       w3 * humanCalculated.aleatoricUncertainty + 
+                                       w4 * humanCalculated.decisionStability) * 100
+                const overallScore = overallScoreNum.toFixed(1)
+                
+                return (
+                  <>
+                    {/* Overall Score */}
+                    <div className="mb-6 p-4 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="font-semibold text-lg">Gesamtunsicherheit</h3>
+                          <p className="text-muted-foreground text-sm">Menschliche Unsicherheit für {selectedStock}</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-primary">{overallScore}%</div>
+                          <p className="text-xs text-muted-foreground">Gewichteter Durchschnitt</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 4 Uncertainty Parameters */}
+                    <div className="space-y-4">
+                      <h3 className="font-medium text-lg">Unsicherheits-Dimensionen</h3>
+                      
+                      {/* Wahrgenommene Unsicherheit */}
+                      <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="font-medium">1. Wahrgenommene Unsicherheit (P)</span>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button 
+                                className="p-1 rounded-full hover:bg-muted/50"
+                                onClick={() => setActiveInfoBox('perceivedUncertainty')}
+                              >
+                                <Info className="h-4 w-4 text-muted-foreground" />
+                              </button>
+                            </TooltipTrigger>
+                          </Tooltip>
+                          <Badge className="ml-auto">{(humanCalculated.perceivedUncertainty * 100).toFixed(1)}%</Badge>
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Subjektives Gefühl der Unsicherheit auf 1-5 Skala: {humanParams.perceivedUncertainty.likertResponse}/{humanParams.perceivedUncertainty.maxScale}
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Gewichtung: 30% - Wichtigster Faktor für subjektive Entscheidungsbasis
+                        </div>
+                      </div>
+
+                      {/* Epistemische Unsicherheit */}
+                      <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="font-medium">2. Epistemische Unsicherheit (E)</span>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button 
+                                className="p-1 rounded-full hover:bg-muted/50"
+                                onClick={() => setActiveInfoBox('epistemicUncertaintyHuman')}
+                              >
+                                <Info className="h-4 w-4 text-muted-foreground" />
+                              </button>
+                            </TooltipTrigger>
+                          </Tooltip>
+                          <Badge className="ml-auto">{(humanCalculated.epistemicUncertainty * 100).toFixed(1)}%</Badge>
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          {humanParams.epistemicUncertainty.unclearAnswers} unklare Antworten von {humanParams.epistemicUncertainty.totalQuestions} Fragen
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Gewichtung: 25% - Wissenslücken führen zu höherer Unsicherheit
+                        </div>
+                      </div>
+
+                      {/* Aleatorische Unsicherheit */}
+                      <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="font-medium">3. Aleatorische Unsicherheit (A)</span>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button 
+                                className="p-1 rounded-full hover:bg-muted/50"
+                                onClick={() => setActiveInfoBox('aleatoricUncertaintyHuman')}
+                              >
+                                <Info className="h-4 w-4 text-muted-foreground" />
+                              </button>
+                            </TooltipTrigger>
+                          </Tooltip>
+                          <Badge className="ml-auto">{(humanCalculated.aleatoricUncertainty * 100).toFixed(1)}%</Badge>
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Konsistenzscore: {humanParams.aleatoricUncertainty.consistencyScore}/{humanParams.aleatoricUncertainty.maxPossibleConsistency}
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Gewichtung: 25% - Widersprüchliche Antworten erhöhen Unsicherheit
+                        </div>
+                      </div>
+
+                      {/* Entscheidungsstabilität */}
+                      <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="font-medium">4. Entscheidungsstabilität (S)</span>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button 
+                                className="p-1 rounded-full hover:bg-muted/50"
+                                onClick={() => setActiveInfoBox('decisionStabilityHuman')}
+                              >
+                                <Info className="h-4 w-4 text-muted-foreground" />
+                              </button>
+                            </TooltipTrigger>
+                          </Tooltip>
+                          <Badge className="ml-auto">{(humanCalculated.decisionStability * 100).toFixed(1)}%</Badge>
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Änderungsratio: {(humanParams.decisionStability.decisionChange * 100).toFixed(1)}%/{(humanParams.decisionStability.inputChange * 100).toFixed(1)}%
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Gewichtung: 20% - Instabilität bei kleinen Änderungen erhöht Unsicherheit
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Gesamtberechnung */}
+                    <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                      <div className="flex items-center gap-2 mb-4">
+                        <h4 className="font-medium text-green-700">Gesamtberechnung</h4>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button 
+                              className="p-1 rounded-full hover:bg-muted/50"
+                              onClick={() => setActiveInfoBox('humanUncertaintyOverall')}
+                            >
+                              <Info className="h-4 w-4 text-muted-foreground" />
+                            </button>
+                          </TooltipTrigger>
+                        </Tooltip>
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <div className="text-xs text-muted-foreground space-y-1 mb-3">
+                          <p><strong>P</strong> = Wahrgenommene Unsicherheit, <strong>E</strong> = Epistemische Unsicherheit</p>
+                          <p><strong>A</strong> = Aleatorische Unsicherheit, <strong>S</strong> = Entscheidungsstabilität</p>
+                          <p><strong>Gewichte:</strong> w₁={w1}, w₂={w2}, w₃={w3}, w₄={w4}</p>
+                        </div>
+                        
+                        <div className="formula-container bg-muted/30 p-2 rounded text-xs">
+                          <div className="flex items-center justify-center min-h-[40px]">
+                            <BlockMath math="Q_{human} = w_1 \cdot P + w_2 \cdot E + w_3 \cdot A + w_4 \cdot S" />
+                          </div>
+                        </div>
+                        
+                        <div className="formula-container bg-muted/30 p-2 rounded text-xs">
+                          <div className="flex items-center justify-center min-h-[40px]">
+                            <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${humanCalculated.perceivedUncertainty.toFixed(3)} + ${w2} \\cdot ${humanCalculated.epistemicUncertainty.toFixed(3)} + ${w3} \\cdot ${humanCalculated.aleatoricUncertainty.toFixed(3)} + ${w4} \\cdot ${humanCalculated.decisionStability.toFixed(3)} = ${(overallScoreNum/100).toFixed(3)}`} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )
+              })()}
             </CardContent>
           </Card>
         </TabsContent>
@@ -1380,24 +1599,38 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
                                     <div className="space-y-3 p-2">
-                                      <div className="font-semibold text-sm text-white">Aktualität (Fundamentaldaten)</div>
+                                      <div className="font-semibold text-sm text-white">Aktualität Berechnung</div>
                                       
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math="T = \\max(0, 1 - \\frac{\\text{Tage alt}}{\\text{Max. akzeptable Tage}})" />
-                                        </div>
+                                      <div className="p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                                        <p className="text-sm text-gray-200">
+                                          Bewertung der Aktualität der Fundamentaldaten basierend auf der Verzögerung seit letztem Update
+                                        </p>
                                       </div>
                                       
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math={`T = \\max(0, 1 - \\frac{${params.timeliness.daysOld}}{${params.timeliness.maxAcceptableDays}}) = ${(calculatedValues.timeliness).toFixed(3)}`} />
-                                        </div>
+                                      <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                                        <h4 className="font-semibold mb-2 text-white">Aktueller Score: {(calculatedValues.timeliness * 100).toFixed(1)}%</h4>
+                                        <p className="text-sm text-gray-200">
+                                          Berechnet aus Zeitverzögerung für {selectedStock}
+                                        </p>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
-                                        Bewertet wie aktuell die Fundamentaldaten sind. d = Verzögerung in Tagen, d_max = Maximaltoleranz. Neuere Daten erhalten höhere Bewertungen.
+                                      <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                                        <div className="flex items-center gap-2 mb-3">
+                                          <h4 className="font-medium text-white">Formel</h4>
+                                        </div>
+                                        <div className="space-y-3">
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <BlockMath math="T = \max(0, 1 - \frac{\text{Tage alt}}{\text{Max. akzeptable Tage}})" />
+                                          </div>
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <div className="text-xs">
+                                              <BlockMath math={`T = \\max(0, 1 - \\frac{${params.timeliness.daysOld}}{${params.timeliness.maxAcceptableDays}}) = ${calculatedValues.timeliness.toFixed(3)}`} />
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="text-xs text-gray-200 mt-3">
+                                          Gewichtung: 20% - Neuere Daten erhalten höhere Bewertungen und reduzieren Unsicherheit
+                                        </div>
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1421,24 +1654,38 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
                                     <div className="space-y-3 p-2">
-                                      <div className="font-semibold text-sm text-white">Konsistenz (Fundamentaldaten)</div>
+                                      <div className="font-semibold text-sm text-white">Konsistenz Berechnung</div>
                                       
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math="K = 1 - \\frac{\\text{Inkonsistente Einträge}}{\\text{Gesamte Einträge}}" />
-                                        </div>
+                                      <div className="p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                                        <p className="text-sm text-gray-200">
+                                          Bewertung der Datenkonsistenz zwischen verschiedenen Quellen und historischen Trends
+                                        </p>
                                       </div>
                                       
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math={`K = 1 - \\frac{${params.consistency.inconsistentEntries}}{${params.consistency.totalEntries}} = ${(calculatedValues.consistency).toFixed(3)}`} />
-                                        </div>
+                                      <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                                        <h4 className="font-semibold mb-2 text-white">Aktueller Score: {(calculatedValues.consistency * 100).toFixed(1)}%</h4>
+                                        <p className="text-sm text-gray-200">
+                                          Berechnet aus Abweichungsrate für {selectedStock}
+                                        </p>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
-                                        Misst interne Konsistenz der Daten. I = Inkonsistente Einträge, E = Gesamte Einträge. Höhere Werte zeigen weniger Widersprueche an.
+                                      <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                                        <div className="flex items-center gap-2 mb-3">
+                                          <h4 className="font-medium text-white">Formel</h4>
+                                        </div>
+                                        <div className="space-y-3">
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <BlockMath math="K = 1 - \frac{\text{Inkonsistente Datenpunkte}}{\text{Gesamte Datenpunkte}}" />
+                                          </div>
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <div className="text-xs">
+                                              <BlockMath math={`K = 1 - \\frac{${params.consistency.inconsistentEntries}}{${params.consistency.totalEntries}} = ${calculatedValues.consistency.toFixed(2)}`} />
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="text-xs text-gray-200 mt-3">
+                                          Gewichtung: 25% - Hohe Konsistenz reduziert Datenunsicherheit erheblich
+                                        </div>
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1462,24 +1709,38 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
                                     <div className="space-y-3 p-2">
-                                      <div className="font-semibold text-sm text-white">Genauigkeit (Fundamentaldaten)</div>
+                                      <div className="font-semibold text-sm text-white">Genauigkeit Berechnung</div>
                                       
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math="A = \\frac{\\text{Genaue Berichte}}{\\text{Gesamte Berichte}}" />
-                                        </div>
+                                      <div className="p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                                        <p className="text-sm text-gray-200">
+                                          Bewertung der Richtigkeit der Fundamentaldaten durch Vergleich mit verifizierten Quellen
+                                        </p>
                                       </div>
                                       
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math={`A = \\frac{${params.accuracy.accurateReports}}{${params.accuracy.totalReports}} = ${(calculatedValues.accuracy).toFixed(3)}`} />
-                                        </div>
+                                      <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                                        <h4 className="font-semibold mb-2 text-white">Aktueller Score: {(calculatedValues.accuracy * 100).toFixed(1)}%</h4>
+                                        <p className="text-sm text-gray-200">
+                                          Berechnet aus Genauigkeitsrate für {selectedStock}
+                                        </p>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
-                                        Misst die Richtigkeit der Fundamentaldaten durch Vergleich mit verifizierten Quellen. R = Richtige Berichte, N = Gesamte Berichte.
+                                      <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                                        <div className="flex items-center gap-2 mb-3">
+                                          <h4 className="font-medium text-white">Formel</h4>
+                                        </div>
+                                        <div className="space-y-3">
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <BlockMath math="A = \frac{\text{Genaue Berichte}}{\text{Gesamte Berichte}}" />
+                                          </div>
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <div className="text-xs">
+                                              <BlockMath math={`A = \\frac{${params.accuracy.accurateReports}}{${params.accuracy.totalReports}} = ${calculatedValues.accuracy.toFixed(3)}`} />
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="text-xs text-gray-200 mt-3">
+                                          Gewichtung: 25% - Höhere Genauigkeit reduziert Datenunsicherheit erheblich
+                                        </div>
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1559,7 +1820,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                               </Tooltip>
                             </div>
                             
-                            <div className="formula-container bg-muted/30 p-2 rounded" style={{fontSize: '0.7rem'}}>
+                            <div className="formula-container bg-muted/30 p-2 rounded text-xs">
                               <div className="flex items-center justify-center min-h-[40px]">
                                 <BlockMath math={`\\text{Aktuell} = \\frac{${(calculatedValues.completeness * 100).toFixed(1)} + ${(calculatedValues.timeliness * 100).toFixed(1)} + ${(calculatedValues.consistency * 100).toFixed(1)} + ${(calculatedValues.accuracy * 100).toFixed(1)} + ${(calculatedValues.stability * 100).toFixed(1)}}{5} = ${overallScore}\\%`} />
                               </div>
@@ -1649,24 +1910,38 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
                                     <div className="space-y-3 p-2">
-                                      <div className="font-semibold text-sm text-white">Ausreißerfreiheit (Zeitreihen)</div>
+                                      <div className="font-semibold text-sm text-white">Ausreißer-Freiheit Berechnung</div>
                                       
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math="O = 1 - \\frac{\\text{Ausreißer}}{\\text{Beobachtungen}}" />
-                                        </div>
+                                      <div className="p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                                        <p className="text-sm text-gray-200">
+                                          Bewertung der Abwesenheit statistischer Ausreißer in den Zeitreihendaten
+                                        </p>
                                       </div>
                                       
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math={`O = 1 - \\frac{${params.outlierFreedom.outliers}}{${params.outlierFreedom.totalObservations}} = ${(calculatedValues.outlierFreedom).toFixed(3)}`} />
-                                        </div>
+                                      <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                                        <h4 className="font-semibold mb-2 text-white">Aktueller Score: {(calculatedValues.outlierFreedom * 100).toFixed(1)}%</h4>
+                                        <p className="text-sm text-gray-200">
+                                          Berechnet aus Ausreißerrate für {selectedStock}
+                                        </p>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
-                                        Bewertet das Vorhandensein statistischer Ausreißer. Out = Ausreißer, Obs = Beobachtungen. Höhere Werte zeigen sauberere Daten.
+                                      <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                                        <div className="flex items-center gap-2 mb-3">
+                                          <h4 className="font-medium text-white">Formel</h4>
+                                        </div>
+                                        <div className="space-y-3">
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <BlockMath math="O = 1 - \frac{\text{Ausreißer}}{\text{Beobachtungen}}" />
+                                          </div>
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <div className="text-xs">
+                                              <BlockMath math={`O = 1 - \\frac{${params.outlierFreedom.outliers}}{${params.outlierFreedom.totalObservations}} = ${calculatedValues.outlierFreedom.toFixed(3)}`} />
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="text-xs text-gray-200 mt-3">
+                                          Gewichtung: 25% - Sauberere Daten ohne Ausreißer reduzieren Zeitreihenunsicherheit
+                                        </div>
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1690,24 +1965,38 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
                                     <div className="space-y-3 p-2">
-                                      <div className="font-semibold text-sm text-white">Revisionsstabilität (Zeitreihen)</div>
+                                      <div className="font-semibold text-sm text-white">Revision-Stabilität Berechnung</div>
                                       
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math="R = 1 - \\frac{\\text{Revisionen}}{\\text{Total}}" />
-                                        </div>
+                                      <div className="p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                                        <p className="text-sm text-gray-200">
+                                          Bewertung der Stabilität gegen nachträgliche Korrekturen in den Zeitreihendaten
+                                        </p>
                                       </div>
                                       
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math={`R = 1 - \\frac{${params.revisionStability.revisedValues}}{${params.revisionStability.totalValues}} = ${(calculatedValues.revisionStability).toFixed(3)}`} />
-                                        </div>
+                                      <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                                        <h4 className="font-semibold mb-2 text-white">Aktueller Score: {(calculatedValues.revisionStability * 100).toFixed(1)}%</h4>
+                                        <p className="text-sm text-gray-200">
+                                          Berechnet aus Revisionsrate für {selectedStock}
+                                        </p>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
-                                        Misst nachträgliche Korrekturen der Zeitreihe. Rev = Revidierte Werte, Tot = Gesamte Werte. Stabile Daten haben weniger Revisionen.
+                                      <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                                        <div className="flex items-center gap-2 mb-3">
+                                          <h4 className="font-medium text-white">Formel</h4>
+                                        </div>
+                                        <div className="space-y-3">
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <BlockMath math="R = 1 - \frac{\text{Revisionen}}{\text{Total}}" />
+                                          </div>
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <div className="text-xs">
+                                              <BlockMath math={`R = 1 - \\frac{${params.revisionStability.revisedValues}}{${params.revisionStability.totalValues}} = ${calculatedValues.revisionStability.toFixed(3)}`} />
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="text-xs text-gray-200 mt-3">
+                                          Gewichtung: 25% - Stabile Daten ohne nachträgliche Revisionen erhöhen Vertrauen
+                                        </div>
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1787,7 +2076,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                               </Tooltip>
                             </div>
                             
-                            <div className="formula-container bg-muted/30 p-2 rounded" style={{fontSize: '0.7rem'}}>
+                            <div className="formula-container bg-muted/30 p-2 rounded text-xs">
                               <div className="flex items-center justify-center min-h-[40px]">
                                 <BlockMath math={`\\text{Aktuell} = \\frac{${(calculatedValues.completeness * 100).toFixed(1)} + ${(calculatedValues.outlierFreedom * 100).toFixed(1)} + ${(calculatedValues.revisionStability * 100).toFixed(1)} + ${(calculatedValues.continuity * 100).toFixed(1)}}{4} = ${overallScore}\\%`} />
                               </div>
@@ -1882,24 +2171,38 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
                                     <div className="space-y-3 p-2">
-                                      <div className="font-semibold text-sm text-white">Historische Trefferquote (News)</div>
+                                      <div className="font-semibold text-sm text-white">Reputation Accuracy Berechnung</div>
                                       
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math="P = 1 - \\frac{\\text{Falsche Nachrichten}}{\\text{Gesamte Nachrichten}}" />
-                                        </div>
+                                      <div className="p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                                        <p className="text-sm text-gray-200">
+                                          Bewertung der historischen Genauigkeit von Nachrichtenquellen basierend auf vergangenen Falschmeldungen
+                                        </p>
                                       </div>
                                       
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math={`P = 1 - \\frac{${params.reputationAccuracy.falseNews}}{${params.reputationAccuracy.totalNews}} = ${(calculatedValues.reputationAccuracy).toFixed(3)}`} />
-                                        </div>
+                                      <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                                        <h4 className="font-semibold mb-2 text-white">Aktueller Score: {(calculatedValues.reputationAccuracy * 100).toFixed(1)}%</h4>
+                                        <p className="text-sm text-gray-200">
+                                          Berechnet aus Falschmeldungsrate für {selectedStock}
+                                        </p>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
-                                        Misst die Genauigkeit vergangener Nachrichten. F = Falsche Nachrichten, N = Gesamte Nachrichten. Höhere Werte = weniger Falschmeldungen.
+                                      <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                                        <div className="flex items-center gap-2 mb-3">
+                                          <h4 className="font-medium text-white">Formel</h4>
+                                        </div>
+                                        <div className="space-y-3">
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <BlockMath math="P = 1 - \frac{\text{Falsche Nachrichten}}{\text{Gesamte Nachrichten}}" />
+                                          </div>
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <div className="text-xs">
+                                              <BlockMath math={`P = 1 - \\frac{${params.reputationAccuracy.falseNews}}{${params.reputationAccuracy.totalNews}} = ${calculatedValues.reputationAccuracy.toFixed(3)}`} />
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="text-xs text-gray-200 mt-3">
+                                          Gewichtung: 25% - Höhere Trefferquote reduziert News-Unsicherheit erheblich
+                                        </div>
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1926,24 +2229,38 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
                                     <div className="space-y-3 p-2">
-                                      <div className="font-semibold text-sm text-white">Quellenübereinstimmung (News)</div>
+                                      <div className="font-semibold text-sm text-white">Cross-Source Consensus Berechnung</div>
                                       
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math="K = \\frac{\\text{Bestätigte Nachrichten}}{\\text{Gesamte Nachrichten}}" />
-                                        </div>
+                                      <div className="p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                                        <p className="text-sm text-gray-200">
+                                          Bewertung der Übereinstimmung zwischen verschiedenen unabhängigen Nachrichtenquellen
+                                        </p>
                                       </div>
                                       
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math={`K = \\frac{${params.crossSourceConsensus.confirmedNews}}{${params.crossSourceConsensus.totalNews}} = ${(calculatedValues.crossSourceConsensus).toFixed(3)}`} />
-                                        </div>
+                                      <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                                        <h4 className="font-semibold mb-2 text-white">Aktueller Score: {(calculatedValues.crossSourceConsensus * 100).toFixed(1)}%</h4>
+                                        <p className="text-sm text-gray-200">
+                                          Berechnet aus Quellenkonsensrate für {selectedStock}
+                                        </p>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
-                                        Misst Konsens zwischen unabhängigen Quellen. C = Bestätigte Nachrichten, N = Gesamte Nachrichten. Höhere Werte = bessere Bestätigung.
+                                      <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                                        <div className="flex items-center gap-2 mb-3">
+                                          <h4 className="font-medium text-white">Formel</h4>
+                                        </div>
+                                        <div className="space-y-3">
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <BlockMath math="K = \frac{\text{Bestätigte Nachrichten}}{\text{Gesamte Nachrichten}}" />
+                                          </div>
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <div className="text-xs">
+                                              <BlockMath math={`K = \\frac{${params.crossSourceConsensus.confirmedNews}}{${params.crossSourceConsensus.totalNews}} = ${calculatedValues.crossSourceConsensus.toFixed(3)}`} />
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="text-xs text-gray-200 mt-3">
+                                          Gewichtung: 25% - Höherer Konsens zwischen Quellen reduziert News-Unsicherheit
+                                        </div>
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1970,24 +2287,48 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
                                     <div className="space-y-3 p-2">
-                                      <div className="font-semibold text-sm text-white">Verzerrungsanalyse (News)</div>
+                                      <div className="font-semibold text-sm text-white">Bias-Check Berechnung</div>
                                       
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math="B = 1 - \\frac{\\text{Bias-Index}}{\\text{Max-Bias}}" />
-                                        </div>
+                                      {/* Blue intro box */}
+                                      <div className="p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                                        <p className="text-sm text-white">
+                                          Bewertung der Neutralität und Objektivität der Nachrichtenquellen
+                                        </p>
                                       </div>
-                                      
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math={`B = 1 - \\frac{${params.biasCheck.biasIndex}}{${params.biasCheck.maxBiasValue}} = ${(calculatedValues.biasCheck).toFixed(3)}`} />
-                                        </div>
+
+                                      {/* Primary score box */}
+                                      <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                                        <h4 className="font-semibold mb-2 text-primary">Aktueller Score: {(calculatedValues.biasCheck * 100).toFixed(1)}%</h4>
+                                        <p className="text-sm text-white">
+                                          Berechnet aus Bias-Rate für {selectedStock}
+                                        </p>
                                       </div>
-                                      
-                                      <div className="text-xs text-gray-200">
-                                        Erkennt systematische Verzerrungen in der Berichterstattung. Bias = Normierter Bias-Index, Max = Maximaler Bias-Wert. Höhere Werte = neutralere Quellen.
+
+                                      {/* Green formula box */}
+                                      <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                                        <div className="flex items-center gap-2 mb-4">
+                                          <h4 className="font-medium text-green-700">Bias-Check Formel</h4>
+                                        </div>
+                                        
+                                        <div className="space-y-4">
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <div className="flex items-center justify-center min-h-[60px]">
+                                              <BlockMath math="B = 1 - \\frac{\\text{Bias-Index}}{\\text{Max-Bias-Wert}}" />
+                                            </div>
+                                          </div>
+                                          
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <div className="flex items-center justify-center min-h-[50px]">
+                                              <div className="text-xs">
+                                                <BlockMath math={`B = 1 - \\frac{${params.biasCheck.biasIndex}}{${params.biasCheck.maxBiasValue}} = ${calculatedValues.biasCheck.toFixed(3)}`} />
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        
+                                        <div className="text-xs text-white mt-3">
+                                          <strong className="text-white">Gewichtung: 15%</strong> - Niedrigere Bias-Werte erhöhen News-Vertrauen
+                                        </div>
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -2036,7 +2377,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                 <p><strong>Gewichte:</strong> w₁={w1}, w₂={w2}, w₃={w3}, w₄={w4}</p>
                               </div>
                               
-                              <div className="formula-container bg-muted/30 p-2 rounded" style={{fontSize: '0.65rem'}}>
+                              <div className="formula-container bg-muted/30 p-2 rounded text-xs">
                                 <div className="flex items-center justify-center min-h-[40px]">
                                   <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${calculatedValues.sourceReliability} + ${w2} \\cdot ${calculatedValues.reputationAccuracy} + ${w3} \\cdot ${calculatedValues.crossSourceConsensus} + ${w4} \\cdot ${calculatedValues.biasCheck} = ${(overallScoreNum/100).toFixed(3)}`} />
                                 </div>
@@ -2098,25 +2439,48 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
                                     <div className="space-y-3 p-2">
-                                      <div className="font-semibold text-sm text-white">Konzentration (Handelsvolumen)</div>
+                                      <div className="font-semibold text-sm text-white">Konzentration Berechnung</div>
                                       
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math="S = 1 - \\text{HHI-Index}" />
-                                        </div>
-                                        <div className="text-xs text-gray-200">HHI = Herfindahl-Hirschman Index</div>
+                                      {/* Blue intro box */}
+                                      <div className="p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                                        <p className="text-sm text-white">
+                                          Bewertung der Marktkonzentration durch Handelsvolumen-Verteilung
+                                        </p>
                                       </div>
-                                      
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math={`S = 1 - \\frac{${params.concentration.topTradersVolume}}{${params.concentration.totalVolume}} = ${(calculatedValues.concentration).toFixed(3)}`} />
-                                        </div>
+
+                                      {/* Primary score box */}
+                                      <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                                        <h4 className="font-semibold mb-2 text-primary">Aktueller Score: {(calculatedValues.concentration * 100).toFixed(1)}%</h4>
+                                        <p className="text-sm text-white">
+                                          Berechnet aus Handelskonzentration für {selectedStock}
+                                        </p>
                                       </div>
-                                      
-                                      <div className="text-xs text-gray-200">
-                                        Misst Marktverteilung. Höhere Werte bedeuten weniger Marktkonzentration bei Großinvestoren.
+
+                                      {/* Green formula box */}
+                                      <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                                        <div className="flex items-center gap-2 mb-4">
+                                          <h4 className="font-medium text-green-700">Konzentrations-Formel</h4>
+                                        </div>
+                                        
+                                        <div className="space-y-4">
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <div className="flex items-center justify-center min-h-[60px]">
+                                              <BlockMath math="S = 1 - \\text{HHI-Index}" />
+                                            </div>
+                                          </div>
+                                          
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <div className="flex items-center justify-center min-h-[50px]">
+                                              <div className="text-xs">
+                                                <BlockMath math={`S = 1 - \\frac{${params.concentration.topTradersVolume}}{${params.concentration.totalVolume}} = ${calculatedValues.concentration.toFixed(3)}`} />
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        
+                                        <div className="text-xs text-white mt-3">
+                                          <strong className="text-white">Gewichtung: 40%</strong> - Höhere Werte bedeuten weniger Marktkonzentration
+                                        </div>
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -2143,24 +2507,48 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
                                     <div className="space-y-3 p-2">
-                                      <div className="font-semibold text-sm text-white">Anomale Spitzen (Handelsvolumen)</div>
+                                      <div className="font-semibold text-sm text-white">Anomalous Spikes Berechnung</div>
                                       
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math="A = 1 - \\frac{\\text{Anomale Spitzen}}{\\text{Handelstage}}" />
-                                        </div>
+                                      {/* Blue intro box */}
+                                      <div className="p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                                        <p className="text-sm text-white">
+                                          Erkennung ungewöhnlicher Handelsaktivität und Volumen-Anomalien
+                                        </p>
                                       </div>
-                                      
-                                      <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
-                                        <div className="formula-container bg-muted/30 p-2 rounded">
-                                          <BlockMath math={`A = 1 - \\frac{${params.anomalousSpikes.spikes}}{${params.anomalousSpikes.totalTradingDays}} = ${(calculatedValues.anomalousSpikes).toFixed(3)}`} />
-                                        </div>
+
+                                      {/* Primary score box */}
+                                      <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                                        <h4 className="font-semibold mb-2 text-primary">Aktueller Score: {(calculatedValues.anomalousSpikes * 100).toFixed(1)}%</h4>
+                                        <p className="text-sm text-white">
+                                          Berechnet aus Volumen-Anomalien für {selectedStock}
+                                        </p>
                                       </div>
-                                      
-                                      <div className="text-xs text-gray-200">
-                                        Erkennt ungewöhnliche Handelsaktivität. Spikes = Anomale Volumenspitzen, Days = Handelstage. Höhere Werte = normalere Volumenmuster.
+
+                                      {/* Green formula box */}
+                                      <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                                        <div className="flex items-center gap-2 mb-4">
+                                          <h4 className="font-medium text-green-700">Anomalous Spikes Formel</h4>
+                                        </div>
+                                        
+                                        <div className="space-y-4">
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <div className="flex items-center justify-center min-h-[60px]">
+                                              <BlockMath math="A = 1 - \\frac{\\text{Anomale Spitzen}}{\\text{Handelstage}}" />
+                                            </div>
+                                          </div>
+                                          
+                                          <div className="formula-container bg-muted/30 p-2 rounded">
+                                            <div className="flex items-center justify-center min-h-[50px]">
+                                              <div className="text-xs">
+                                                <BlockMath math={`A = 1 - \\frac{${params.anomalousSpikes.spikes}}{${params.anomalousSpikes.totalTradingDays}} = ${calculatedValues.anomalousSpikes.toFixed(3)}`} />
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        
+                                        <div className="text-xs text-white mt-3">
+                                          <strong className="text-white">Gewichtung: 30%</strong> - Höhere Werte bedeuten normalere Volumenmuster
+                                        </div>
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -2239,7 +2627,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                               </Tooltip>
                             </div>
                             
-                            <div className="formula-container bg-muted/30 p-2 rounded" style={{fontSize: '0.7rem'}}>
+                            <div className="formula-container bg-muted/30 p-2 rounded text-xs">
                               <div className="flex items-center justify-center min-h-[40px]">
                                 <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${calculatedValues.concentration.toFixed(3)} + ${w2} \\cdot ${calculatedValues.anomalousSpikes.toFixed(3)} + ${w3} \\cdot ${calculatedValues.timeStability.toFixed(3)} = ${(overallScoreNum/100).toFixed(3)}`} />
                               </div>
@@ -2270,8 +2658,115 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       )
                     })()}
 
+                    {/* Human Uncertainty Parameters */}
+                    {(['perceivedUncertainty', 'epistemicUncertaintyHuman', 'aleatoricUncertaintyHuman', 'decisionStabilityHuman', 'humanUncertaintyOverall'].includes(activeInfoBox || '')) && (() => {
+                      const humanParams = getHumanUncertaintyParams(selectedStock)
+                      const humanCalculated = calculateAllHumanUncertainty(humanParams)
+                      
+                      const getHumanUncertaintyContent = (paramType: string) => {
+                        switch (paramType) {
+                          case 'perceivedUncertainty':
+                            return {
+                              title: 'Wahrgenommene Unsicherheit Berechnung',
+                              intro: 'Bewertung des subjektiven Unsicherheitsgefühls basierend auf 1-5 Likert-Skala',
+                              score: (humanCalculated.perceivedUncertainty * 100).toFixed(1) + '%',
+                              formula: 'P = \\frac{\\text{Likert Response} - 1}{\\text{Max Scale} - 1}',
+                              currentCalc: `P = \\frac{${humanParams.perceivedUncertainty.likertResponse} - 1}{${humanParams.perceivedUncertainty.maxScale} - 1} = ${humanCalculated.perceivedUncertainty.toFixed(3)}`,
+                              weight: '30% - Wichtigster Faktor für subjektive Entscheidungsbasis'
+                            }
+                          case 'epistemicUncertaintyHuman':
+                            return {
+                              title: 'Epistemische Unsicherheit (Human) Berechnung',
+                              intro: 'Bewertung der Wissenslücken basierend auf "unklar"-Antworten',
+                              score: (humanCalculated.epistemicUncertainty * 100).toFixed(1) + '%',
+                              formula: 'E_{human} = \\frac{\\text{Unklare Antworten}}{\\text{Gesamte Fragen}}',
+                              currentCalc: `E_{human} = \\frac{${humanParams.epistemicUncertainty.unclearAnswers}}{${humanParams.epistemicUncertainty.totalQuestions}} = ${humanCalculated.epistemicUncertainty.toFixed(3)}`,
+                              weight: '25% - Wissenslücken führen zu höherer Unsicherheit'
+                            }
+                          case 'aleatoricUncertaintyHuman':
+                            return {
+                              title: 'Aleatorische Unsicherheit (Human) Berechnung',
+                              intro: 'Bewertung der Inkonsistenz und Widersprüche bei ähnlichen Entscheidungen',
+                              score: (humanCalculated.aleatoricUncertainty * 100).toFixed(1) + '%',
+                              formula: 'A_{human} = 1 - \\frac{\\text{Konsistenz Score}}{\\text{Max Konsistenz}}',
+                              currentCalc: `A_{human} = 1 - \\frac{${humanParams.aleatoricUncertainty.consistencyScore}}{${humanParams.aleatoricUncertainty.maxPossibleConsistency}} = ${humanCalculated.aleatoricUncertainty.toFixed(3)}`,
+                              weight: '25% - Widersprüchliche Antworten erhöhen Unsicherheit'
+                            }
+                          case 'decisionStabilityHuman':
+                            return {
+                              title: 'Entscheidungsstabilität (Human) Berechnung',
+                              intro: 'Bewertung der Robustheit gegen kleine Input-Änderungen',
+                              score: (humanCalculated.decisionStability * 100).toFixed(1) + '%',
+                              formula: 'S_{human} = \\max(0, 1 - \\frac{\\text{Decision Change}}{\\text{Input Change}})',
+                              currentCalc: `S_{human} = \\max(0, 1 - \\frac{${humanParams.decisionStability.decisionChange}}{${humanParams.decisionStability.inputChange}}) = ${humanCalculated.decisionStability.toFixed(3)}`,
+                              weight: '20% - Instabilität bei kleinen Änderungen erhöht Unsicherheit'
+                            }
+                          case 'humanUncertaintyOverall':
+                            const w1 = 0.30, w2 = 0.25, w3 = 0.25, w4 = 0.20
+                            const overallScore = (w1 * humanCalculated.perceivedUncertainty + 
+                                               w2 * humanCalculated.epistemicUncertainty + 
+                                               w3 * humanCalculated.aleatoricUncertainty + 
+                                               w4 * humanCalculated.decisionStability) * 100
+                            return {
+                              title: 'Menschliche Unsicherheit Gesamtberechnung',
+                              intro: 'Gewichtete Kombination aller 4 menschlichen Unsicherheitsdimensionen',
+                              score: overallScore.toFixed(1) + '%',
+                              formula: 'Q_{human} = w_1 \\cdot P + w_2 \\cdot E + w_3 \\cdot A + w_4 \\cdot S',
+                              currentCalc: `Q_{human} = ${w1} \\cdot ${humanCalculated.perceivedUncertainty.toFixed(3)} + ${w2} \\cdot ${humanCalculated.epistemicUncertainty.toFixed(3)} + ${w3} \\cdot ${humanCalculated.aleatoricUncertainty.toFixed(3)} + ${w4} \\cdot ${humanCalculated.decisionStability.toFixed(3)} = ${(overallScore/100).toFixed(3)}`,
+                              weight: 'Gewichtung: P=30%, E=25%, A=25%, S=20%'
+                            }
+                          default:
+                            return null
+                        }
+                      }
+                      
+                      const content = getHumanUncertaintyContent(activeInfoBox)
+                      if (!content) return null
+                      
+                      return (
+                        <>
+                          {/* Short intro text */}
+                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                            <p className="text-sm text-gray-200">
+                              {content.intro}
+                            </p>
+                          </div>
+                          
+                          {/* Overall Score */}
+                          <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                            <h4 className="font-semibold mb-2 text-white">Aktueller Score: {content.score}</h4>
+                            <p className="text-sm text-gray-200">
+                              Berechnet für {selectedStock}
+                            </p>
+                          </div>
+                          
+                          {/* Formula Calculation */}
+                          <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                            <div className="flex items-center gap-2 mb-3">
+                              <h4 className="font-medium text-white">Formel</h4>
+                            </div>
+                            <div className="space-y-3">
+                              <div className="formula-container bg-muted/30 p-2 rounded">
+                                <div className="flex items-center justify-center min-h-[60px]">
+                                  <BlockMath math={content.formula} />
+                                </div>
+                              </div>
+                              <div className="formula-container bg-muted/30 p-2 rounded">
+                                <div className="flex items-center justify-center min-h-[50px] text-xs">
+                                  <BlockMath math={content.currentCalc} />
+                                </div>
+                              </div>
+                            </div>
+                            <div className="text-xs text-gray-200 mt-3">
+                              {content.weight}
+                            </div>
+                          </div>
+                        </>
+                      )
+                    })()}
+
                     {/* Other metrics placeholder */}
-                    {activeInfoBox !== 'fundamentalData' && activeInfoBox !== 'timeSeriesIntegrity' && activeInfoBox !== 'newsReliability' && activeInfoBox !== 'tradingVolume' && !["Epistemische Unsicherheit", "Aleatorische Unsicherheit", "Overfitting-Risiko", "Robustheit", "Erklärungs-Konsistenz"].includes(activeInfoBox || '') && (
+                    {activeInfoBox !== 'fundamentalData' && activeInfoBox !== 'timeSeriesIntegrity' && activeInfoBox !== 'newsReliability' && activeInfoBox !== 'tradingVolume' && !["Epistemische Unsicherheit", "Aleatorische Unsicherheit", "Overfitting-Risiko", "Robustheit", "Erklärungs-Konsistenz"].includes(activeInfoBox || '') && !(['perceivedUncertainty', 'epistemicUncertaintyHuman', 'aleatoricUncertaintyHuman', 'decisionStabilityHuman', 'humanUncertaintyOverall'].includes(activeInfoBox || '')) && (
                       <>
                         <div className="mt-8 p-4 bg-muted/30 rounded-lg">
                           <h4 className="font-medium mb-2 text-foreground">Berechnungsdetails</h4>
