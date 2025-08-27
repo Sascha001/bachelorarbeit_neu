@@ -1546,8 +1546,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                 <TooltipContent className="max-w-lg">
                                   <div className="space-y-3 p-2">
                                     <div className="font-semibold text-sm text-white">Fundamentaldaten Gesamtformel</div>
-                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                                      <div className="flex items-center justify-center min-h-[60px]">
+                                    <div className="formula-container bg-muted/30 p-2 rounded">
+                                      <div className="flex items-center justify-center min-h-[50px]">
                                         <BlockMath math="\\text{Score} = \\frac{C + T + K + A + S}{5}" />
                                       </div>
                                     </div>
@@ -1559,8 +1559,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                               </Tooltip>
                             </div>
                             
-                            <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                              <div className="flex items-center justify-center min-h-[60px]">
+                            <div className="formula-container bg-muted/30 p-2 rounded" style={{fontSize: '0.7rem'}}>
+                              <div className="flex items-center justify-center min-h-[40px]">
                                 <BlockMath math={`\\text{Aktuell} = \\frac{${(calculatedValues.completeness * 100).toFixed(1)} + ${(calculatedValues.timeliness * 100).toFixed(1)} + ${(calculatedValues.consistency * 100).toFixed(1)} + ${(calculatedValues.accuracy * 100).toFixed(1)} + ${(calculatedValues.stability * 100).toFixed(1)}}{5} = ${overallScore}\\%`} />
                               </div>
                             </div>
@@ -1774,8 +1774,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                 <TooltipContent className="max-w-lg">
                                   <div className="space-y-3 p-2">
                                     <div className="font-semibold text-sm text-white">Zeitreihen-Integrität Gesamtformel</div>
-                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                                      <div className="flex items-center justify-center min-h-[60px]">
+                                    <div className="formula-container bg-muted/30 p-2 rounded">
+                                      <div className="flex items-center justify-center min-h-[50px]">
                                         <BlockMath math="\\text{Score} = \\frac{C + O + R + K}{4}" />
                                       </div>
                                     </div>
@@ -1787,8 +1787,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                               </Tooltip>
                             </div>
                             
-                            <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                              <div className="flex items-center justify-center min-h-[60px]">
+                            <div className="formula-container bg-muted/30 p-2 rounded" style={{fontSize: '0.7rem'}}>
+                              <div className="flex items-center justify-center min-h-[40px]">
                                 <BlockMath math={`\\text{Aktuell} = \\frac{${(calculatedValues.completeness * 100).toFixed(1)} + ${(calculatedValues.outlierFreedom * 100).toFixed(1)} + ${(calculatedValues.revisionStability * 100).toFixed(1)} + ${(calculatedValues.continuity * 100).toFixed(1)}}{4} = ${overallScore}\\%`} />
                               </div>
                             </div>
@@ -2016,8 +2016,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                 <TooltipContent className="max-w-lg">
                                   <div className="space-y-3 p-2">
                                     <div className="font-semibold text-sm text-white">Nachrichten-Verlässlichkeit Gesamtformel</div>
-                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                                      <div className="flex items-center justify-center min-h-[60px]">
+                                    <div className="formula-container bg-muted/30 p-2 rounded">
+                                      <div className="flex items-center justify-center min-h-[50px]">
                                         <BlockMath math="Q_{news} = w_1 \\cdot R + w_2 \\cdot P + w_3 \\cdot K + w_4 \\cdot (1-B)" />
                                       </div>
                                     </div>
@@ -2036,8 +2036,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                 <p><strong>Gewichte:</strong> w₁={w1}, w₂={w2}, w₃={w3}, w₄={w4}</p>
                               </div>
                               
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                                <div className="flex items-center justify-center min-h-[60px]">
+                              <div className="formula-container bg-muted/30 p-2 rounded" style={{fontSize: '0.65rem'}}>
+                                <div className="flex items-center justify-center min-h-[40px]">
                                   <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${calculatedValues.sourceReliability} + ${w2} \\cdot ${calculatedValues.reputationAccuracy} + ${w3} \\cdot ${calculatedValues.crossSourceConsensus} + ${w4} \\cdot ${calculatedValues.biasCheck} = ${(overallScoreNum/100).toFixed(3)}`} />
                                 </div>
                               </div>
@@ -2226,8 +2226,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                 <TooltipContent className="max-w-lg">
                                   <div className="space-y-3 p-2">
                                     <div className="font-semibold text-sm text-white">Handelsvolumen-Verteilung Gesamtformel</div>
-                                    <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                                      <div className="flex items-center justify-center min-h-[60px]">
+                                    <div className="formula-container bg-muted/30 p-2 rounded">
+                                      <div className="flex items-center justify-center min-h-[50px]">
                                         <BlockMath math="Q_{volume} = w_1 \\cdot S + w_2 \\cdot A + w_3 \\cdot T" />
                                       </div>
                                     </div>
@@ -2239,8 +2239,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                               </Tooltip>
                             </div>
                             
-                            <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                              <div className="flex items-center justify-center min-h-[60px]">
+                            <div className="formula-container bg-muted/30 p-2 rounded" style={{fontSize: '0.7rem'}}>
+                              <div className="flex items-center justify-center min-h-[40px]">
                                 <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${calculatedValues.concentration.toFixed(3)} + ${w2} \\cdot ${calculatedValues.anomalousSpikes.toFixed(3)} + ${w3} \\cdot ${calculatedValues.timeStability.toFixed(3)} = ${(overallScoreNum/100).toFixed(3)}`} />
                               </div>
                             </div>
