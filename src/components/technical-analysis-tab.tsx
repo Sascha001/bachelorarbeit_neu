@@ -1343,10 +1343,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       
                                       <div className="space-y-2">
                                         <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
-                                        <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container-large">
-                                          <div className="flex items-center justify-center min-h-[40px]">
-                                            <BlockMath math="C = 1 - \\frac{\\text{Fehlende Werte}}{\\text{Gesamte Werte}}" />
-                                          </div>
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="C = 1 - \\frac{\\text{Fehlende Werte}}{\\text{Gesamte Werte}}" />
                                         </div>
                                       </div>
                                       
