@@ -386,3 +386,20 @@
   }
 
 }
+
+/* KaTeX Formula Styling - moved from dynamic injection to resolve CSS race condition */
+.formula-container .katex {
+  font-size: 0.9rem !important;
+}
+
+.formula-container .katex .frac-line {
+  border-bottom-width: 0.08em !important;
+}
+
+.formula-container-small .katex {
+  font-size: 0.8rem !important;
+}
+
+.formula-container-large .katex {
+  font-size: 1rem !important;
+}
