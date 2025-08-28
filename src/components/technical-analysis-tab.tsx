@@ -1406,43 +1406,6 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       </p>
                     </div>
                   </div>
-
-                    {/* Gesamtberechnung */}
-                    <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                      <div className="flex items-center gap-2 mb-4">
-                        <h4 className="font-medium text-green-700">Gesamtberechnung</h4>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button 
-                              className="p-1 rounded-full hover:bg-muted/50"
-                              onClick={() => setActiveInfoBox('humanUncertaintyOverall')}
-                            >
-                              <Info className="h-4 w-4 text-muted-foreground" />
-                            </button>
-                          </TooltipTrigger>
-                        </Tooltip>
-                      </div>
-                      
-                      <div className="space-y-4">
-                        <div className="text-xs text-muted-foreground space-y-1 mb-3">
-                          <p><strong>P</strong> = Wahrgenommene Unsicherheit, <strong>E</strong> = Epistemische Unsicherheit</p>
-                          <p><strong>A</strong> = Aleatorische Unsicherheit, <strong>S</strong> = Entscheidungsstabilität</p>
-                          <p><strong>Gewichte:</strong> w₁={w1}, w₂={w2}, w₃={w3}, w₄={w4}</p>
-                        </div>
-                        
-                        <div className="formula-container bg-muted/30 p-2 rounded text-xs">
-                          <div className="flex items-center justify-center min-h-[40px]">
-                            <BlockMath math="Q_{human} = w_1 \cdot P + w_2 \cdot E + w_3 \cdot A + w_4 \cdot S" />
-                          </div>
-                        </div>
-                        
-                        <div className="formula-container bg-muted/30 p-2 rounded text-xs">
-                          <div className="flex items-center justify-center min-h-[40px]">
-                            <BlockMath math={`\\text{Aktuell} = ${w1} \\cdot ${humanCalculated.perceivedUncertainty.toFixed(3)} + ${w2} \\cdot ${humanCalculated.epistemicUncertainty.toFixed(3)} + ${w3} \\cdot ${humanCalculated.aleatoricUncertainty.toFixed(3)} + ${w4} \\cdot ${humanCalculated.decisionStability.toFixed(3)} = ${(overallScoreNum/100).toFixed(3)}`} />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </>
                 )
               })()}
