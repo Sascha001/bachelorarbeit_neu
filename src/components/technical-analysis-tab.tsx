@@ -1344,104 +1344,123 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       </div>
                     </div>
 
-                    {/* 4 Uncertainty Parameters */}
+                    {/* Human Uncertainty Dimensions - Data Uncertainty Style */}
                     <div className="space-y-4">
-                      <h3 className="font-medium text-lg">Unsicherheits-Dimensionen</h3>
                       
                       {/* Wahrgenommene Unsicherheit */}
-                      <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="font-medium">1. Wahrgenommene Unsicherheit (P)</span>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button 
-                                className="p-1 rounded-full hover:bg-muted/50"
-                                onClick={() => setActiveInfoBox('perceivedUncertainty')}
-                              >
-                                <Info className="h-4 w-4 text-muted-foreground" />
-                              </button>
-                            </TooltipTrigger>
-                          </Tooltip>
-                          <Badge className="ml-auto">{(humanCalculated.perceivedUncertainty * 100).toFixed(1)}%</Badge>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">Wahrgenommene Unsicherheit</span>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button 
+                                  onClick={() => handleInfoClick('perceivedUncertainty')}
+                                  className="ml-1 p-1 rounded-full hover:bg-muted/50 transition-colors"
+                                >
+                                  <Info className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Für nähere Information klicken Sie auf das Icon</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                          <Badge>
+                            {(humanCalculated.perceivedUncertainty * 100).toFixed(1)}%
+                          </Badge>
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          Subjektives Gefühl der Unsicherheit auf 1-5 Skala: {humanParams.perceivedUncertainty.likertResponse}/{humanParams.perceivedUncertainty.maxScale}
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          Gewichtung: 30% - Wichtigster Faktor für subjektive Entscheidungsbasis
-                        </div>
+                        <Progress value={humanCalculated.perceivedUncertainty * 100} className="h-2" />
+                        <p className="text-xs text-muted-foreground">
+                          Likert-Skala: {humanParams.perceivedUncertainty.likertResponse}/{humanParams.perceivedUncertainty.maxScale} (30% Gewichtung)
+                        </p>
                       </div>
 
                       {/* Epistemische Unsicherheit */}
-                      <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="font-medium">2. Epistemische Unsicherheit (E)</span>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button 
-                                className="p-1 rounded-full hover:bg-muted/50"
-                                onClick={() => setActiveInfoBox('epistemicUncertaintyHuman')}
-                              >
-                                <Info className="h-4 w-4 text-muted-foreground" />
-                              </button>
-                            </TooltipTrigger>
-                          </Tooltip>
-                          <Badge className="ml-auto">{(humanCalculated.epistemicUncertainty * 100).toFixed(1)}%</Badge>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">Epistemische Unsicherheit</span>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button 
+                                  onClick={() => handleInfoClick('epistemicUncertaintyHuman')}
+                                  className="ml-1 p-1 rounded-full hover:bg-muted/50 transition-colors"
+                                >
+                                  <Info className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Für nähere Information klicken Sie auf das Icon</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                          <Badge>
+                            {(humanCalculated.epistemicUncertainty * 100).toFixed(1)}%
+                          </Badge>
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          {humanParams.epistemicUncertainty.unclearAnswers} unklare Antworten von {humanParams.epistemicUncertainty.totalQuestions} Fragen
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          Gewichtung: 25% - Wissenslücken führen zu höherer Unsicherheit
-                        </div>
+                        <Progress value={humanCalculated.epistemicUncertainty * 100} className="h-2" />
+                        <p className="text-xs text-muted-foreground">
+                          {humanParams.epistemicUncertainty.unclearAnswers} unklare Antworten von {humanParams.epistemicUncertainty.totalQuestions} (25% Gewichtung)
+                        </p>
                       </div>
 
                       {/* Aleatorische Unsicherheit */}
-                      <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="font-medium">3. Aleatorische Unsicherheit (A)</span>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button 
-                                className="p-1 rounded-full hover:bg-muted/50"
-                                onClick={() => setActiveInfoBox('aleatoricUncertaintyHuman')}
-                              >
-                                <Info className="h-4 w-4 text-muted-foreground" />
-                              </button>
-                            </TooltipTrigger>
-                          </Tooltip>
-                          <Badge className="ml-auto">{(humanCalculated.aleatoricUncertainty * 100).toFixed(1)}%</Badge>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">Aleatorische Unsicherheit</span>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button 
+                                  onClick={() => handleInfoClick('aleatoricUncertaintyHuman')}
+                                  className="ml-1 p-1 rounded-full hover:bg-muted/50 transition-colors"
+                                >
+                                  <Info className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Für nähere Information klicken Sie auf das Icon</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                          <Badge>
+                            {(humanCalculated.aleatoricUncertainty * 100).toFixed(1)}%
+                          </Badge>
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          Konsistenzscore: {humanParams.aleatoricUncertainty.consistencyScore}/{humanParams.aleatoricUncertainty.maxPossibleConsistency}
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          Gewichtung: 25% - Widersprüchliche Antworten erhöhen Unsicherheit
-                        </div>
+                        <Progress value={humanCalculated.aleatoricUncertainty * 100} className="h-2" />
+                        <p className="text-xs text-muted-foreground">
+                          Konsistenz: {humanParams.aleatoricUncertainty.consistencyScore}/{humanParams.aleatoricUncertainty.maxPossibleConsistency} (25% Gewichtung)
+                        </p>
                       </div>
 
                       {/* Entscheidungsstabilität */}
-                      <div className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="font-medium">4. Entscheidungsstabilität (S)</span>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button 
-                                className="p-1 rounded-full hover:bg-muted/50"
-                                onClick={() => setActiveInfoBox('decisionStabilityHuman')}
-                              >
-                                <Info className="h-4 w-4 text-muted-foreground" />
-                              </button>
-                            </TooltipTrigger>
-                          </Tooltip>
-                          <Badge className="ml-auto">{(humanCalculated.decisionStability * 100).toFixed(1)}%</Badge>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">Entscheidungsstabilität</span>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button 
+                                  onClick={() => handleInfoClick('decisionStabilityHuman')}
+                                  className="ml-1 p-1 rounded-full hover:bg-muted/50 transition-colors"
+                                >
+                                  <Info className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Für nähere Information klicken Sie auf das Icon</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                          <Badge>
+                            {(humanCalculated.decisionStability * 100).toFixed(1)}%
+                          </Badge>
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          Änderungsratio: {(humanParams.decisionStability.decisionChange * 100).toFixed(1)}%/{(humanParams.decisionStability.inputChange * 100).toFixed(1)}%
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          Gewichtung: 20% - Instabilität bei kleinen Änderungen erhöht Unsicherheit
-                        </div>
+                        <Progress value={humanCalculated.decisionStability * 100} className="h-2" />
+                        <p className="text-xs text-muted-foreground">
+                          Instabilität: {(humanParams.decisionStability.decisionChange * 100).toFixed(1)}%/{(humanParams.decisionStability.inputChange * 100).toFixed(1)}% (20% Gewichtung)
+                        </p>
                       </div>
                     </div>
 
@@ -2658,112 +2677,6 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       )
                     })()}
 
-                    {/* Human Uncertainty Parameters */}
-                    {(['perceivedUncertainty', 'epistemicUncertaintyHuman', 'aleatoricUncertaintyHuman', 'decisionStabilityHuman', 'humanUncertaintyOverall'].includes(activeInfoBox || '')) && (() => {
-                      const humanParams = getHumanUncertaintyParams(selectedStock)
-                      const humanCalculated = calculateAllHumanUncertainty(humanParams)
-                      
-                      const getHumanUncertaintyContent = (paramType: string) => {
-                        switch (paramType) {
-                          case 'perceivedUncertainty':
-                            return {
-                              title: 'Wahrgenommene Unsicherheit Berechnung',
-                              intro: 'Bewertung des subjektiven Unsicherheitsgefühls basierend auf 1-5 Likert-Skala',
-                              score: (humanCalculated.perceivedUncertainty * 100).toFixed(1) + '%',
-                              formula: 'P = \\frac{\\text{Likert Response} - 1}{\\text{Max Scale} - 1}',
-                              currentCalc: `P = \\frac{${humanParams.perceivedUncertainty.likertResponse} - 1}{${humanParams.perceivedUncertainty.maxScale} - 1} = ${humanCalculated.perceivedUncertainty.toFixed(3)}`,
-                              weight: '30% - Wichtigster Faktor für subjektive Entscheidungsbasis'
-                            }
-                          case 'epistemicUncertaintyHuman':
-                            return {
-                              title: 'Epistemische Unsicherheit (Human) Berechnung',
-                              intro: 'Bewertung der Wissenslücken basierend auf "unklar"-Antworten',
-                              score: (humanCalculated.epistemicUncertainty * 100).toFixed(1) + '%',
-                              formula: 'E_{human} = \\frac{\\text{Unklare Antworten}}{\\text{Gesamte Fragen}}',
-                              currentCalc: `E_{human} = \\frac{${humanParams.epistemicUncertainty.unclearAnswers}}{${humanParams.epistemicUncertainty.totalQuestions}} = ${humanCalculated.epistemicUncertainty.toFixed(3)}`,
-                              weight: '25% - Wissenslücken führen zu höherer Unsicherheit'
-                            }
-                          case 'aleatoricUncertaintyHuman':
-                            return {
-                              title: 'Aleatorische Unsicherheit (Human) Berechnung',
-                              intro: 'Bewertung der Inkonsistenz und Widersprüche bei ähnlichen Entscheidungen',
-                              score: (humanCalculated.aleatoricUncertainty * 100).toFixed(1) + '%',
-                              formula: 'A_{human} = 1 - \\frac{\\text{Konsistenz Score}}{\\text{Max Konsistenz}}',
-                              currentCalc: `A_{human} = 1 - \\frac{${humanParams.aleatoricUncertainty.consistencyScore}}{${humanParams.aleatoricUncertainty.maxPossibleConsistency}} = ${humanCalculated.aleatoricUncertainty.toFixed(3)}`,
-                              weight: '25% - Widersprüchliche Antworten erhöhen Unsicherheit'
-                            }
-                          case 'decisionStabilityHuman':
-                            return {
-                              title: 'Entscheidungsstabilität (Human) Berechnung',
-                              intro: 'Bewertung der Robustheit gegen kleine Input-Änderungen',
-                              score: (humanCalculated.decisionStability * 100).toFixed(1) + '%',
-                              formula: 'S_{human} = \\max(0, 1 - \\frac{\\text{Decision Change}}{\\text{Input Change}})',
-                              currentCalc: `S_{human} = \\max(0, 1 - \\frac{${humanParams.decisionStability.decisionChange}}{${humanParams.decisionStability.inputChange}}) = ${humanCalculated.decisionStability.toFixed(3)}`,
-                              weight: '20% - Instabilität bei kleinen Änderungen erhöht Unsicherheit'
-                            }
-                          case 'humanUncertaintyOverall':
-                            const w1 = 0.30, w2 = 0.25, w3 = 0.25, w4 = 0.20
-                            const overallScore = (w1 * humanCalculated.perceivedUncertainty + 
-                                               w2 * humanCalculated.epistemicUncertainty + 
-                                               w3 * humanCalculated.aleatoricUncertainty + 
-                                               w4 * humanCalculated.decisionStability) * 100
-                            return {
-                              title: 'Menschliche Unsicherheit Gesamtberechnung',
-                              intro: 'Gewichtete Kombination aller 4 menschlichen Unsicherheitsdimensionen',
-                              score: overallScore.toFixed(1) + '%',
-                              formula: 'Q_{human} = w_1 \\cdot P + w_2 \\cdot E + w_3 \\cdot A + w_4 \\cdot S',
-                              currentCalc: `Q_{human} = ${w1} \\cdot ${humanCalculated.perceivedUncertainty.toFixed(3)} + ${w2} \\cdot ${humanCalculated.epistemicUncertainty.toFixed(3)} + ${w3} \\cdot ${humanCalculated.aleatoricUncertainty.toFixed(3)} + ${w4} \\cdot ${humanCalculated.decisionStability.toFixed(3)} = ${(overallScore/100).toFixed(3)}`,
-                              weight: 'Gewichtung: P=30%, E=25%, A=25%, S=20%'
-                            }
-                          default:
-                            return null
-                        }
-                      }
-                      
-                      const content = getHumanUncertaintyContent(activeInfoBox)
-                      if (!content) return null
-                      
-                      return (
-                        <>
-                          {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
-                            <p className="text-sm text-gray-200">
-                              {content.intro}
-                            </p>
-                          </div>
-                          
-                          {/* Overall Score */}
-                          <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
-                            <h4 className="font-semibold mb-2 text-white">Aktueller Score: {content.score}</h4>
-                            <p className="text-sm text-gray-200">
-                              Berechnet für {selectedStock}
-                            </p>
-                          </div>
-                          
-                          {/* Formula Calculation */}
-                          <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                            <div className="flex items-center gap-2 mb-3">
-                              <h4 className="font-medium text-white">Formel</h4>
-                            </div>
-                            <div className="space-y-3">
-                              <div className="formula-container bg-muted/30 p-2 rounded">
-                                <div className="flex items-center justify-center min-h-[60px]">
-                                  <BlockMath math={content.formula} />
-                                </div>
-                              </div>
-                              <div className="formula-container bg-muted/30 p-2 rounded">
-                                <div className="flex items-center justify-center min-h-[50px] text-xs">
-                                  <BlockMath math={content.currentCalc} />
-                                </div>
-                              </div>
-                            </div>
-                            <div className="text-xs text-gray-200 mt-3">
-                              {content.weight}
-                            </div>
-                          </div>
-                        </>
-                      )
-                    })()}
 
                     {/* Other metrics placeholder */}
                     {activeInfoBox !== 'fundamentalData' && activeInfoBox !== 'timeSeriesIntegrity' && activeInfoBox !== 'newsReliability' && activeInfoBox !== 'tradingVolume' && !["Epistemische Unsicherheit", "Aleatorische Unsicherheit", "Overfitting-Risiko", "Robustheit", "Erklärungs-Konsistenz"].includes(activeInfoBox || '') && !(['perceivedUncertainty', 'epistemicUncertaintyHuman', 'aleatoricUncertaintyHuman', 'decisionStabilityHuman', 'humanUncertaintyOverall'].includes(activeInfoBox || '')) && (
