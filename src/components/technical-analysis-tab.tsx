@@ -383,6 +383,14 @@ const getStatusIcon = (status: string) => {
   }
 }
 
+// Human Uncertainty Status Mapping (inverted: lower uncertainty = better status)
+const getHumanUncertaintyStatus = (uncertaintyPercentage: number): string => {
+  if (uncertaintyPercentage <= 20) return "excellent"
+  if (uncertaintyPercentage <= 40) return "good"  
+  if (uncertaintyPercentage <= 60) return "fair"
+  return "poor"
+}
+
 // Data Uncertainty Interface Definitions
 interface FundamentalDataParams {
   completeness: { missingValues: number; totalValues: number };
@@ -1254,58 +1262,11 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
         </CardContent>
           </Card>
 
-          {/* Uncertainty Heatmap Visualization */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Activity className="h-5 w-5 text-orange-600" />
-                Unsicherheits-Heatmap
-              </CardTitle>
-              <CardDescription>
-                Visuelle Darstellung der Unsicherheitsquellen über Zeit
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-7 gap-1 text-xs">
-                {/* Heatmap simulation */}
-                <div className="text-center font-medium">Mo</div>
-                <div className="text-center font-medium">Di</div>
-                <div className="text-center font-medium">Mi</div>
-                <div className="text-center font-medium">Do</div>
-                <div className="text-center font-medium">Fr</div>
-                <div className="text-center font-medium">Sa</div>
-                <div className="text-center font-medium">So</div>
-                
-                {/* Week 1 */}
-                <div className="h-8 bg-green-500/30 rounded flex items-center justify-center">15%</div>
-                <div className="h-8 bg-yellow-500/40 rounded flex items-center justify-center">23%</div>
-                <div className="h-8 bg-green-500/20 rounded flex items-center justify-center">12%</div>
-                <div className="h-8 bg-yellow-500/50 rounded flex items-center justify-center">28%</div>
-                <div className="h-8 bg-red-500/30 rounded flex items-center justify-center">42%</div>
-                <div className="h-8 bg-green-500/25 rounded flex items-center justify-center">18%</div>
-                <div className="h-8 bg-green-500/15 rounded flex items-center justify-center">9%</div>
-                
-                {/* Week 2 */}
-                <div className="h-8 bg-yellow-500/35 rounded flex items-center justify-center">25%</div>
-                <div className="h-8 bg-green-500/30 rounded flex items-center justify-center">16%</div>
-                <div className="h-8 bg-red-500/40 rounded flex items-center justify-center">45%</div>
-                <div className="h-8 bg-yellow-500/45 rounded flex items-center justify-center">31%</div>
-                <div className="h-8 bg-green-500/20 rounded flex items-center justify-center">11%</div>
-                <div className="h-8 bg-yellow-500/30 rounded flex items-center justify-center">22%</div>
-                <div className="h-8 bg-green-500/25 rounded flex items-center justify-center">17%</div>
-              </div>
-              <div className="flex justify-between mt-4 text-xs text-muted-foreground">
-                <span>Niedrig (0-20%)</span>
-                <span>Mittel (21-40%)</span>
-                <span>Hoch (41%+)</span>
-              </div>
-            </CardContent>
-          </Card>
         </TabsContent>
 
         {/* Human Uncertainty Tab */}
         <TabsContent value="human" className="space-y-6">
-          <Card className="violet-bloom-card">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-green-600" />
@@ -1320,149 +1281,131 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                 const humanParams = getHumanUncertaintyParams(selectedStock)
                 const humanCalculated = calculateAllHumanUncertainty(humanParams)
                 
-                // Weighted overall score calculation
-                const w1 = 0.30, w2 = 0.25, w3 = 0.25, w4 = 0.20
-                const overallScoreNum = (w1 * humanCalculated.perceivedUncertainty + 
-                                       w2 * humanCalculated.epistemicUncertainty + 
-                                       w3 * humanCalculated.aleatoricUncertainty + 
-                                       w4 * humanCalculated.decisionStability) * 100
-                const overallScore = overallScoreNum.toFixed(1)
                 
                 return (
                   <>
-                    {/* Overall Score */}
-                    <div className="mb-6 p-4 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-semibold text-lg">Gesamtunsicherheit</h3>
-                          <p className="text-muted-foreground text-sm">Menschliche Unsicherheit für {selectedStock}</p>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-2xl font-bold text-primary">{overallScore}%</div>
-                          <p className="text-xs text-muted-foreground">Gewichteter Durchschnitt</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Human Uncertainty Dimensions - Data Uncertainty Style */}
-                    <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       
-                      {/* Wahrgenommene Unsicherheit */}
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium">Wahrgenommene Unsicherheit</span>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <button 
-                                  onClick={() => handleInfoClick('perceivedUncertainty')}
-                                  className="ml-1 p-1 rounded-full hover:bg-muted/50 transition-colors"
-                                >
-                                  <Info className="h-4 w-4 text-muted-foreground hover:text-primary" />
-                                </button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Für nähere Information klicken Sie auf das Icon</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </div>
-                          <Badge>
-                            {(humanCalculated.perceivedUncertainty * 100).toFixed(1)}%
-                          </Badge>
+                    {/* Wahrgenommene Unsicherheit */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          {getStatusIcon(getHumanUncertaintyStatus((humanCalculated.perceivedUncertainty * 100)))}
+                          <span className="font-medium">Wahrgenommene Unsicherheit</span>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button 
+                                onClick={() => handleInfoClick('perceivedUncertainty')}
+                                className="ml-1 p-1 rounded-full hover:bg-muted/50 transition-colors"
+                              >
+                                <Info className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Für nähere Information klicken Sie auf das Icon</p>
+                            </TooltipContent>
+                          </Tooltip>
                         </div>
-                        <Progress value={humanCalculated.perceivedUncertainty * 100} className="h-2" />
-                        <p className="text-xs text-muted-foreground">
-                          Likert-Skala: {humanParams.perceivedUncertainty.likertResponse}/{humanParams.perceivedUncertainty.maxScale} (30% Gewichtung)
-                        </p>
+                        <Badge className={getStatusColor(getHumanUncertaintyStatus((humanCalculated.perceivedUncertainty * 100)))}>
+                          {(humanCalculated.perceivedUncertainty * 100).toFixed(1)}%
+                        </Badge>
                       </div>
-
-                      {/* Epistemische Unsicherheit */}
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium">Epistemische Unsicherheit</span>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <button 
-                                  onClick={() => handleInfoClick('epistemicUncertaintyHuman')}
-                                  className="ml-1 p-1 rounded-full hover:bg-muted/50 transition-colors"
-                                >
-                                  <Info className="h-4 w-4 text-muted-foreground hover:text-primary" />
-                                </button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Für nähere Information klicken Sie auf das Icon</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </div>
-                          <Badge>
-                            {(humanCalculated.epistemicUncertainty * 100).toFixed(1)}%
-                          </Badge>
-                        </div>
-                        <Progress value={humanCalculated.epistemicUncertainty * 100} className="h-2" />
-                        <p className="text-xs text-muted-foreground">
-                          {humanParams.epistemicUncertainty.unclearAnswers} unklare Antworten von {humanParams.epistemicUncertainty.totalQuestions} (25% Gewichtung)
-                        </p>
-                      </div>
-
-                      {/* Aleatorische Unsicherheit */}
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium">Aleatorische Unsicherheit</span>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <button 
-                                  onClick={() => handleInfoClick('aleatoricUncertaintyHuman')}
-                                  className="ml-1 p-1 rounded-full hover:bg-muted/50 transition-colors"
-                                >
-                                  <Info className="h-4 w-4 text-muted-foreground hover:text-primary" />
-                                </button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Für nähere Information klicken Sie auf das Icon</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </div>
-                          <Badge>
-                            {(humanCalculated.aleatoricUncertainty * 100).toFixed(1)}%
-                          </Badge>
-                        </div>
-                        <Progress value={humanCalculated.aleatoricUncertainty * 100} className="h-2" />
-                        <p className="text-xs text-muted-foreground">
-                          Konsistenz: {humanParams.aleatoricUncertainty.consistencyScore}/{humanParams.aleatoricUncertainty.maxPossibleConsistency} (25% Gewichtung)
-                        </p>
-                      </div>
-
-                      {/* Entscheidungsstabilität */}
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium">Entscheidungsstabilität</span>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <button 
-                                  onClick={() => handleInfoClick('decisionStabilityHuman')}
-                                  className="ml-1 p-1 rounded-full hover:bg-muted/50 transition-colors"
-                                >
-                                  <Info className="h-4 w-4 text-muted-foreground hover:text-primary" />
-                                </button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Für nähere Information klicken Sie auf das Icon</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </div>
-                          <Badge>
-                            {(humanCalculated.decisionStability * 100).toFixed(1)}%
-                          </Badge>
-                        </div>
-                        <Progress value={humanCalculated.decisionStability * 100} className="h-2" />
-                        <p className="text-xs text-muted-foreground">
-                          Instabilität: {(humanParams.decisionStability.decisionChange * 100).toFixed(1)}%/{(humanParams.decisionStability.inputChange * 100).toFixed(1)}% (20% Gewichtung)
-                        </p>
-                      </div>
+                      <Progress value={humanCalculated.perceivedUncertainty * 100} className="h-2" />
+                      <p className="text-xs text-muted-foreground">
+                        Likert-Skala: {humanParams.perceivedUncertainty.likertResponse}/{humanParams.perceivedUncertainty.maxScale}
+                      </p>
                     </div>
+
+                    {/* Epistemische Unsicherheit */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          {getStatusIcon(getHumanUncertaintyStatus((humanCalculated.epistemicUncertainty * 100)))}
+                          <span className="font-medium">Epistemische Unsicherheit</span>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button 
+                                onClick={() => handleInfoClick('epistemicUncertaintyHuman')}
+                                className="ml-1 p-1 rounded-full hover:bg-muted/50 transition-colors"
+                              >
+                                <Info className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Für nähere Information klicken Sie auf das Icon</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                        <Badge className={getStatusColor(getHumanUncertaintyStatus((humanCalculated.epistemicUncertainty * 100)))}>
+                          {(humanCalculated.epistemicUncertainty * 100).toFixed(1)}%
+                        </Badge>
+                      </div>
+                      <Progress value={humanCalculated.epistemicUncertainty * 100} className="h-2" />
+                      <p className="text-xs text-muted-foreground">
+                        {humanParams.epistemicUncertainty.unclearAnswers} unklare Antworten erkannt
+                      </p>
+                    </div>
+
+                    {/* Aleatorische Unsicherheit */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          {getStatusIcon(getHumanUncertaintyStatus((humanCalculated.aleatoricUncertainty * 100)))}
+                          <span className="font-medium">Aleatorische Unsicherheit</span>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button 
+                                onClick={() => handleInfoClick('aleatoricUncertaintyHuman')}
+                                className="ml-1 p-1 rounded-full hover:bg-muted/50 transition-colors"
+                              >
+                                <Info className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Für nähere Information klicken Sie auf das Icon</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                        <Badge className={getStatusColor(getHumanUncertaintyStatus((humanCalculated.aleatoricUncertainty * 100)))}>
+                          {(humanCalculated.aleatoricUncertainty * 100).toFixed(1)}%
+                        </Badge>
+                      </div>
+                      <Progress value={humanCalculated.aleatoricUncertainty * 100} className="h-2" />
+                      <p className="text-xs text-muted-foreground">
+                        {humanParams.aleatoricUncertainty.consistencyScore} konsistente Entscheidungen
+                      </p>
+                    </div>
+
+                    {/* Entscheidungsstabilität */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          {getStatusIcon(getHumanUncertaintyStatus((humanCalculated.decisionStability * 100)))}
+                          <span className="font-medium">Entscheidungsstabilität</span>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button 
+                                onClick={() => handleInfoClick('decisionStabilityHuman')}
+                                className="ml-1 p-1 rounded-full hover:bg-muted/50 transition-colors"
+                              >
+                                <Info className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Für nähere Information klicken Sie auf das Icon</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                        <Badge className={getStatusColor(getHumanUncertaintyStatus((humanCalculated.decisionStability * 100)))}>
+                          {(humanCalculated.decisionStability * 100).toFixed(1)}%
+                        </Badge>
+                      </div>
+                      <Progress value={humanCalculated.decisionStability * 100} className="h-2" />
+                      <p className="text-xs text-muted-foreground">
+                        {(humanParams.decisionStability.decisionChange * 100).toFixed(1)}% Entscheidungsänderung
+                      </p>
+                    </div>
+                  </div>
 
                     {/* Gesamtberechnung */}
                     <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
