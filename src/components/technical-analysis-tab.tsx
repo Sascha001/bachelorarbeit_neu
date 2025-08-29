@@ -1524,38 +1524,24 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
                                     <div className="space-y-3 p-2">
-                                      <div className="font-semibold text-sm text-white">Aktualität Berechnung</div>
+                                      <div className="font-semibold text-sm text-white">Aktualität (Fundamentaldaten)</div>
                                       
-                                      <div className="p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
-                                        <p className="text-sm text-gray-200">
-                                          Bewertung der Aktualität der Fundamentaldaten basierend auf der Verzögerung seit letztem Update
-                                        </p>
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="T = \max(0, 1 - \frac{\text{Tage alt}}{\text{Max. akzeptable Tage}})" />
+                                        </div>
                                       </div>
                                       
-                                      <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
-                                        <h4 className="font-semibold mb-2 text-white">Aktueller Score: {(calculatedValues.timeliness * 100).toFixed(1)}%</h4>
-                                        <p className="text-sm text-gray-200">
-                                          Berechnet aus Zeitverzögerung für {selectedStock}
-                                        </p>
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`T = \\max(0, 1 - \\frac{${params.timeliness.daysOld}}{${params.timeliness.maxAcceptableDays}}) = ${calculatedValues.timeliness.toFixed(3)}`} />
+                                        </div>
                                       </div>
                                       
-                                      <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                                        <div className="flex items-center gap-2 mb-3">
-                                          <h4 className="font-medium text-white">Formel</h4>
-                                        </div>
-                                        <div className="space-y-3">
-                                          <div className="formula-container bg-muted/30 p-2 rounded">
-                                            <BlockMath math="T = \max(0, 1 - \frac{\text{Tage alt}}{\text{Max. akzeptable Tage}})" />
-                                          </div>
-                                          <div className="formula-container bg-muted/30 p-2 rounded">
-                                            <div className="text-xs">
-                                              <BlockMath math={`T = \\max(0, 1 - \\frac{${params.timeliness.daysOld}}{${params.timeliness.maxAcceptableDays}}) = ${calculatedValues.timeliness.toFixed(3)}`} />
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div className="text-xs text-gray-200 mt-3">
-                                          Gewichtung: 20% - Neuere Daten erhalten höhere Bewertungen und reduzieren Unsicherheit
-                                        </div>
+                                      <div className="text-xs text-gray-200">
+                                        Bewertung der Aktualität der Fundamentaldaten basierend auf der Verzögerung seit letztem Update. Neuere Daten erhalten höhere Bewertungen.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1579,38 +1565,24 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
                                     <div className="space-y-3 p-2">
-                                      <div className="font-semibold text-sm text-white">Konsistenz Berechnung</div>
+                                      <div className="font-semibold text-sm text-white">Konsistenz (Fundamentaldaten)</div>
                                       
-                                      <div className="p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
-                                        <p className="text-sm text-gray-200">
-                                          Bewertung der Datenkonsistenz zwischen verschiedenen Quellen und historischen Trends
-                                        </p>
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="K = 1 - \frac{\text{Inkonsistente Datenpunkte}}{\text{Gesamte Datenpunkte}}" />
+                                        </div>
                                       </div>
                                       
-                                      <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
-                                        <h4 className="font-semibold mb-2 text-white">Aktueller Score: {(calculatedValues.consistency * 100).toFixed(1)}%</h4>
-                                        <p className="text-sm text-gray-200">
-                                          Berechnet aus Abweichungsrate für {selectedStock}
-                                        </p>
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`K = 1 - \\frac{${params.consistency.inconsistentEntries}}{${params.consistency.totalEntries}} = ${calculatedValues.consistency.toFixed(3)}`} />
+                                        </div>
                                       </div>
                                       
-                                      <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                                        <div className="flex items-center gap-2 mb-3">
-                                          <h4 className="font-medium text-white">Formel</h4>
-                                        </div>
-                                        <div className="space-y-3">
-                                          <div className="formula-container bg-muted/30 p-2 rounded">
-                                            <BlockMath math="K = 1 - \frac{\text{Inkonsistente Datenpunkte}}{\text{Gesamte Datenpunkte}}" />
-                                          </div>
-                                          <div className="formula-container bg-muted/30 p-2 rounded">
-                                            <div className="text-xs">
-                                              <BlockMath math={`K = 1 - \\frac{${params.consistency.inconsistentEntries}}{${params.consistency.totalEntries}} = ${calculatedValues.consistency.toFixed(2)}`} />
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div className="text-xs text-gray-200 mt-3">
-                                          Gewichtung: 25% - Hohe Konsistenz reduziert Datenunsicherheit erheblich
-                                        </div>
+                                      <div className="text-xs text-gray-200">
+                                        Bewertung der Datenkonsistenz zwischen verschiedenen Quellen und historischen Trends. Hohe Konsistenz reduziert Datenunsicherheit erheblich.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1634,38 +1606,24 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
                                     <div className="space-y-3 p-2">
-                                      <div className="font-semibold text-sm text-white">Genauigkeit Berechnung</div>
+                                      <div className="font-semibold text-sm text-white">Genauigkeit (Fundamentaldaten)</div>
                                       
-                                      <div className="p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
-                                        <p className="text-sm text-gray-200">
-                                          Bewertung der Richtigkeit der Fundamentaldaten durch Vergleich mit verifizierten Quellen
-                                        </p>
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="A = \frac{\text{Genaue Berichte}}{\text{Gesamte Berichte}}" />
+                                        </div>
                                       </div>
                                       
-                                      <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
-                                        <h4 className="font-semibold mb-2 text-white">Aktueller Score: {(calculatedValues.accuracy * 100).toFixed(1)}%</h4>
-                                        <p className="text-sm text-gray-200">
-                                          Berechnet aus Genauigkeitsrate für {selectedStock}
-                                        </p>
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`A = \\frac{${params.accuracy.accurateReports}}{${params.accuracy.totalReports}} = ${calculatedValues.accuracy.toFixed(3)}`} />
+                                        </div>
                                       </div>
                                       
-                                      <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                                        <div className="flex items-center gap-2 mb-3">
-                                          <h4 className="font-medium text-white">Formel</h4>
-                                        </div>
-                                        <div className="space-y-3">
-                                          <div className="formula-container bg-muted/30 p-2 rounded">
-                                            <BlockMath math="A = \frac{\text{Genaue Berichte}}{\text{Gesamte Berichte}}" />
-                                          </div>
-                                          <div className="formula-container bg-muted/30 p-2 rounded">
-                                            <div className="text-xs">
-                                              <BlockMath math={`A = \\frac{${params.accuracy.accurateReports}}{${params.accuracy.totalReports}} = ${calculatedValues.accuracy.toFixed(3)}`} />
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div className="text-xs text-gray-200 mt-3">
-                                          Gewichtung: 25% - Höhere Genauigkeit reduziert Datenunsicherheit erheblich
-                                        </div>
+                                      <div className="text-xs text-gray-200">
+                                        Bewertung der Richtigkeit der Fundamentaldaten durch Vergleich mit verifizierten Quellen. Höhere Genauigkeit reduziert Datenunsicherheit erheblich.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1835,38 +1793,24 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
                                     <div className="space-y-3 p-2">
-                                      <div className="font-semibold text-sm text-white">Ausreißer-Freiheit Berechnung</div>
+                                      <div className="font-semibold text-sm text-white">Ausreißer-Freiheit (Zeitreihen)</div>
                                       
-                                      <div className="p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
-                                        <p className="text-sm text-gray-200">
-                                          Bewertung der Abwesenheit statistischer Ausreißer in den Zeitreihendaten
-                                        </p>
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="O = 1 - \frac{\text{Ausreißer}}{\text{Beobachtungen}}" />
+                                        </div>
                                       </div>
                                       
-                                      <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
-                                        <h4 className="font-semibold mb-2 text-white">Aktueller Score: {(calculatedValues.outlierFreedom * 100).toFixed(1)}%</h4>
-                                        <p className="text-sm text-gray-200">
-                                          Berechnet aus Ausreißerrate für {selectedStock}
-                                        </p>
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`O = 1 - \\frac{${params.outlierFreedom.outliers}}{${params.outlierFreedom.totalObservations}} = ${calculatedValues.outlierFreedom.toFixed(3)}`} />
+                                        </div>
                                       </div>
                                       
-                                      <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                                        <div className="flex items-center gap-2 mb-3">
-                                          <h4 className="font-medium text-white">Formel</h4>
-                                        </div>
-                                        <div className="space-y-3">
-                                          <div className="formula-container bg-muted/30 p-2 rounded">
-                                            <BlockMath math="O = 1 - \frac{\text{Ausreißer}}{\text{Beobachtungen}}" />
-                                          </div>
-                                          <div className="formula-container bg-muted/30 p-2 rounded">
-                                            <div className="text-xs">
-                                              <BlockMath math={`O = 1 - \\frac{${params.outlierFreedom.outliers}}{${params.outlierFreedom.totalObservations}} = ${calculatedValues.outlierFreedom.toFixed(3)}`} />
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div className="text-xs text-gray-200 mt-3">
-                                          Gewichtung: 25% - Sauberere Daten ohne Ausreißer reduzieren Zeitreihenunsicherheit
-                                        </div>
+                                      <div className="text-xs text-gray-200">
+                                        Bewertung der Abwesenheit statistischer Ausreißer in den Zeitreihendaten. Sauberere Daten ohne Ausreißer reduzieren Zeitreihenunsicherheit.
                                       </div>
                                     </div>
                                   </TooltipContent>
@@ -1890,38 +1834,24 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-lg">
                                     <div className="space-y-3 p-2">
-                                      <div className="font-semibold text-sm text-white">Revision-Stabilität Berechnung</div>
+                                      <div className="font-semibold text-sm text-white">Revision-Stabilität (Zeitreihen)</div>
                                       
-                                      <div className="p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
-                                        <p className="text-sm text-gray-200">
-                                          Bewertung der Stabilität gegen nachträgliche Korrekturen in den Zeitreihendaten
-                                        </p>
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math="R = 1 - \frac{\text{Revisionen}}{\text{Total}}" />
+                                        </div>
                                       </div>
                                       
-                                      <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
-                                        <h4 className="font-semibold mb-2 text-white">Aktueller Score: {(calculatedValues.revisionStability * 100).toFixed(1)}%</h4>
-                                        <p className="text-sm text-gray-200">
-                                          Berechnet aus Revisionsrate für {selectedStock}
-                                        </p>
+                                      <div className="space-y-2">
+                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="formula-container bg-muted/30 p-2 rounded">
+                                          <BlockMath math={`R = 1 - \\frac{${params.revisionStability.revisedValues}}{${params.revisionStability.totalValues}} = ${calculatedValues.revisionStability.toFixed(3)}`} />
+                                        </div>
                                       </div>
                                       
-                                      <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                                        <div className="flex items-center gap-2 mb-3">
-                                          <h4 className="font-medium text-white">Formel</h4>
-                                        </div>
-                                        <div className="space-y-3">
-                                          <div className="formula-container bg-muted/30 p-2 rounded">
-                                            <BlockMath math="R = 1 - \frac{\text{Revisionen}}{\text{Total}}" />
-                                          </div>
-                                          <div className="formula-container bg-muted/30 p-2 rounded">
-                                            <div className="text-xs">
-                                              <BlockMath math={`R = 1 - \\frac{${params.revisionStability.revisedValues}}{${params.revisionStability.totalValues}} = ${calculatedValues.revisionStability.toFixed(3)}`} />
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div className="text-xs text-gray-200 mt-3">
-                                          Gewichtung: 25% - Stabile Daten ohne nachträgliche Revisionen erhöhen Vertrauen
-                                        </div>
+                                      <div className="text-xs text-gray-200">
+                                        Bewertung der Stabilität gegen nachträgliche Korrekturen in den Zeitreihendaten. Stabile Daten ohne nachträgliche Revisionen erhöhen Vertrauen.
                                       </div>
                                     </div>
                                   </TooltipContent>
