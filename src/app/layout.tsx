@@ -19,8 +19,8 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dashboard App",
-  description: "Modern dashboard with violet bloom theme",
+  title: "Unsicherheitsanalyse Dashboard",
+  description: "Moderne Trading-Anwendung zur Analyse von Modellunsicherheit und Datenunsicherheit in AI-Handelssystemen",
 };
 
 export default function RootLayout({
@@ -29,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="de">
       <body
         className={`${plusJakartaSans.variable} ${lora.variable} ${ibmPlexMono.variable} font-sans antialiased`}
       >
