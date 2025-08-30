@@ -182,24 +182,24 @@
     letter-spacing: var(--tracking-normal);
   }
   
-  /* TEMPORÄR DEAKTIVIERT - Hide native scrollbars completely - we'll use custom ones */
-  /* html {
+  /* Hide native scrollbars completely - we'll use custom ones */
+  html {
     scrollbar-width: none; /* Firefox */
-    /* overflow: auto;
-  } */
+    overflow: auto;
+  }
   
-  /* html::-webkit-scrollbar {
+  html::-webkit-scrollbar {
     display: none; /* Chrome/Safari */
-  /* } */
+  }
   
-  /* body {
+  body {
     scrollbar-width: none; /* Firefox */
-    /* overflow-y: auto;
-  } */
+    overflow-y: auto;
+  }
   
-  /* body::-webkit-scrollbar {
+  body::-webkit-scrollbar {
     display: none; /* Chrome/Safari */
-  /* } */
+  }
   
   /* Custom VS Code scrollbar */
   .vscode-scrollbar {
