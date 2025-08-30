@@ -623,6 +623,24 @@ const getInfoBoxContent = (parameterName: string | null) => {
   if (!parameterName) return { title: "Information", content: "Keine Informationen verfügbar." };
   
   const infoContent: Record<string, { title: string; content: string }> = {
+    // Data Uncertainty Dimensions
+    "fundamentalData": {
+      title: "Analyse der Fundamentaldaten",
+      content: "Bewertung der Qualität und Verlässlichkeit von Unternehmens-Fundamentaldaten."
+    },
+    "timeSeriesIntegrity": {
+      title: "Analyse der Zeitreihen-Integrität",
+      content: "Bewertung der Qualität und Konsistenz von Zeitreihendaten."
+    },
+    "newsReliability": {
+      title: "Analyse der Nachrichten-Verlässlichkeit",
+      content: "Bewertung der Qualität und Verlässlichkeit von Nachrichtenquellen."
+    },
+    "tradingVolume": {
+      title: "Analyse der Handelsvolumen-Verteilung",
+      content: "Bewertung der Marktstruktur und Handelsvolumen-Charakteristika."
+    },
+    // Model Uncertainty Dimensions
     "Epistemische Unsicherheit": {
       title: "Epistemische Unsicherheit – Modellwissen",
       content: "Epistemische Unsicherheit entsteht durch begrenzte Trainingsdaten und Modellkomplexität. Sie kann durch mehr Daten reduziert werden und zeigt, wie sicher sich das Modell bei seinen Vorhersagen ist."
@@ -1454,7 +1472,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       return (
                         <>
                           {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
+                          <div className="mt-4 p-3 bg-primary/10 border border-primary/30 rounded-lg violet-bloom-card">
                             <p className="text-sm text-muted-foreground">
                               Die Fundamentaldaten-Qualität wird aus 5 kritischen Parametern berechnet: Vollständigkeit, Aktualität, Konsistenz, Genauigkeit und Stabilität der Finanzdaten.
                             </p>
@@ -1723,7 +1741,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       return (
                         <>
                           {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
+                          <div className="mt-4 p-3 bg-primary/10 border border-primary/30 rounded-lg violet-bloom-card">
                             <p className="text-sm text-muted-foreground">
                               Die Zeitreihen-Integrität bewertet die Qualität der Kursdaten über die Zeit anhand von 4 Dimensionen: Vollständigkeit, Ausreißer-Freiheit, Revision-Stabilität und Kontinuität.
                             </p>
@@ -1953,7 +1971,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       return (
                         <>
                           {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
+                          <div className="mt-4 p-3 bg-primary/10 border border-primary/30 rounded-lg violet-bloom-card">
                             <p className="text-sm text-muted-foreground">
                               Die Nachrichten-Verlässlichkeit bewertet die Qualität von Marktinformationen durch 4 gewichtete Dimensionen: Quellenseriosität, historische Trefferquote, Bestätigung durch mehrere Quellen und Verzerrungsanalyse.
                             </p>
@@ -2213,7 +2231,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       return (
                         <>
                           {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
+                          <div className="mt-4 p-3 bg-primary/10 border border-primary/30 rounded-lg violet-bloom-card">
                             <p className="text-sm text-muted-foreground">
                               Die Handelsvolumen-Verteilung bewertet die Marktstruktur durch 3 gewichtete Dimensionen: Marktteilnehmer-Konzentration, Anomalous Spikes und Zeit-Stabilität des Handelsvolumens.
                             </p>
