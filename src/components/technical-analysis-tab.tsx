@@ -642,23 +642,23 @@ const getInfoBoxContent = (parameterName: string | null) => {
     },
     // Model Uncertainty Dimensions
     "Epistemische Unsicherheit": {
-      title: "Epistemische Unsicherheit – Modellwissen",
+      title: "Analyse der epistemischen Unsicherheit",
       content: "Epistemische Unsicherheit entsteht durch begrenzte Trainingsdaten und Modellkomplexität. Sie kann durch mehr Daten reduziert werden und zeigt, wie sicher sich das Modell bei seinen Vorhersagen ist."
     },
     "Aleatorische Unsicherheit": {
-      title: "Aleatorische Unsicherheit – Marktvolatilität", 
+      title: "Analyse der aleatorischen Unsicherheit", 
       content: "Aleatorische Unsicherheit stammt aus der inhärenten Zufälligkeit der Finanzmärkte. Sie ist irreduzibel und spiegelt die natürliche Volatilität der Aktienkurse wider."
     },
     "Overfitting-Risiko": {
-      title: "Overfitting-Risiko – Generalisierungsfähigkeit",
+      title: "Analyse des Overfitting-Risikos",
       content: "Overfitting-Risiko misst, wie gut das Modell auf neue, ungesehene Daten generalisiert. Hohe Werte deuten auf Überanpassung an Trainingsdaten hin."
     },
     "Robustheit": {
-      title: "Robustheit/Stabilität – Eingabesensitivität",
+      title: "Analyse der Robustheit",
       content: "Robustheit misst, wie empfindlich das Modell auf kleine Änderungen in den Eingabedaten reagiert. Instabile Modelle ändern Empfehlungen bei minimalen Preisänderungen."
     },
     "Erklärungs-Konsistenz": {
-      title: "Erklärungs-Konsistenz – Interpretierbarkeit",
+      title: "Analyse der Erklärungs-Konsistenz",
       content: "Selbst bei gleichen Eingaben können verschiedene Trainingsläufe unterschiedliche Erklärungen liefern ('warum' es eine Empfehlung gibt). Wichtig für Vertrauen und Nachvollziehbarkeit."
     }
   };
@@ -1504,20 +1504,20 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="font-semibold text-sm text-white">Vollständigkeit (Fundamentaldaten)</div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="text-xs text-white font-medium">Generelle Formel:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math="C = 1 - \frac{\text{Fehlende Werte}}{\text{Gesamte Werte}}" />
                                         </div>
                                       </div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="text-xs text-white font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math={`C = 1 - \\frac{${params.completeness.missingValues}}{${params.completeness.totalValues}} = ${(calculatedValues.completeness).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
+                                      <div className="text-xs text-white">
                                         Misst den Anteil verfügbarer Fundamentaldaten. Höhere Werte bedeuten weniger fehlende Daten.
                                       </div>
                                     </div>
@@ -1545,20 +1545,20 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="font-semibold text-sm text-white">Aktualität (Fundamentaldaten)</div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="text-xs text-white font-medium">Generelle Formel:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math="T = \max(0, 1 - \frac{\text{Tage alt}}{\text{Max. akzeptable Tage}})" />
                                         </div>
                                       </div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="text-xs text-white font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math={`T = \\max(0, 1 - \\frac{${params.timeliness.daysOld}}{${params.timeliness.maxAcceptableDays}}) = ${calculatedValues.timeliness.toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
+                                      <div className="text-xs text-white">
                                         Bewertung der Aktualität der Fundamentaldaten basierend auf der Verzögerung seit letztem Update. Neuere Daten erhalten höhere Bewertungen.
                                       </div>
                                     </div>
@@ -1586,20 +1586,20 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="font-semibold text-sm text-white">Konsistenz (Fundamentaldaten)</div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="text-xs text-white font-medium">Generelle Formel:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math="K = 1 - \frac{\text{Inkonsistente Datenpunkte}}{\text{Gesamte Datenpunkte}}" />
                                         </div>
                                       </div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="text-xs text-white font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math={`K = 1 - \\frac{${params.consistency.inconsistentEntries}}{${params.consistency.totalEntries}} = ${calculatedValues.consistency.toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
+                                      <div className="text-xs text-white">
                                         Bewertung der Datenkonsistenz zwischen verschiedenen Quellen und historischen Trends. Hohe Konsistenz reduziert Datenunsicherheit erheblich.
                                       </div>
                                     </div>
@@ -1627,20 +1627,20 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="font-semibold text-sm text-white">Genauigkeit (Fundamentaldaten)</div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="text-xs text-white font-medium">Generelle Formel:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math="A = \frac{\text{Genaue Berichte}}{\text{Gesamte Berichte}}" />
                                         </div>
                                       </div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="text-xs text-white font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math={`A = \\frac{${params.accuracy.accurateReports}}{${params.accuracy.totalReports}} = ${calculatedValues.accuracy.toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
+                                      <div className="text-xs text-white">
                                         Bewertung der Richtigkeit der Fundamentaldaten durch Vergleich mit verifizierten Quellen. Höhere Genauigkeit reduziert Datenunsicherheit erheblich.
                                       </div>
                                     </div>
@@ -1668,20 +1668,20 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="font-semibold text-sm text-white">Stabilität (Fundamentaldaten)</div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="text-xs text-white font-medium">Generelle Formel:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math="S = 1 - \frac{\text{Revisionen}}{\text{Datenpunkte}}" />
                                         </div>
                                       </div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="text-xs text-white font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math={`S = 1 - \\frac{${params.stability.revisions}}{${params.stability.totalDataPoints}} = ${(calculatedValues.stability).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
+                                      <div className="text-xs text-white">
                                         Misst wie oft Daten nachträglich korrigiert wurden. Rev = Anzahl Revisionen, D = Gesamte Datenpunkte. Weniger Revisionen bedeuten stabilere Daten.
                                       </div>
                                     </div>
@@ -1713,7 +1713,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                         <BlockMath math="\text{Score} = \frac{C + T + K + A + S}{5}" />
                                       </div>
                                     </div>
-                                    <div className="text-xs text-gray-200">
+                                    <div className="text-xs text-white">
                                       Gleichgewichteter Durchschnitt aller 5 Parameter
                                     </div>
                                   </div>
@@ -1773,20 +1773,20 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="font-semibold text-sm text-white">Vollständigkeit (Zeitreihen)</div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="text-xs text-white font-medium">Generelle Formel:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math="C = 1 - \frac{\text{Fehlende Zeitpunkte}}{\text{Erwartete Zeitpunkte}}" />
                                         </div>
                                       </div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="text-xs text-white font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math={`C = 1 - \\frac{${params.completeness.missingTimepoints}}{${params.completeness.expectedTimepoints}} = ${(calculatedValues.completeness).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
+                                      <div className="text-xs text-white">
                                         Misst Lücken in der Zeitreihe. M = Fehlende Zeitpunkte, E = Erwartete Zeitpunkte. Höhere Werte bedeuten vollständigere Datenreihen.
                                       </div>
                                     </div>
@@ -1814,20 +1814,20 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="font-semibold text-sm text-white">Ausreißer-Freiheit (Zeitreihen)</div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="text-xs text-white font-medium">Generelle Formel:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math="O = 1 - \frac{\text{Ausreißer}}{\text{Beobachtungen}}" />
                                         </div>
                                       </div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="text-xs text-white font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math={`O = 1 - \\frac{${params.outlierFreedom.outliers}}{${params.outlierFreedom.totalObservations}} = ${calculatedValues.outlierFreedom.toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
+                                      <div className="text-xs text-white">
                                         Bewertung der Abwesenheit statistischer Ausreißer in den Zeitreihendaten. Sauberere Daten ohne Ausreißer reduzieren Zeitreihenunsicherheit.
                                       </div>
                                     </div>
@@ -1855,20 +1855,20 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="font-semibold text-sm text-white">Revision-Stabilität (Zeitreihen)</div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="text-xs text-white font-medium">Generelle Formel:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math="R = 1 - \frac{\text{Revisionen}}{\text{Total}}" />
                                         </div>
                                       </div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="text-xs text-white font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math={`R = 1 - \\frac{${params.revisionStability.revisedValues}}{${params.revisionStability.totalValues}} = ${calculatedValues.revisionStability.toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
+                                      <div className="text-xs text-white">
                                         Bewertung der Stabilität gegen nachträgliche Korrekturen in den Zeitreihendaten. Stabile Daten ohne nachträgliche Revisionen erhöhen Vertrauen.
                                       </div>
                                     </div>
@@ -1896,20 +1896,20 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="font-semibold text-sm text-white">Kontinuität (Zeitreihen)</div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="text-xs text-white font-medium">Generelle Formel:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math="K = 1 - \frac{\text{Lücken}}{\text{Intervalle}}" />
                                         </div>
                                       </div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="text-xs text-white font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math={`K = 1 - \\frac{${params.continuity.gaps}}{${params.continuity.totalIntervals}} = ${(calculatedValues.continuity).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
+                                      <div className="text-xs text-white">
                                         Misst zeitliche Lücken in der Datenreihe. G = Gaps, I = Gesamte Intervalle. Höhere Werte bedeuten kontinuierlichere Daten.
                                       </div>
                                     </div>
@@ -1941,7 +1941,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                         <BlockMath math="\text{Score} = \frac{C + O + R + K}{4}" />
                                       </div>
                                     </div>
-                                    <div className="text-xs text-gray-200">
+                                    <div className="text-xs text-white">
                                       Gleichgewichteter Durchschnitt aller 4 Parameter
                                     </div>
                                   </div>
@@ -2003,20 +2003,20 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="font-semibold text-sm text-white">Quellenseriosität (News)</div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="text-xs text-white font-medium">Generelle Formel:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math="R = \frac{\sum \text{Gewichtung} \cdot \text{Zuverlässigkeit}}{\text{Anzahl Quellen}}" />
                                         </div>
                                       </div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="text-xs text-white font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math={`R = ${(calculatedValues.sourceReliability).toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
+                                      <div className="text-xs text-white">
                                         Bewertet die Glaubwürdigkeit der Nachrichtenquellen. w_i = Gewichtung, r_i = Zuverlässigkeit, N = Anzahl Nachrichten (Reuters=0.98, Bloomberg=0.95).
                                       </div>
                                     </div>
@@ -2047,20 +2047,20 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="font-semibold text-sm text-white">Reputation Accuracy (News-Verlässlichkeit)</div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="text-xs text-white font-medium">Generelle Formel:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math="P = 1 - \frac{\text{Falsche Nachrichten}}{\text{Gesamte Nachrichten}}" />
                                         </div>
                                       </div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="text-xs text-white font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math={`P = 1 - \\frac{${params.reputationAccuracy.falseNews}}{${params.reputationAccuracy.totalNews}} = ${calculatedValues.reputationAccuracy.toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
+                                      <div className="text-xs text-white">
                                         Bewertung der historischen Genauigkeit von Nachrichtenquellen basierend auf vergangenen Falschmeldungen. Höhere Werte bedeuten weniger widerlegte Nachrichten.
                                       </div>
                                     </div>
@@ -2091,20 +2091,20 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="font-semibold text-sm text-white">Cross-Source Consensus (News-Verlässlichkeit)</div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="text-xs text-white font-medium">Generelle Formel:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math="K = \frac{\text{Bestätigte Nachrichten}}{\text{Gesamte Nachrichten}}" />
                                         </div>
                                       </div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="text-xs text-white font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math={`K = \\frac{${params.crossSourceConsensus.confirmedNews}}{${params.crossSourceConsensus.totalNews}} = ${calculatedValues.crossSourceConsensus.toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
+                                      <div className="text-xs text-white">
                                         Bewertung der Übereinstimmung zwischen verschiedenen unabhängigen Nachrichtenquellen. Höhere Werte bedeuten besseren Konsens zwischen Quellen.
                                       </div>
                                     </div>
@@ -2135,20 +2135,20 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="font-semibold text-sm text-white">Bias-Check (News-Verlässlichkeit)</div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="text-xs text-white font-medium">Generelle Formel:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math="B = 1 - \frac{\text{Bias-Index}}{\text{Max-Bias-Wert}}" />
                                         </div>
                                       </div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="text-xs text-white font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math={`B = 1 - \\frac{${params.biasCheck.biasIndex}}{${params.biasCheck.maxBiasValue}} = ${calculatedValues.biasCheck.toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
+                                      <div className="text-xs text-white">
                                         Bewertung der Neutralität und Objektivität der Nachrichtenquellen. Höhere Werte bedeuten weniger Bias und objektivere Berichterstattung.
                                       </div>
                                     </div>
@@ -2183,7 +2183,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                         <BlockMath math="Q_{news} = w_1 \cdot R + w_2 \cdot P + w_3 \cdot K + w_4 \cdot (1-B)" />
                                       </div>
                                     </div>
-                                    <div className="text-xs text-gray-200">
+                                    <div className="text-xs text-white">
                                       Gewichteter Durchschnitt: w₁=30%, w₂=30%, w₃=25%, w₄=15%
                                     </div>
                                   </div>
@@ -2263,20 +2263,20 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="font-semibold text-sm text-white">Konzentration (Handelsvolumen-Verteilung)</div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="text-xs text-white font-medium">Generelle Formel:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math="S = 1 - \frac{\text{Top-Trader-Volumen}}{\text{Gesamt-Volumen}}" />
                                         </div>
                                       </div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="text-xs text-white font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math={`S = 1 - \\frac{${params.concentration.topTradersVolume}}{${params.concentration.totalVolume}} = ${calculatedValues.concentration.toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
+                                      <div className="text-xs text-white">
                                         Bewertung der Marktkonzentration durch Handelsvolumen-Verteilung. Höhere Werte bedeuten weniger Marktkonzentration und fairere Verteilung.
                                       </div>
                                     </div>
@@ -2307,20 +2307,20 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="font-semibold text-sm text-white">Anomalous Spikes (Handelsvolumen-Verteilung)</div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="text-xs text-white font-medium">Generelle Formel:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math="A = 1 - \frac{\text{Anomale Spitzen}}{\text{Handelstage}}" />
                                         </div>
                                       </div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="text-xs text-white font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math={`A = 1 - \\frac{${params.anomalousSpikes.spikes}}{${params.anomalousSpikes.totalTradingDays}} = ${calculatedValues.anomalousSpikes.toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
+                                      <div className="text-xs text-white">
                                         Erkennung ungewöhnlicher Handelsaktivität und Volumen-Anomalien. Höhere Werte bedeuten normalere und vorhersagbarere Volumenmuster.
                                       </div>
                                     </div>
@@ -2351,20 +2351,20 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                       <div className="font-semibold text-sm text-white">Zeitstabilität (Handelsvolumen)</div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+                                        <div className="text-xs text-white font-medium">Generelle Formel:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math="T = 1 - \frac{\text{Variationskoeffizient}}{\text{Max-Variation}}" />
                                         </div>
                                       </div>
                                       
                                       <div className="space-y-2">
-                                        <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+                                        <div className="text-xs text-white font-medium">Aktuelle Berechnung für {selectedStock}:</div>
                                         <div className="formula-container bg-muted/30 p-2 rounded">
                                           <BlockMath math={`T = 1 - \\frac{${params.timeStability.varianceCoefficient.toFixed(2)}}{${params.timeStability.maxVarianceCoefficient.toFixed(2)}} = ${calculatedValues.timeStability.toFixed(3)}`} />
                                         </div>
                                       </div>
                                       
-                                      <div className="text-xs text-gray-200">
+                                      <div className="text-xs text-white">
                                         Misst die Stabilität des Handelsvolumens über Zeit. Höhere Werte bedeuten stabilere und vorhersagbarere Volumenentwicklung.
                                       </div>
                                     </div>
@@ -2399,7 +2399,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                         <BlockMath math="Q_{volume} = w_1 \cdot S + w_2 \cdot A + w_3 \cdot T" />
                                       </div>
                                     </div>
-                                    <div className="text-xs text-gray-200">
+                                    <div className="text-xs text-white">
                                       Gewichteter Durchschnitt: w₁=40%, w₂=30%, w₃=30%
                                     </div>
                                   </div>
@@ -2424,7 +2424,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       return (
                         <>
                           {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
+                          <div className="mt-4 p-3 bg-primary/10 border border-primary/30 rounded-lg violet-bloom-card">
                             <p className="text-sm text-muted-foreground">
                               {getInfoBoxContent(parameterName).content}
                             </p>
