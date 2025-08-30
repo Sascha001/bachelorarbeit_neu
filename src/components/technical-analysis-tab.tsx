@@ -814,7 +814,13 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
         <div className="space-y-4">
           <h4 className="font-medium text-foreground">Detaillierte Parameter-Aufschlüsselung:</h4>
           
-          {Object.entries(param.rawData).map(([key, value], index) => (
+          {Object.entries(param.rawData)
+            .filter(([key]) => !key.includes('Unsicherheit (E)') && 
+                               !key.includes('Unsicherheit (A)') && 
+                               !key.includes('Score (C)') && 
+                               !key.includes('Robustheit (R)') && 
+                               !key.includes('Konsistenz (X)'))
+            .map(([key, value], index) => (
             <div key={key} className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <span className="font-medium">{index + 1}. {renderParameterName(key)}</span>
