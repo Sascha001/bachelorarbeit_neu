@@ -1,6 +1,7 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { HelpCircle } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -921,6 +922,210 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
   };
   return params[stock] || params.AAPL;
 };
+
+// Function to create pop-up content for human uncertainty parameters
+const getHumanUncertaintyParameterPopup = (parameterName: string, selectedStock: string, humanParams: HumanUncertaintyParams) => {
+  // Calculate all human uncertainty values
+  const calculatedValues = calculateAllHumanUncertainty(humanParams);
+  
+  const parameterMap: Record<string, {
+    title: string;
+    icon: React.ReactNode;
+    description: string;
+    importance: string;
+    formula: string;
+    currentValue: number;
+    rawData: Record<string, string | number>;
+  }> = {
+    "perceivedUncertainty": {
+      title: "Wahrgenommene Unsicherheit",
+      icon: <Users className="h-6 w-6 text-orange-600" />,
+      description: "Subjektive Einschätzung der eigenen Unsicherheit bei Trading-Entscheidungen basierend auf 1-5 Likert-Skala.",
+      importance: "Zeigt das bewusste Unsicherheitsgefühl des Traders. Beeinflusst direkt Entscheidungsverhalten und Risikobereitschaft.",
+      formula: "U_{perceived} = \\frac{L_{response} - 1}{L_{max} - 1}",
+      currentValue: calculatedValues.perceivedUncertainty,
+      rawData: {
+        "Likert-Antwort": `${humanParams.perceivedUncertainty.likertResponse}/${humanParams.perceivedUncertainty.maxScale}`,
+        "Normalisierter Score": (calculatedValues.perceivedUncertainty * 100).toFixed(1) + "%",
+        "Interpretierbarkeit": calculatedValues.perceivedUncertainty > 0.6 ? "Hoch" : calculatedValues.perceivedUncertainty > 0.4 ? "Mittel" : "Niedrig"
+      }
+    },
+    "epistemicUncertaintyHuman": {
+      title: "Epistemische Unsicherheit (Mensch)",
+      icon: <Brain className="h-6 w-6 text-purple-600" />,
+      description: "Wissenslücken basierend auf 'unklar'-Antworten bei Fragen zum Marktverständnis und Entscheidungsgrundlagen.",
+      importance: "Misst explizites Unwissen. Hohe Werte deuten auf Bedarf für zusätzliche Information oder Training hin.",
+      formula: "E_{human} = \\frac{\\text{Unklare Antworten}}{\\text{Gesamte Fragen}}",
+      currentValue: calculatedValues.epistemicUncertainty,
+      rawData: {
+        "Unklare Antworten": humanParams.epistemicUncertainty.unclearAnswers.toString(),
+        "Gesamte Fragen": humanParams.epistemicUncertainty.totalQuestions.toString(),
+        "Wissens-Score": (calculatedValues.epistemicUncertainty * 100).toFixed(1) + "%"
+      }
+    },
+    "aleatoricUncertaintyHuman": {
+      title: "Aleatorische Unsicherheit (Mensch)",
+      icon: <Activity className="h-6 w-6 text-blue-600" />,
+      description: "Inkonsistenz und Widersprüche bei ähnlichen Entscheidungssituationen durch Analyse des Konsistenz-Scores.",
+      importance: "Zeigt zufällige Schwankungen im Entscheidungsverhalten. Niedrige Konsistenz deutet auf unvorhersagbare Entscheidungen hin.",
+      formula: "A_{human} = 1 - \\frac{\\text{Konsistenz-Score}}{\\text{Max. Konsistenz}}",
+      currentValue: calculatedValues.aleatoricUncertainty,
+      rawData: {
+        "Konsistenz-Score": humanParams.aleatoricUncertainty.consistencyScore.toString(),
+        "Max. Konsistenz": humanParams.aleatoricUncertainty.maxPossibleConsistency.toString(),
+        "Inkonsistenz-Rate": (calculatedValues.aleatoricUncertainty * 100).toFixed(1) + "%"
+      }
+    },
+    "decisionStabilityHuman": {
+      title: "Entscheidungsstabilität",
+      icon: <CheckCircle className="h-6 w-6 text-green-600" />,
+      description: "Robustheit von Entscheidungen gegen kleine Input-Änderungen zur Messung der Entscheidungsstabilität.",
+      importance: "Kritisch für verlässliche Trading-Entscheidungen. Instabile Entscheidungen führen zu inkonsistenten Portfolios.",
+      formula: "S_{decision} = 1 - \\frac{\\text{Entscheidungsänderungen}}{\\text{Gesamte Tests}}",
+      currentValue: calculatedValues.decisionStability,
+      rawData: {
+        "Entscheidungsänderungen": humanParams.decisionStability.decisionChange.toString(),
+        "Gesamte Tests": humanParams.decisionStability.inputChange.toString(),
+        "Stabilität-Score": (calculatedValues.decisionStability * 100).toFixed(1) + "%"
+      }
+    }
+  };
+
+  const param = parameterMap[parameterName];
+  if (!param) return <div>Parameter nicht gefunden</div>;
+
+  return (
+    <>
+      <div className="space-y-4 mb-6">
+        <div className="flex items-center gap-3">
+          {param.icon}
+          <h3 className="text-xl font-semibold">{param.title}</h3>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button className="p-1 rounded-full hover:bg-muted/50 transition-colors">
+                  <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-md">
+                <div className="p-3 space-y-2">
+                  <div className="font-medium text-sm text-white">{param.importance}</div>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+        <p className="text-muted-foreground text-sm leading-relaxed">
+          {param.description}
+        </p>
+      </div>
+
+      {/* Overall Score - matching Modellunsicherheit structure */}
+      <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+        <h4 className="font-semibold mb-2 text-primary">Gesamtscore: {(param.currentValue * 100).toFixed(1)}%</h4>
+        <p className="text-sm text-muted-foreground">
+          Bewertung für {selectedStock}
+        </p>
+      </div>
+      
+      <div className="space-y-6 py-6">
+        
+        {/* Parameter-Aufschlüsselung */}
+        <div className="space-y-4">
+          <h4 className="font-medium text-foreground">Detaillierte Parameter-Aufschlüsselung:</h4>
+          
+          {Object.entries(param.rawData).map(([key, value], index) => (
+            <div key={key} className="p-3 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="font-medium">{index + 1}. {key}</span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button className="p-1 rounded-full hover:bg-muted/50 transition-colors">
+                        <Info className="h-3 w-3 text-muted-foreground hover:text-primary" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-sm">
+                      <div className="p-2">
+                        <p className="text-xs text-white leading-relaxed">
+                          {key === "Likert-Antwort" && "Selbsteinschätzung auf 1-5 Skala, wobei höhere Werte mehr Unsicherheit bedeuten."}
+                          {key === "Normalisierter Score" && "Auf 0-100% normalisierte Unsicherheit für bessere Vergleichbarkeit."}
+                          {key === "Interpretierbarkeit" && "Qualitative Bewertung der Unsicherheitsstärke (Niedrig/Mittel/Hoch)."}
+                          {key === "Unklare Antworten" && "Anzahl der Fragen, bei denen 'unklar' als Antwort gegeben wurde."}
+                          {key === "Gesamte Fragen" && "Gesamtanzahl der gestellten Wissensfragen zur Markteinschätzung."}
+                          {key === "Wissens-Score" && "Anteil der unklaren Antworten als Prozentsatz der Wissenslücken."}
+                          {key === "Konsistenz-Score" && "Numerische Bewertung der Entscheidungskonsistenz bei ähnlichen Szenarien."}
+                          {key === "Max. Konsistenz" && "Maximaler Konsistenz-Wert, der erreicht werden kann."}
+                          {key === "Inkonsistenz-Rate" && "Umgekehrte Konsistenz als Maß für aleatorische Unsicherheit."}
+                          {key === "Entscheidungsänderungen" && "Anzahl der Fälle, in denen sich Entscheidungen bei kleinen Input-Änderungen änderten."}
+                          {key === "Gesamte Tests" && "Gesamtanzahl der Stabilitätstests mit leicht veränderten Eingaben."}
+                          {key === "Stabilität-Score" && "Anteil stabiler Entscheidungen als Robustheitsmaß."}
+                        </p>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Aktueller Wert: <span className="font-medium text-foreground">{value}</span> für {selectedStock}
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        {/* Gesamtberechnung */}
+        <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+          <div className="flex items-center gap-2 mb-4">
+            <h4 className="font-medium text-green-700">Gesamtberechnung</h4>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button className="p-1 rounded-full hover:bg-muted/50">
+                    <Info className="h-4 w-4 text-muted-foreground" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent className="max-w-lg">
+                  <div className="space-y-3 p-2">
+                    <div className="font-semibold text-sm text-white">{param.title} Gesamtformel</div>
+                    <div className="formula-container bg-muted/30 p-2 rounded">
+                      <div className="flex items-center justify-center min-h-[50px]">
+                        <BlockMath math={param.formula} />
+                      </div>
+                    </div>
+                    <div className="text-xs text-white">
+                      {parameterName === "perceivedUncertainty" && "Normalisiert subjektive Selbsteinschätzung auf 0-1 Skala"}
+                      {parameterName === "epistemicUncertaintyHuman" && "Misst explizites Unwissen durch unklare Antworten"}
+                      {parameterName === "aleatoricUncertaintyHuman" && "Quantifiziert Inkonsistenz in ähnlichen Entscheidungssituationen"}
+                      {parameterName === "decisionStabilityHuman" && "Bewertet Robustheit gegen kleine Input-Änderungen"}
+                    </div>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          
+          <div className="formula-container bg-muted/30 p-2 rounded text-xs">
+            <div className="flex items-center justify-center min-h-[40px]">
+              <BlockMath math={param.formula.replace(/\\text\{[^}]*\}/g, (match) => {
+                // Replace placeholder text with actual values
+                if (match.includes('L_{response}')) return humanParams.perceivedUncertainty?.likertResponse?.toString() || '4';
+                if (match.includes('L_{max}')) return humanParams.perceivedUncertainty?.maxScale?.toString() || '5';
+                if (match.includes('Unklare Antworten')) return humanParams.epistemicUncertainty?.unclearAnswers?.toString() || '2';
+                if (match.includes('Gesamte Fragen')) return humanParams.epistemicUncertainty?.totalQuestions?.toString() || '10';
+                if (match.includes('Konsistenz-Score')) return humanParams.aleatoricUncertainty?.consistencyScore?.toString() || '8';
+                if (match.includes('Max. Konsistenz')) return humanParams.aleatoricUncertainty?.maxPossibleConsistency?.toString() || '10';
+                if (match.includes('Entscheidungsänderungen')) return humanParams.decisionStability?.decisionChange?.toString() || '2';
+                if (match.includes('Gesamte Tests')) return humanParams.decisionStability?.inputChange?.toString() || '15';
+                return match;
+              })} />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </>
+  );
+}
 
 // Data Parameter Export Functions
 export const getNewsReliabilityParams = (_stock: string): NewsReliabilityParams => {
@@ -2463,48 +2668,18 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     {/* Human Uncertainty Info Panels */}
                     {activeInfoBox === 'perceivedUncertainty' && (() => {
                       const humanParams = getHumanUncertaintyParams(selectedStock)
-                      const humanCalculated = calculateAllHumanUncertainty(humanParams)
-                      const score = (humanCalculated.perceivedUncertainty * 100).toFixed(1)
-                      
                       return (
                         <>
                           {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                          <div className="mt-4 p-3 bg-primary/10 border border-primary/30 rounded-lg violet-bloom-card">
                             <p className="text-sm text-muted-foreground">
-                              Bewertung des subjektiven Unsicherheitsgefühls basierend auf 1-5 Likert-Skala zur Einschätzung der eigenen Unsicherheit bei Trading-Entscheidungen.
+                              Subjektive Einschätzung der eigenen Unsicherheit bei Trading-Entscheidungen basierend auf 1-5 Likert-Skala.
                             </p>
                           </div>
                           
-                          {/* Overall Score */}
-                          <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
-                            <h4 className="font-semibold mb-2 text-primary">Aktueller Score: {score}%</h4>
-                            <p className="text-sm text-muted-foreground">
-                              Berechnet für {selectedStock} aus Likert-Skala Antwort
-                            </p>
-                          </div>
-                          
-                          {/* Formula Explanation */}
-                          <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                            <div className="flex items-center gap-2 mb-4">
-                              <h4 className="font-medium text-green-700">Formelberechnung</h4>
-                            </div>
-                            
-                            <div className="space-y-4">
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
-                                <div className="flex items-center justify-center min-h-[60px]">
-                                  <BlockMath math="P = \frac{\text{Likert Response} - 1}{\text{Max Scale} - 1}" />
-                                </div>
-                              </div>
-                              
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
-                                <div className="flex items-center justify-center min-h-[50px]">
-                                  <BlockMath math={`P = \\frac{${humanParams.perceivedUncertainty.likertResponse} - 1}{${humanParams.perceivedUncertainty.maxScale} - 1} = ${humanCalculated.perceivedUncertainty.toFixed(3)}`} />
-                                </div>
-                              </div>
-                            </div>
-                            <div className="text-xs text-muted-foreground mt-3">
-                              30% Gewichtung im Gesamtscore der menschlichen Unsicherheit
-                            </div>
+                          {/* Parameter-spezifische Details mit getHumanUncertaintyParameterPopup */}
+                          <div className="mt-6">
+                            {getHumanUncertaintyParameterPopup('perceivedUncertainty', selectedStock, humanParams)}
                           </div>
                         </>
                       )
@@ -2512,48 +2687,18 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
 
                     {activeInfoBox === 'epistemicUncertaintyHuman' && (() => {
                       const humanParams = getHumanUncertaintyParams(selectedStock)
-                      const humanCalculated = calculateAllHumanUncertainty(humanParams)
-                      const score = (humanCalculated.epistemicUncertainty * 100).toFixed(1)
-                      
                       return (
                         <>
                           {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                          <div className="mt-4 p-3 bg-primary/10 border border-primary/30 rounded-lg violet-bloom-card">
                             <p className="text-sm text-muted-foreground">
-                              Bewertung der Wissenslücken basierend auf &quot;unklar&quot;-Antworten bei Fragen zum Marktverständnis und Entscheidungsgrundlagen.
+                              Bewertung der Wissenslücken basierend auf "unklar"-Antworten bei Fragen zum Marktverständnis und Entscheidungsgrundlagen.
                             </p>
                           </div>
                           
-                          {/* Overall Score */}
-                          <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
-                            <h4 className="font-semibold mb-2 text-primary">Aktueller Score: {score}%</h4>
-                            <p className="text-sm text-muted-foreground">
-                              Berechnet für {selectedStock} aus Wissenslücken-Analyse
-                            </p>
-                          </div>
-                          
-                          {/* Formula Explanation */}
-                          <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                            <div className="flex items-center gap-2 mb-4">
-                              <h4 className="font-medium text-green-700">Formelberechnung</h4>
-                            </div>
-                            
-                            <div className="space-y-4">
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
-                                <div className="flex items-center justify-center min-h-[60px]">
-                                  <BlockMath math="E_{human} = \frac{\text{Unklare Antworten}}{\text{Gesamte Fragen}}" />
-                                </div>
-                              </div>
-                              
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
-                                <div className="flex items-center justify-center min-h-[50px]">
-                                  <BlockMath math={`E_{human} = \\frac{${humanParams.epistemicUncertainty.unclearAnswers}}{${humanParams.epistemicUncertainty.totalQuestions}} = ${humanCalculated.epistemicUncertainty.toFixed(3)}`} />
-                                </div>
-                              </div>
-                            </div>
-                            <div className="text-xs text-muted-foreground mt-3">
-                              25% Gewichtung - Wissenslücken führen zu höherer Unsicherheit
-                            </div>
+                          {/* Parameter-spezifische Details mit getHumanUncertaintyParameterPopup */}
+                          <div className="mt-6">
+                            {getHumanUncertaintyParameterPopup('epistemicUncertaintyHuman', selectedStock, humanParams)}
                           </div>
                         </>
                       )
