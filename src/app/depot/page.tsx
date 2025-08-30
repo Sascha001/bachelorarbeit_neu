@@ -202,13 +202,13 @@ export default function DepotPage() {
             <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card">
               <div className="space-y-1">
                 <p className="text-sm text-muted-foreground">Gesamtes Portfolio</p>
-                <p className="text-2xl font-bold text-foreground">€{portfolioData.total.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-foreground" suppressHydrationWarning>€{portfolioData.total.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                 <div className="flex items-center gap-2">
                   <span className="text-xs bg-green-500/10 text-green-600 px-2 py-1 rounded-full">
                     ↗ +{portfolioData.change}% heute
                   </span>
                 </div>
-                <p className="text-xs text-muted-foreground">+€{((portfolioData.total * portfolioData.change) / 100).toFixed(2)} heute</p>
+                <p className="text-xs text-muted-foreground" suppressHydrationWarning>+€{((portfolioData.total * portfolioData.change) / 100).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} heute</p>
               </div>
             </div>
 
@@ -231,10 +231,10 @@ export default function DepotPage() {
                 <p className="text-2xl font-bold text-foreground">{portfolioData.largestPosition}%</p>
                 <div className="flex items-center gap-2">
                   <span className="text-xs bg-orange-500/10 text-orange-600 px-2 py-1 rounded-full">
-                    €{portfolioData.largestPositionValue.toLocaleString()}
+                    €{portfolioData.largestPositionValue.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                 </div>
-                <p className="text-xs text-muted-foreground">AAPL (€{portfolioData.largestPositionValue.toLocaleString()})</p>
+                <p className="text-xs text-muted-foreground" suppressHydrationWarning>AAPL (€{portfolioData.largestPositionValue.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</p>
               </div>
             </div>
 
@@ -341,7 +341,7 @@ export default function DepotPage() {
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="font-mono font-bold">€{category.value.toLocaleString()}</span>
+                          <span className="font-mono font-bold" suppressHydrationWarning>€{category.value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                           <span className="text-sm text-muted-foreground">{category.percentage}%</span>
                           {expandedCategory === category.name ? (
                             <ChevronUp className="w-4 h-4" />
@@ -361,7 +361,7 @@ export default function DepotPage() {
                                   <span className="text-xs text-muted-foreground">({position.symbol})</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                  <span className="text-sm font-mono">€{position.value.toLocaleString()}</span>
+                                  <span className="text-sm font-mono" suppressHydrationWarning>€{position.value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                   <span className="text-xs text-muted-foreground">{position.percentage}%</span>
                                 </div>
                               </div>

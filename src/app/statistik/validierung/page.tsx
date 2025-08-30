@@ -251,7 +251,7 @@ export default function ValidierungPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground">Gesamtwert</p>
-                    <p className="text-2xl font-bold">€{stats.totalValue.toLocaleString()}</p>
+                    <p className="text-2xl font-bold" suppressHydrationWarning>€{stats.totalValue.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                   </div>
                   <Euro className="h-5 w-5 text-primary" />
                 </div>
@@ -350,7 +350,7 @@ export default function ValidierungPage() {
                       <div className="flex justify-between text-sm">
                         <span>Tatsächliche Rendite:</span>
                         <span className={`font-semibold ${getReturnColor(validation.actualReturn)}`}>
-                          {validation.actualReturn > 0 ? '+' : ''}{validation.actualReturn.toFixed(2)}%
+                          <span suppressHydrationWarning>{validation.actualReturn > 0 ? '+' : ''}{validation.actualReturn.toFixed(2)}%</span>
                           {validation.actualReturn > 0 ? (
                             <TrendingUp className="h-3 w-3 inline ml-1" />
                           ) : (
@@ -367,7 +367,7 @@ export default function ValidierungPage() {
                       <div className="flex justify-between text-sm">
                         <span>KI-Prognose:</span>
                         <span className={`font-semibold ${getReturnColor(validation.predictedReturn)}`}>
-                          {validation.predictedReturn > 0 ? '+' : ''}{validation.predictedReturn.toFixed(2)}%
+                          <span suppressHydrationWarning>{validation.predictedReturn > 0 ? '+' : ''}{validation.predictedReturn.toFixed(2)}%</span>
                         </span>
                       </div>
                       <Progress 
@@ -382,7 +382,7 @@ export default function ValidierungPage() {
                     <div className="flex justify-between text-sm mb-1">
                       <span>Prognose-Genauigkeit:</span>
                       <span className="font-semibold">
-                        {Math.max(0, 100 - Math.abs(validation.actualReturn - validation.predictedReturn) * 10).toFixed(1)}%
+                        <span suppressHydrationWarning>{Math.max(0, 100 - Math.abs(validation.actualReturn - validation.predictedReturn) * 10).toFixed(1)}%</span>
                       </span>
                     </div>
                     <Progress 
