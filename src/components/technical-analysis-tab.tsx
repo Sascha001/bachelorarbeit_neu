@@ -391,6 +391,14 @@ const getHumanUncertaintyStatus = (uncertaintyPercentage: number): string => {
   return "poor"
 }
 
+// Model Uncertainty Status Mapping (inverted: lower uncertainty = better status)
+const getModelUncertaintyStatus = (uncertaintyPercentage: number): string => {
+  if (uncertaintyPercentage <= 20) return "excellent"  // 80-100% Sicherheit
+  if (uncertaintyPercentage <= 40) return "good"       // 60-80% Sicherheit  
+  if (uncertaintyPercentage <= 60) return "fair"       // 40-60% Sicherheit
+  return "poor"                                         // <40% Sicherheit
+}
+
 // Data Uncertainty Interface Definitions
 interface FundamentalDataParams {
   completeness: { missingValues: number; totalValues: number };
@@ -1256,6 +1264,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                   <div key={index} className="space-y-1">
                     <div className="flex justify-between text-sm items-center">
                       <div className="flex items-center gap-2">
+                        {getStatusIcon(getModelUncertaintyStatus(getUncertaintyValue(feature.name, data.modelMetrics.uncertaintyParams)))}
                         <span>{feature.name}</span>
                         <Tooltip>
                           <TooltipTrigger asChild>
@@ -1271,7 +1280,9 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                           </TooltipContent>
                         </Tooltip>
                       </div>
-                      <span className="font-medium">{getUncertaintyValue(feature.name, data.modelMetrics.uncertaintyParams).toFixed(1)}%</span>
+                      <Badge className={getStatusColor(getModelUncertaintyStatus(getUncertaintyValue(feature.name, data.modelMetrics.uncertaintyParams)))}>
+                        {getUncertaintyValue(feature.name, data.modelMetrics.uncertaintyParams).toFixed(1)}%
+                      </Badge>
                     </div>
                     <Progress 
                       value={getUncertaintyValue(feature.name, data.modelMetrics.uncertaintyParams)} 
