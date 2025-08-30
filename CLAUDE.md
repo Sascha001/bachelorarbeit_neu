@@ -149,6 +149,39 @@ The main focus is uncertainty analysis in AI trading recommendations using a com
 - **Info-Box Borders**: All explanation sections require visible borders for better readability
 - **No Redundant Badges**: Avoid duplicate percentage displays when already shown in content
 
+### Standardized Tooltip Structure (4-Block Format)
+All Data Uncertainty parameter tooltips follow this exact structure for consistency:
+```tsx
+<TooltipContent className="max-w-lg">
+  <div className="space-y-3 p-2">
+    <div className="font-semibold text-sm text-white">Parameter Name (Category)</div>
+    
+    <div className="space-y-2">
+      <div className="text-xs text-gray-200 font-medium">Generelle Formel:</div>
+      <div className="formula-container bg-muted/30 p-2 rounded">
+        <BlockMath math="General Formula" />
+      </div>
+    </div>
+    
+    <div className="space-y-2">
+      <div className="text-xs text-gray-200 font-medium">Aktuelle Berechnung für {selectedStock}:</div>
+      <div className="formula-container bg-muted/30 p-2 rounded">
+        <BlockMath math="Current calculation with values" />
+      </div>
+    </div>
+    
+    <div className="text-xs text-gray-200">
+      Brief explanation of what the parameter measures
+    </div>
+  </div>
+</TooltipContent>
+```
+- **Block 1**: Parameter title with category identifier
+- **Block 2**: General formula with KaTeX rendering
+- **Block 3**: Current calculation with actual stock values
+- **Block 4**: Brief explanatory text
+- **Consistency**: All 16 Data Uncertainty parameters use this identical structure
+
 ### Info-Box Architecture
 - **Unified System**: Both Datenunsicherheit and Modellunsicherheit use identical Info-Box patterns
 - **Event Handler**: Use `handleInfoClick` for consistent behavior across all uncertainty components
@@ -168,6 +201,8 @@ The main focus is uncertainty analysis in AI trading recommendations using a com
 - **Container Sizing**: Use `overflow-x-auto` and proper padding for formula containers
 - **Box Dimensions**: Ensure formulas stay within violet-bloom bordered containers
 - **Responsive Design**: Use horizontal scroll for long formulas rather than line breaking
+- **Rendering Issues Fix**: When KaTeX formulas display as raw text instead of rendered math, apply the proven fix: temporarily remove the entire tooltip component, then re-add it with fresh formulas. This triggers proper KaTeX initialization.
+- **Escape Characters**: Use single backslashes (`\`) in BlockMath math prop, not double backslashes (`\\`) which can cause rendering issues
 
 ## Important Development Notes
 
@@ -213,6 +248,8 @@ Located in `src/components/technical-analysis-tab.tsx`:
 - **Build Stability Improvements**: Resolved all TypeScript property errors for successful Vercel deployment
 - **Interface Standardization**: Added comprehensive TypeScript interfaces for all parameter types
 - **Code Organization**: Cleaned up 278+ lines of obsolete code, added 110 lines of structured functions
+- **Tooltip Standardization (2025-08-30)**: Unified all 16 Data Uncertainty parameter tooltips to identical 4-block structure for consistent user experience
+- **KaTeX Rendering Fixes (2025-08-30)**: Resolved formula rendering issues in Gesamtberechnung tooltips using remove/re-add methodology
 - **Deployment Ready**: Build compiles successfully in ~20s with only harmless ESLint warnings
 
 ### Production Deployment Status
@@ -221,5 +258,26 @@ Located in `src/components/technical-analysis-tab.tsx`:
 - **TypeScript**: ✅ No compilation errors
 - **Vercel Compatible**: ✅ All deployment blockers resolved
 - **Route Size**: Main uncertainty analysis route (264 KB) optimized for production
+
+## Common Issues & Solutions
+
+### KaTeX Formula Rendering Problems
+**Problem**: KaTeX formulas display as raw LaTeX text instead of rendered mathematical notation  
+**Symptoms**: Info icons show `\frac{A}{B}` instead of proper fraction bars  
+**Solution**: Apply the proven remove/re-add fix:
+1. Remove the entire Tooltip component containing the problematic formula
+2. Re-add the Tooltip with the same formula content  
+3. Use single backslashes (`\`) not double backslashes (`\\`) in math prop
+**Why it works**: Forces fresh KaTeX initialization and proper component mounting
+
+### Tooltip Structure Inconsistencies  
+**Problem**: Parameter tooltips have different layouts and information organization  
+**Symptoms**: Some use complex info-panel format, others use simple structure  
+**Solution**: Standardize all tooltips to the 4-block structure:
+- Block 1: `Parameter Name (Category)`
+- Block 2: `Generelle Formel:` with KaTeX formula
+- Block 3: `Aktuelle Berechnung für {stock}:` with current values
+- Block 4: Brief explanatory text
+**Example files affected**: All 16 Data Uncertainty parameters in `technical-analysis-tab.tsx`
 
 This application serves as a bachelor's thesis project focused on uncertainty visualization in AI trading systems, emphasizing mathematical accuracy, user experience, and clear presentation of complex uncertainty metrics through consistent Info-Box architecture, violet-bloom design patterns, and robust calculation-based uncertainty quantification.
