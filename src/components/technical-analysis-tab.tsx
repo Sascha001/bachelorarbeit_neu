@@ -1692,7 +1692,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     <div className="font-semibold text-sm text-white">Fundamentaldaten Gesamtformel</div>
                                     <div className="formula-container bg-muted/30 p-2 rounded">
                                       <div className="flex items-center justify-center min-h-[50px]">
-                                        <BlockMath math="\\text{Score} = \\frac{C + T + K + A + S}{5}" />
+                                        <BlockMath math="\text{Score} = \frac{C + T + K + A + S}{5}" />
                                       </div>
                                     </div>
                                     <div className="text-xs text-gray-200">
@@ -1920,7 +1920,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     <div className="font-semibold text-sm text-white">Zeitreihen-Integrität Gesamtformel</div>
                                     <div className="formula-container bg-muted/30 p-2 rounded">
                                       <div className="flex items-center justify-center min-h-[50px]">
-                                        <BlockMath math="\\text{Score} = \\frac{C + O + R + K}{4}" />
+                                        <BlockMath math="\text{Score} = \frac{C + O + R + K}{4}" />
                                       </div>
                                     </div>
                                     <div className="text-xs text-gray-200">
@@ -2162,7 +2162,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     <div className="font-semibold text-sm text-white">Nachrichten-Verlässlichkeit Gesamtformel</div>
                                     <div className="formula-container bg-muted/30 p-2 rounded">
                                       <div className="flex items-center justify-center min-h-[50px]">
-                                        <BlockMath math="Q_{news} = w_1 \\cdot R + w_2 \\cdot P + w_3 \\cdot K + w_4 \\cdot (1-B)" />
+                                        <BlockMath math="Q_{news} = w_1 \cdot R + w_2 \cdot P + w_3 \cdot K + w_4 \cdot (1-B)" />
                                       </div>
                                     </div>
                                     <div className="text-xs text-gray-200">
@@ -2378,7 +2378,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                                     <div className="font-semibold text-sm text-white">Handelsvolumen-Verteilung Gesamtformel</div>
                                     <div className="formula-container bg-muted/30 p-2 rounded">
                                       <div className="flex items-center justify-center min-h-[50px]">
-                                        <BlockMath math="Q_{volume} = w_1 \\cdot S + w_2 \\cdot A + w_3 \\cdot T" />
+                                        <BlockMath math="Q_{volume} = w_1 \cdot S + w_2 \cdot A + w_3 \cdot T" />
                                       </div>
                                     </div>
                                     <div className="text-xs text-gray-200">
