@@ -195,7 +195,7 @@ export default function DepotPage() {
             <ThemeToggle />
           </div>
         </header>
-        <div ref={scrollbarRef} className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-auto standard-scrollbar" style={{height: '600px', maxHeight: '600px'}}>
+        <div ref={scrollbarRef} className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-auto standard-scrollbar">
           {/* Portfolio Overview Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Gesamtes Portfolio */}
