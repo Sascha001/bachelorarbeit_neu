@@ -766,10 +766,10 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
               <TooltipContent className="max-w-lg">
                 <div className="space-y-2 p-2">
                   <div className="font-semibold text-sm text-white">Beschreibung</div>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  <p className="text-xs text-white leading-relaxed">
                     {param.description}
                   </p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  <p className="text-xs text-white leading-relaxed">
                     <strong>Bedeutung:</strong> {param.importance}
                   </p>
                 </div>
@@ -780,6 +780,29 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
         <p className="text-sm text-muted-foreground">
           Detaillierte Analyse für {selectedStock}
         </p>
+      </div>
+
+      {/* Gesamtbewertung - nach oben verschoben */}
+      <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+        <h4 className="font-semibold mb-2 text-primary">Gesamtscore: 
+          <span className={`ml-2 ${getStatusColor(getStatus(param.currentValue * 100))}`}>
+            {(param.currentValue * 100).toFixed(1)}%
+          </span>
+        </h4>
+        <p className="text-sm text-muted-foreground mb-3">
+          Bewertung für {selectedStock}
+        </p>
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm font-medium">Qualitätsbewertung:</span>
+          <span className={`text-sm font-bold ${
+            param.currentValue > 0.8 ? 'text-green-600' : 
+            param.currentValue > 0.6 ? 'text-yellow-600' : 'text-red-600'
+          }`}>
+            {param.currentValue > 0.8 ? 'Sehr gut' : 
+             param.currentValue > 0.6 ? 'Gut' : 
+             param.currentValue > 0.4 ? 'Mäßig' : 'Schlecht'}
+          </span>
+        </div>
       </div>
       
       <div className="space-y-6 py-6">
@@ -801,7 +824,7 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
                     </TooltipTrigger>
                     <TooltipContent className="max-w-sm">
                       <div className="p-2">
-                        <p className="text-xs text-muted-foreground leading-relaxed">
+                        <p className="text-xs text-white leading-relaxed">
                           {getParameterExplanation(key, parameterName)}
                         </p>
                       </div>
@@ -846,28 +869,6 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
           </div>
         </div>
 
-        {/* Gesamtbewertung */}
-        <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
-          <h4 className="font-semibold mb-2 text-primary">Gesamtscore: 
-            <span className={`ml-2 ${getStatusColor(getStatus(param.currentValue * 100))}`}>
-              {(param.currentValue * 100).toFixed(1)}%
-            </span>
-          </h4>
-          <p className="text-sm text-muted-foreground mb-3">
-            Bewertung für {selectedStock}
-          </p>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium">Qualitätsbewertung:</span>
-            <span className={`text-sm font-bold ${
-              param.currentValue > 0.8 ? 'text-green-600' : 
-              param.currentValue > 0.6 ? 'text-yellow-600' : 'text-red-600'
-            }`}>
-              {param.currentValue > 0.8 ? 'Sehr gut' : 
-               param.currentValue > 0.6 ? 'Gut' : 
-               param.currentValue > 0.4 ? 'Mäßig' : 'Schlecht'}
-            </span>
-          </div>
-        </div>
       </div>
     </>
   );
