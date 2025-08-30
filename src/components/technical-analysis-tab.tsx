@@ -551,34 +551,34 @@ const getCalculationWithRealValues = (parameterName: string, rawData: Record<str
       const mu = Object.values(rawData)[1];       // μ_ŷ (mittlere Vorhersage)
       const epsilonVal = "0.00001";
       const finalScore = Object.values(rawData)[2]; // E (Epistemische Unsicherheit Score)
-      return `1 - \\frac{${sigma}}{${mu} + ${epsilonVal}} = ${finalScore}`;
+      return `\\text{Aktuell} = 1 - \\frac{${sigma}}{${mu} + ${epsilonVal}} = ${finalScore}`;
     
     case "Aleatorische Unsicherheit":
       // A = 1 - (mittlere Varianz)/(max. erwartete Varianz)
       const meanVar = Object.values(rawData)[0];     // Mittlere Vorhersagevarianz
       const maxVar = Object.values(rawData)[1];      // Maximale erwartete Varianz  
       const aleatoricScore = Object.values(rawData)[2]; // A Score
-      return `1 - \\frac{${meanVar}}{${maxVar}} = ${aleatoricScore}`;
+      return `\\text{Aktuell} = 1 - \\frac{${meanVar}}{${maxVar}} = ${aleatoricScore}`;
     
     case "Overfitting-Risiko":
       // C = 1 - |L_train - L_test|/(L_train + ε)
       const lTrain = Object.values(rawData)[0];
       const lTest = Object.values(rawData)[1];
       const overfittingScore = Object.values(rawData)[2];
-      return `1 - \\frac{|${lTrain} - ${lTest}|}{${lTrain} + 0.001} = ${overfittingScore}`;
+      return `\\text{Aktuell} = 1 - \\frac{|${lTrain} - ${lTest}|}{${lTrain} + 0.001} = ${overfittingScore}`;
     
     case "Robustheit":
       // R = 1 - Δŷ/ŷ
       const deltaY = Object.values(rawData)[0];      // Δŷ (mittlere Änderung)
       const baselineY = Object.values(rawData)[1];   // ŷ (Baseline-Vorhersage)
       const robustnessScore = Object.values(rawData)[2];
-      return `1 - \\frac{${deltaY}}{${baselineY}} = ${robustnessScore}`;
+      return `\\text{Aktuell} = 1 - \\frac{${deltaY}}{${baselineY}} = ${robustnessScore}`;
     
     case "Erklärungs-Konsistenz":
       // X = normalized ρ from [-1,1] to [0,1]: X = (ρ + 1)/2
       const rho = Object.values(rawData)[0];         // ρ (Korrelation)
       const consistencyScore = Object.values(rawData)[1]; // X Score (normalisiert)
-      return `X = \\frac{\\rho + 1}{2} = \\frac{${rho} + 1}{2} = ${consistencyScore}`;
+      return `\\text{Aktuell} = \\frac{${rho} + 1}{2} = ${consistencyScore}`;
     
     default:
       return "Formel nicht verfügbar";
@@ -782,28 +782,6 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
         </p>
       </div>
 
-      {/* Gesamtbewertung - nach oben verschoben */}
-      <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
-        <h4 className="font-semibold mb-2 text-primary">Gesamtscore: 
-          <span className={`ml-2 ${getStatusColor(getStatus(param.currentValue * 100))}`}>
-            {(param.currentValue * 100).toFixed(1)}%
-          </span>
-        </h4>
-        <p className="text-sm text-muted-foreground mb-3">
-          Bewertung für {selectedStock}
-        </p>
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium">Qualitätsbewertung:</span>
-          <span className={`text-sm font-bold ${
-            param.currentValue > 0.8 ? 'text-green-600' : 
-            param.currentValue > 0.6 ? 'text-yellow-600' : 'text-red-600'
-          }`}>
-            {param.currentValue > 0.8 ? 'Sehr gut' : 
-             param.currentValue > 0.6 ? 'Gut' : 
-             param.currentValue > 0.4 ? 'Mäßig' : 'Schlecht'}
-          </span>
-        </div>
-      </div>
       
       <div className="space-y-6 py-6">
         
@@ -839,11 +817,11 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
           ))}
         </div>
         
-        {/* Formel-Sektion */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <h4 className="font-medium text-foreground">Berechnung</h4>
-            <TooltipProvider key="inner-tooltip">
+        {/* Gesamtberechnung - einheitliche grüne Box wie bei Datenunsicherheit */}
+        <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+          <div className="flex items-center gap-2 mb-4">
+            <h4 className="font-medium text-green-700">Gesamtberechnung</h4>
+            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button className="p-1 rounded-full hover:bg-muted/50">
@@ -851,10 +829,19 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
                   </button>
                 </TooltipTrigger>
                 <TooltipContent className="max-w-lg">
-                  <div className="space-y-2 p-2">
-                    <div className="font-semibold text-sm text-white">Generelle Formel</div>
+                  <div className="space-y-3 p-2">
+                    <div className="font-semibold text-sm text-white">{param.title} Gesamtformel</div>
                     <div className="formula-container bg-muted/30 p-2 rounded">
-                      <BlockMath math={param.formula} />
+                      <div className="flex items-center justify-center min-h-[50px]">
+                        <BlockMath math={param.formula} />
+                      </div>
+                    </div>
+                    <div className="text-xs text-white">
+                      {parameterName === "Epistemische Unsicherheit" && "Misst Unsicherheit über das Modellwissen selbst"}
+                      {parameterName === "Aleatorische Unsicherheit" && "Misst natürliche Marktvolatilität und Zufälligkeit"}
+                      {parameterName === "Overfitting-Risiko" && "Misst Generalisierungsfähigkeit auf neue Daten"}
+                      {parameterName === "Robustheit" && "Misst Stabilität gegen kleine Eingabeänderungen"}
+                      {parameterName === "Erklärungs-Konsistenz" && "Misst Konsistenz der Modellerklärungen"}
                     </div>
                   </div>
                 </TooltipContent>
@@ -862,8 +849,8 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
             </TooltipProvider>
           </div>
           
-          <div className="bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg p-4">
-            <div className="formula-container">
+          <div className="formula-container bg-muted/30 p-2 rounded text-xs">
+            <div className="flex items-center justify-center min-h-[40px]">
               <BlockMath math={getCalculationWithRealValues(parameterName, param.rawData)} />
             </div>
           </div>
