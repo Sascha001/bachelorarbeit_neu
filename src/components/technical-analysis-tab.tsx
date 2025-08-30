@@ -2692,7 +2692,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                           {/* Short intro text */}
                           <div className="mt-4 p-3 bg-primary/10 border border-primary/30 rounded-lg violet-bloom-card">
                             <p className="text-sm text-muted-foreground">
-                              Bewertung der Wissenslücken basierend auf "unklar"-Antworten bei Fragen zum Marktverständnis und Entscheidungsgrundlagen.
+                              Bewertung der Wissenslücken basierend auf &quot;unklar&quot;-Antworten bei Fragen zum Marktverständnis und Entscheidungsgrundlagen.
                             </p>
                           </div>
                           
