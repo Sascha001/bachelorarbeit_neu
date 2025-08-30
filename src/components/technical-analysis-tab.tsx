@@ -551,7 +551,12 @@ const getCalculationWithRealValues = (parameterName: string, rawData: Record<str
       const mu = Object.values(rawData)[1];       // μ_ŷ (mittlere Vorhersage)
       const epsilonVal = "0.00001";
       const finalScore = Object.values(rawData)[2]; // E (Epistemische Unsicherheit Score)
-      return `\\text{Aktuell} = 1 - \\frac{${sigma}}{${mu} + ${epsilonVal}} = ${finalScore}`;
+      
+      // Konvertiere "2.1%" zu "0.021" für saubere LaTeX-Darstellung
+      const muNumeric = typeof mu === 'string' && mu.includes('%') ? 
+        (parseFloat(mu.replace('%', '')) / 100).toFixed(4) : mu;
+      
+      return `\\text{Aktuell} = 1 - \\frac{${sigma}}{${muNumeric} + ${epsilonVal}} = ${finalScore}`;
     
     case "Aleatorische Unsicherheit":
       // A = 1 - (mittlere Varianz)/(max. erwartete Varianz)
@@ -572,7 +577,12 @@ const getCalculationWithRealValues = (parameterName: string, rawData: Record<str
       const deltaY = Object.values(rawData)[0];      // Δŷ (mittlere Änderung)
       const baselineY = Object.values(rawData)[1];   // ŷ (Baseline-Vorhersage)
       const robustnessScore = Object.values(rawData)[2];
-      return `\\text{Aktuell} = 1 - \\frac{${deltaY}}{${baselineY}} = ${robustnessScore}`;
+      
+      // Konvertiere "2.1%" zu "0.021" für saubere LaTeX-Darstellung
+      const baselineYNumeric = typeof baselineY === 'string' && baselineY.includes('%') ? 
+        (parseFloat(baselineY.replace('%', '')) / 100).toFixed(4) : baselineY;
+      
+      return `\\text{Aktuell} = 1 - \\frac{${deltaY}}{${baselineYNumeric}} = ${robustnessScore}`;
     
     case "Erklärungs-Konsistenz":
       // X = normalized ρ from [-1,1] to [0,1]: X = (ρ + 1)/2
@@ -782,6 +792,13 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
         </p>
       </div>
 
+      {/* Overall Score - matching Data Uncertainty structure */}
+      <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+        <h4 className="font-semibold mb-2 text-primary">Gesamtscore: {(param.currentValue * 100).toFixed(1)}%</h4>
+        <p className="text-sm text-muted-foreground">
+          Bewertung für {selectedStock}
+        </p>
+      </div>
       
       <div className="space-y-6 py-6">
         
