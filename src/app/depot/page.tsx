@@ -3,6 +3,7 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { StockSearch } from "@/components/stock-search"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { NotificationButton } from "@/components/notification-button"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -189,11 +190,12 @@ export default function DepotPage() {
             <StockSearch />
           </div>
           
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
+            <NotificationButton />
             <ThemeToggle />
           </div>
         </header>
-        <div ref={scrollbarRef} className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-auto standard-scrollbar">
+        <div ref={scrollbarRef} className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-auto standard-scrollbar" style={{height: '600px', maxHeight: '600px'}}>
           {/* Portfolio Overview Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Gesamtes Portfolio */}
