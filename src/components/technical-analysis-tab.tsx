@@ -1106,18 +1106,33 @@ const getHumanUncertaintyParameterPopup = (parameterName: string, selectedStock:
           
           <div className="formula-container bg-muted/30 p-2 rounded text-xs">
             <div className="flex items-center justify-center min-h-[40px]">
-              <BlockMath math={param.formula.replace(/\\text\{[^}]*\}/g, (match) => {
-                // Replace placeholder text with actual values
-                if (match.includes('L_{response}')) return humanParams.perceivedUncertainty?.likertResponse?.toString() || '4';
-                if (match.includes('L_{max}')) return humanParams.perceivedUncertainty?.maxScale?.toString() || '5';
-                if (match.includes('Unklare Antworten')) return humanParams.epistemicUncertainty?.unclearAnswers?.toString() || '2';
-                if (match.includes('Gesamte Fragen')) return humanParams.epistemicUncertainty?.totalQuestions?.toString() || '10';
-                if (match.includes('Konsistenz-Score')) return humanParams.aleatoricUncertainty?.consistencyScore?.toString() || '8';
-                if (match.includes('Max. Konsistenz')) return humanParams.aleatoricUncertainty?.maxPossibleConsistency?.toString() || '10';
-                if (match.includes('Entscheidungsänderungen')) return humanParams.decisionStability?.decisionChange?.toString() || '2';
-                if (match.includes('Gesamte Tests')) return humanParams.decisionStability?.inputChange?.toString() || '15';
-                return match;
-              })} />
+              <BlockMath math={(() => {
+                // Create specific calculation for each parameter type
+                switch (parameterName) {
+                  case "perceivedUncertainty":
+                    const likert = humanParams.perceivedUncertainty?.likertResponse || 4;
+                    const maxScale = humanParams.perceivedUncertainty?.maxScale || 5;
+                    return `U_{perceived} = \\frac{${likert} - 1}{${maxScale} - 1} = ${param.currentValue.toFixed(3)}`;
+                  
+                  case "epistemicUncertaintyHuman": 
+                    const unclear = humanParams.epistemicUncertainty?.unclearAnswers || 2;
+                    const total = humanParams.epistemicUncertainty?.totalQuestions || 10;
+                    return `E_{human} = \\frac{${unclear}}{${total}} = ${param.currentValue.toFixed(3)}`;
+                  
+                  case "aleatoricUncertaintyHuman":
+                    const consistency = humanParams.aleatoricUncertainty?.consistencyScore || 8;
+                    const maxConsist = humanParams.aleatoricUncertainty?.maxPossibleConsistency || 10;
+                    return `A_{human} = 1 - \\frac{${consistency}}{${maxConsist}} = ${param.currentValue.toFixed(3)}`;
+                  
+                  case "decisionStabilityHuman":
+                    const changes = humanParams.decisionStability?.decisionChange || 2;
+                    const tests = humanParams.decisionStability?.inputChange || 15;
+                    return `S_{decision} = 1 - \\frac{${changes}}{${tests}} = ${param.currentValue.toFixed(3)}`;
+                  
+                  default:
+                    return param.formula;
+                }
+              })()} />
             </div>
           </div>
         </div>
@@ -2706,48 +2721,18 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
 
                     {activeInfoBox === 'aleatoricUncertaintyHuman' && (() => {
                       const humanParams = getHumanUncertaintyParams(selectedStock)
-                      const humanCalculated = calculateAllHumanUncertainty(humanParams)
-                      const score = (humanCalculated.aleatoricUncertainty * 100).toFixed(1)
-                      
                       return (
                         <>
                           {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                          <div className="mt-4 p-3 bg-primary/10 border border-primary/30 rounded-lg violet-bloom-card">
                             <p className="text-sm text-muted-foreground">
                               Bewertung der Inkonsistenz und Widersprüche bei ähnlichen Entscheidungssituationen durch Analyse des Konsistenz-Scores.
                             </p>
                           </div>
                           
-                          {/* Overall Score */}
-                          <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
-                            <h4 className="font-semibold mb-2 text-primary">Aktueller Score: {score}%</h4>
-                            <p className="text-sm text-muted-foreground">
-                              Berechnet für {selectedStock} aus Konsistenz-Analyse
-                            </p>
-                          </div>
-                          
-                          {/* Formula Explanation */}
-                          <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                            <div className="flex items-center gap-2 mb-4">
-                              <h4 className="font-medium text-green-700">Formelberechnung</h4>
-                            </div>
-                            
-                            <div className="space-y-4">
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
-                                <div className="flex items-center justify-center min-h-[60px]">
-                                  <BlockMath math="A_{human} = 1 - \frac{\text{Konsistenz Score}}{\text{Max Konsistenz}}" />
-                                </div>
-                              </div>
-                              
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
-                                <div className="flex items-center justify-center min-h-[50px]">
-                                  <BlockMath math={`A_{human} = 1 - \\frac{${humanParams.aleatoricUncertainty.consistencyScore}}{${humanParams.aleatoricUncertainty.maxPossibleConsistency}} = ${humanCalculated.aleatoricUncertainty.toFixed(3)}`} />
-                                </div>
-                              </div>
-                            </div>
-                            <div className="text-xs text-muted-foreground mt-3">
-                              25% Gewichtung - Widersprüchliche Antworten erhöhen Unsicherheit
-                            </div>
+                          {/* Parameter-spezifische Details mit getHumanUncertaintyParameterPopup */}
+                          <div className="mt-6">
+                            {getHumanUncertaintyParameterPopup('aleatoricUncertaintyHuman', selectedStock, humanParams)}
                           </div>
                         </>
                       )
@@ -2755,48 +2740,18 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
 
                     {activeInfoBox === 'decisionStabilityHuman' && (() => {
                       const humanParams = getHumanUncertaintyParams(selectedStock)
-                      const humanCalculated = calculateAllHumanUncertainty(humanParams)
-                      const score = (humanCalculated.decisionStability * 100).toFixed(1)
-                      
                       return (
                         <>
                           {/* Short intro text */}
-                          <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                          <div className="mt-4 p-3 bg-primary/10 border border-primary/30 rounded-lg violet-bloom-card">
                             <p className="text-sm text-muted-foreground">
                               Bewertung der Robustheit von Entscheidungen gegen kleine Input-Änderungen zur Messung der Entscheidungsstabilität.
                             </p>
                           </div>
                           
-                          {/* Overall Score */}
-                          <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
-                            <h4 className="font-semibold mb-2 text-primary">Aktueller Score: {score}%</h4>
-                            <p className="text-sm text-muted-foreground">
-                              Berechnet für {selectedStock} aus Stabilitäts-Analyse
-                            </p>
-                          </div>
-                          
-                          {/* Formula Explanation */}
-                          <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                            <div className="flex items-center gap-2 mb-4">
-                              <h4 className="font-medium text-green-700">Formelberechnung</h4>
-                            </div>
-                            
-                            <div className="space-y-4">
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
-                                <div className="flex items-center justify-center min-h-[60px]">
-                                  <BlockMath math="S_{human} = \max(0, 1 - \frac{\text{Decision Change}}{\text{Input Change}})" />
-                                </div>
-                              </div>
-                              
-                              <div className="bg-white p-3 rounded border text-black overflow-hidden formula-container">
-                                <div className="flex items-center justify-center min-h-[50px]">
-                                  <BlockMath math={`S_{human} = \\max(0, 1 - \\frac{${humanParams.decisionStability.decisionChange}}{${humanParams.decisionStability.inputChange}}) = ${humanCalculated.decisionStability.toFixed(3)}`} />
-                                </div>
-                              </div>
-                            </div>
-                            <div className="text-xs text-muted-foreground mt-3">
-                              20% Gewichtung - Instabilität bei kleinen Änderungen erhöht Unsicherheit
-                            </div>
+                          {/* Parameter-spezifische Details mit getHumanUncertaintyParameterPopup */}
+                          <div className="mt-6">
+                            {getHumanUncertaintyParameterPopup('decisionStabilityHuman', selectedStock, humanParams)}
                           </div>
                         </>
                       )
