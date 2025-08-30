@@ -202,7 +202,7 @@ export default function RootLayout({
                 setTimeout(initComponentScrollbars, 1000);
               }
               
-              // Periodic check for new violet-bloom-scrollbar elements
+              // Frequent check for new violet-bloom-scrollbar elements (optimized for pop-ups)
               setInterval(() => {
                 const elements = document.querySelectorAll('.violet-bloom-scrollbar');
                 elements.forEach(element => {
@@ -210,7 +210,38 @@ export default function RootLayout({
                     createComponentScrollbar(element);
                   }
                 });
-              }, 2000);
+              }, 500);
+              
+              // MutationObserver for dynamic content
+              const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                  mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === 1) { // Element node
+                      const element = node as Element;
+                      // Check if added node has violet-bloom-scrollbar class
+                      if (element.classList && element.classList.contains('violet-bloom-scrollbar')) {
+                        setTimeout(() => {
+                          if (element.scrollHeight > element.clientHeight) {
+                            createComponentScrollbar(element);
+                          }
+                        }, 100);
+                      }
+                      // Check descendants
+                      const descendants = element.querySelectorAll && element.querySelectorAll('.violet-bloom-scrollbar');
+                      if (descendants) {
+                        descendants.forEach(desc => {
+                          setTimeout(() => {
+                            if (desc.scrollHeight > desc.clientHeight) {
+                              createComponentScrollbar(desc);
+                            }
+                          }, 100);
+                        });
+                      }
+                    }
+                  });
+                });
+              });
+              observer.observe(document.body, { childList: true, subtree: true });
             `,
           }}
         />

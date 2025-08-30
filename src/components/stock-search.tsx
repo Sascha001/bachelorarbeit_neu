@@ -98,7 +98,7 @@ export function StockSearch({ onStockSelect }: StockSearchProps = {}) {
       </div>
       
       {isOpen && (
-        <div className="absolute top-full mt-1 w-full bg-card border border-primary/20 rounded-lg shadow-lg shadow-primary/10 z-50 max-h-80 overflow-y-auto">
+        <div className="absolute top-full mt-1 w-full bg-card border border-primary/20 rounded-lg shadow-lg shadow-primary/10 z-50 max-h-80 overflow-y-auto violet-bloom-scrollbar">
           {isLoading && (
             <div className="flex items-center justify-center p-4">
               <Loader2 className="h-4 w-4 animate-spin mr-2" />

@@ -27,7 +27,7 @@ function StatistikContent() {
   const scrollbarRef = useCoolScrollbar()
 
   return (
-    <div ref={scrollbarRef} className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-auto">
+    <div ref={scrollbarRef} className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-auto violet-bloom-scrollbar">
       {stock ? (
         <div className="space-y-4 h-full flex flex-col">
           <div className="text-center">
