@@ -558,7 +558,7 @@ body::-webkit-scrollbar {
 .uncertainty-modal-positioning {
   position: fixed !important;
   left: 65% !important;
-  top: 85% !important;
+  top: 100% !important;
   transform: translate(-50%, -50%) !important;
   z-index: 51 !important;
   max-width: 500px !important;
@@ -569,7 +569,7 @@ body::-webkit-scrollbar {
 [data-radix-dialog-content]:not(.uncertainty-modal-positioning) {
   position: fixed !important;
   left: 35% !important;
-  top: 85% !important;
+  top: 100% !important;
   transform: translate(-50%, -50%) !important;
   z-index: 50 !important;
 }
