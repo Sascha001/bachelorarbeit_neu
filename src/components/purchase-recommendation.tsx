@@ -241,7 +241,6 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
   }
 
   const handlePurchase = () => {
-    setTransactionCompleted(true)
     setIsTransactionModalOpen(false)
     
     // Prepare trading data for uncertainty modal
@@ -293,6 +292,7 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
     setIsFeedbackModalOpen(false)
     setFeedbackRating(0)
     setFeedbackText("")
+    setTransactionCompleted(true) // Show transaction success only after feedback
     setScheduleForValidation(false)
   }
 
@@ -351,7 +351,7 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                     }`}
                     onClick={() => {
                       setIsRecommendedSelected(true)
-                      setPurchaseAmount(data.recommendedAmount)
+                      setPurchaseAmount(Math.round(data.recommendedAmount * 100) / 100)
                     }}
                   >
                     <div className={`text-sm font-medium ${isRecommendedSelected ? 'text-primary' : 'text-muted-foreground'}`}>
@@ -382,7 +382,7 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                     }}
                     min={data.minAmount}
                     max={data.maxAmount}
-                    placeholder={`Empfohlen: €${data.recommendedAmount.toFixed(2)}`}
+                    placeholder="Betrag eingeben"
                     className="flex-1"
                   />
                   <div className="text-sm text-muted-foreground whitespace-nowrap">
@@ -486,6 +486,7 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                     size="lg" 
                     className="px-8 bg-green-600 hover:bg-green-700"
                     onClick={() => setTransactionType('BUY')}
+                    disabled={purchaseAmount <= 0}
                   >
                     <TrendingUp className="h-4 w-4 mr-2" />
                     {selectedStock} kaufen
@@ -497,6 +498,7 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                     variant="destructive"
                     className="px-8"
                     onClick={() => setTransactionType('SELL')}
+                    disabled={purchaseAmount <= 0}
                   >
                     <TrendingDown className="h-4 w-4 mr-2" />
                     {selectedStock} verkaufen
@@ -579,7 +581,7 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
       )}
 
       {/* Feedback Modal */}
-      <Dialog open={isFeedbackModalOpen} onOpenChange={setIsFeedbackModalOpen}>
+      <Dialog open={isFeedbackModalOpen} onOpenChange={() => {}}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
@@ -638,7 +640,10 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsFeedbackModalOpen(false)}>
+            <Button variant="outline" onClick={() => {
+              setIsFeedbackModalOpen(false)
+              setTransactionCompleted(true) // Show transaction success also when skipping
+            }}>
               Überspringen
             </Button>
             <Button onClick={submitFeedback} disabled={feedbackRating === 0}>

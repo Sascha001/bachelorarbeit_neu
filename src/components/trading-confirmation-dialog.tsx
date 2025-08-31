@@ -106,7 +106,7 @@ export function TradingConfirmationDialog({
 
   return (
     <TooltipProvider>
-      <Dialog open={isOpen} onOpenChange={onClose}>
+      <Dialog open={isOpen} onOpenChange={() => {}}>
         <DialogContent className="sm:max-w-2xl violet-bloom-card uncertainty-modal-positioning">
           <DialogHeader>
             <div className="flex items-center gap-2">
