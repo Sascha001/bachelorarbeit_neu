@@ -104,10 +104,12 @@ const getUncertaintyData = (stock: string, stockData: TradingUncertaintyData[], 
   const totalUncertaintyRaw = dataUncertaintyRaw + modelUncertaintyRaw + humanUncertaintyRaw
   const totalUncertainty = Math.round((totalUncertaintyRaw / 300) * 100)
   
-  // STEP 6: Use absolute uncertainty values (not relative breakdown)
-  const dataUncertaintyPercent = Math.round(dataUncertaintyRaw)
-  const modelUncertaintyPercent = Math.round(modelUncertaintyRaw)  
-  const humanUncertaintyPercent = Math.round(humanUncertaintyRaw)
+  // STEP 6: Calculate relative uncertainty breakdown (percentages that sum to 100%)
+  const totalRawUncertainty = dataUncertaintyRaw + modelUncertaintyRaw + humanUncertaintyRaw
+  
+  const dataUncertaintyPercent = Math.round((dataUncertaintyRaw / totalRawUncertainty) * 100 * 10) / 10
+  const modelUncertaintyPercent = Math.round((modelUncertaintyRaw / totalRawUncertainty) * 100 * 10) / 10
+  const humanUncertaintyPercent = Math.round((humanUncertaintyRaw / totalRawUncertainty) * 100 * 10) / 10
   
   // Determine recommendation and confidence level
   const getRecommendation = (uncertainty: number) => {
@@ -125,9 +127,9 @@ const getUncertaintyData = (stock: string, stockData: TradingUncertaintyData[], 
   
   return {
     totalUncertainty,
-    dataUncertainty: dataUncertaintyPercent,      // Shows absolute percentage (0-100%)
-    modelUncertainty: modelUncertaintyPercent,    // Shows absolute percentage (0-100%)  
-    humanUncertainty: humanUncertaintyPercent,    // Shows absolute percentage (0-100%)
+    dataUncertainty: dataUncertaintyPercent,      // Shows relative percentage (part of 100%)
+    modelUncertainty: modelUncertaintyPercent,    // Shows relative percentage (part of 100%)  
+    humanUncertainty: humanUncertaintyPercent,    // Shows relative percentage (part of 100%)
     recommendation: getRecommendation(totalUncertainty),
     confidenceLevel: getConfidenceLevel(totalUncertainty)
   }
@@ -204,7 +206,7 @@ export function UncertaintyOverview({ selectedStock }: UncertaintyOverviewProps)
         <CardHeader className="pb-4">
           <CardTitle>Unsicherheits-Aufschlüsselung</CardTitle>
           <CardDescription>
-            Einzelne Unsicherheitsdimensionen für {selectedStock}:
+            Prozentualer Anteil jeder Dimension an der Gesamtunsicherheit für {selectedStock}:
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -252,8 +254,8 @@ export function UncertaintyOverview({ selectedStock }: UncertaintyOverviewProps)
 
           <div className="pt-2 border-t border-border">
             <div className="flex justify-between text-sm">
-              <span className="font-medium">Gesamtunsicherheit:</span>
-              <span className="font-semibold">{data.totalUncertainty}% (von max. 100%)</span>
+              <span className="font-medium">Summe der Anteile:</span>
+              <span className="font-semibold">100% (Gesamtunsicherheit: {data.totalUncertainty}%)</span>
             </div>
           </div>
         </CardContent>
