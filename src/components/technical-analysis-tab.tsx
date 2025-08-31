@@ -10,7 +10,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import React, { useState } from "react"
 import 'katex/dist/katex.min.css'
 
-// Custom CSS for formula scaling and violet bloom scrollbar
+// Custom CSS for formula scaling
 const formulaStyles = `
   .formula-container .katex {
     font-size: 0.9rem !important;
@@ -25,43 +25,6 @@ const formulaStyles = `
     font-size: 1rem !important;
   }
 
-  /* Violet Bloom Scrollbar Styling */
-  .violet-bloom-scrollbar {
-    scrollbar-width: thin;
-    scrollbar-color: hsl(270 95% 75%) hsl(270 20% 98%);
-  }
-
-  .violet-bloom-scrollbar::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  .violet-bloom-scrollbar::-webkit-scrollbar-track {
-    background: linear-gradient(180deg, hsl(270 20% 98%) 0%, hsl(270 15% 95%) 100%);
-    border-radius: 4px;
-  }
-
-  .violet-bloom-scrollbar::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, hsl(270 95% 75%) 0%, hsl(280 80% 70%) 50%, hsl(290 75% 65%) 100%);
-    border-radius: 4px;
-    border: 1px solid hsl(270 60% 85%);
-    transition: all 0.3s ease;
-  }
-
-  .violet-bloom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, hsl(270 95% 70%) 0%, hsl(280 85% 65%) 50%, hsl(290 80% 60%) 100%);
-    border-color: hsl(270 70% 75%);
-    transform: scale(1.1);
-  }
-
-  .violet-bloom-scrollbar::-webkit-scrollbar-thumb:active {
-    background: linear-gradient(180deg, hsl(270 95% 65%) 0%, hsl(280 90% 60%) 50%, hsl(290 85% 55%) 100%);
-    border-color: hsl(270 80% 65%);
-  }
-
-  .violet-bloom-scrollbar::-webkit-scrollbar-corner {
-    background: hsl(270 20% 98%);
-  }
 `
 import { BlockMath, InlineMath } from 'react-katex'
 import { 
@@ -1702,7 +1665,10 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                 </div>
                 
                 {/* Content */}
-                <div className="flex-1 overflow-y-auto violet-bloom-scrollbar">
+                <div 
+                  className="flex-1 overflow-y-auto violet-bloom-scrollbar" 
+                  data-popup="true"
+                >
                   <div className="space-y-4">
                     
                     {/* Fundamentaldaten detailed parameters */}

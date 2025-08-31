@@ -34,19 +34,19 @@ export default function RootLayout({
         className={`${plusJakartaSans.variable} ${lora.variable} ${ibmPlexMono.variable} font-sans antialiased`}
       >
         {children}
-        <div className="vscode-scrollbar" id="vscode-scrollbar">
-          <div className="vscode-scrollbar-thumb" id="vscode-scrollbar-thumb"></div>
+        <div className="vscode-main-scrollbar" id="vscode-main-scrollbar">
+          <div className="vscode-main-scrollbar-thumb" id="vscode-main-scrollbar-thumb"></div>
         </div>
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              // VS Code Custom Scrollbar System - Main + Components
-              const mainScrollbar = document.getElementById('vscode-scrollbar');
-              const mainThumb = document.getElementById('vscode-scrollbar-thumb');
+              // ===== VS CODE SCROLLBAR SYSTEM =====
+              const mainScrollbar = document.getElementById('vscode-main-scrollbar');
+              const mainThumb = document.getElementById('vscode-main-scrollbar-thumb');
               let mainFadeTimeout = null;
-              const componentScrollbars = new Map();
+              const scrollbarElements = new Map();
               
-              // Main page scrollbar functions
+              // MAIN PAGE SCROLLBAR
               function updateMainScrollbar() {
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -58,7 +58,7 @@ export default function RootLayout({
                 }
                 
                 const ratio = clientHeight / document.documentElement.scrollHeight;
-                const thumbHeight = Math.max(20, clientHeight * ratio);
+                const thumbHeight = Math.max(30, clientHeight * ratio);
                 const thumbTop = (scrollTop / scrollHeight) * (clientHeight - thumbHeight);
                 
                 mainThumb.style.height = thumbHeight + 'px';
@@ -77,24 +77,31 @@ export default function RootLayout({
                 }, 1000);
               }
               
-              // Component scrollbar functions
-              function createComponentScrollbar(element) {
-                if (componentScrollbars.has(element)) return;
+              // COMPONENT/POP-UP SCROLLBARS
+              function createVSCodeScrollbar(element) {
+                if (scrollbarElements.has(element)) return;
                 
-                // Make the element itself the container for the scrollbar
-                element.style.position = element.style.position || 'relative';
+                const isPopup = element.closest('.fixed') || element.hasAttribute('data-popup');
+                const scrollbarClass = isPopup ? 'vscode-popup-scrollbar' : 'vscode-component-scrollbar';
+                const thumbClass = isPopup ? 'vscode-popup-scrollbar-thumb' : 'vscode-component-scrollbar-thumb';
                 
-                // Create scrollbar DOM elements
+                // Ensure container has relative positioning
+                const computedStyle = window.getComputedStyle(element);
+                if (computedStyle.position === 'static') {
+                  element.style.position = 'relative';
+                }
+                
+                // Create scrollbar elements
                 const scrollbar = document.createElement('div');
-                scrollbar.className = 'component-scrollbar';
+                scrollbar.className = scrollbarClass;
                 const thumb = document.createElement('div');
-                thumb.className = 'component-scrollbar-thumb';
+                thumb.className = thumbClass;
                 scrollbar.appendChild(thumb);
                 element.appendChild(scrollbar);
                 
                 let fadeTimeout = null;
                 
-                function updateComponentScrollbar() {
+                function updateScrollbar() {
                   const scrollTop = element.scrollTop;
                   const scrollHeight = element.scrollHeight - element.clientHeight;
                   const clientHeight = element.clientHeight;
@@ -105,18 +112,15 @@ export default function RootLayout({
                   }
                   
                   const ratio = clientHeight / element.scrollHeight;
-                  const thumbHeight = Math.max(15, clientHeight * ratio);
+                  const thumbHeight = Math.max(20, clientHeight * ratio);
                   const thumbTop = (scrollTop / scrollHeight) * (clientHeight - thumbHeight);
                   
                   thumb.style.height = thumbHeight + 'px';
                   thumb.style.top = thumbTop + 'px';
                   scrollbar.style.height = clientHeight + 'px';
-                  
-                  // Position scrollbar directly within the element (no calculation needed)
-                  scrollbar.style.top = '0px';
                 }
                 
-                function showComponentScrollbar() {
+                function showScrollbar() {
                   scrollbar.classList.add('visible');
                   
                   if (fadeTimeout) {
@@ -128,89 +132,100 @@ export default function RootLayout({
                   }, 1000);
                 }
                 
-                function handleComponentScroll() {
-                  updateComponentScrollbar();
-                  showComponentScrollbar();
+                // Enhanced scroll event handler with boundary detection
+                function handleScroll(event) {
+                  updateScrollbar();
+                  showScrollbar();
+                  
+                  // For pop-ups: prevent page scroll at boundaries
+                  if (isPopup && event.type === 'wheel') {
+                    const atTop = element.scrollTop === 0;
+                    const atBottom = element.scrollTop >= element.scrollHeight - element.clientHeight - 1;
+                    
+                    if ((atTop && event.deltaY < 0) || (atBottom && event.deltaY > 0)) {
+                      event.preventDefault();
+                      event.stopPropagation();
+                    }
+                  }
                 }
                 
                 // Event listeners
-                element.addEventListener('scroll', handleComponentScroll, { passive: true });
-                window.addEventListener('resize', updateComponentScrollbar, { passive: true });
+                element.addEventListener('scroll', handleScroll, { passive: true });
+                if (isPopup) {
+                  element.addEventListener('wheel', handleScroll, { passive: false });
+                  element.addEventListener('touchmove', (e) => e.stopPropagation(), { passive: false });
+                }
                 
-                componentScrollbars.set(element, {
+                // Store scrollbar data
+                scrollbarElements.set(element, {
                   scrollbar,
                   thumb,
-                  update: updateComponentScrollbar,
-                  show: showComponentScrollbar,
+                  isPopup,
+                  update: updateScrollbar,
+                  show: showScrollbar,
                   cleanup: () => {
-                    element.removeEventListener('scroll', handleComponentScroll);
-                    window.removeEventListener('resize', updateComponentScrollbar);
+                    element.removeEventListener('scroll', handleScroll);
+                    if (isPopup) {
+                      element.removeEventListener('wheel', handleScroll);
+                    }
                     if (fadeTimeout) clearTimeout(fadeTimeout);
                     if (scrollbar.parentElement) scrollbar.parentElement.removeChild(scrollbar);
-                    componentScrollbars.delete(element);
+                    scrollbarElements.delete(element);
                   }
                 });
                 
                 // Initial setup
-                updateComponentScrollbar();
+                updateScrollbar();
                 
-                // Auto-show when element becomes visible
+                // Auto-show for new elements
                 const observer = new IntersectionObserver((entries) => {
                   entries.forEach(entry => {
                     if (entry.isIntersecting && element.scrollHeight > element.clientHeight) {
-                      setTimeout(() => showComponentScrollbar(), 200);
+                      setTimeout(showScrollbar, 200);
                     }
                   });
                 });
                 observer.observe(element);
               }
               
-              // Initialize component scrollbars
-              function initComponentScrollbars() {
+              // INITIALIZATION
+              function initScrollbars() {
                 const elements = document.querySelectorAll('.violet-bloom-scrollbar');
                 elements.forEach(element => {
-                  // Only create scrollbar if element is actually scrollable
                   if (element.scrollHeight > element.clientHeight) {
-                    createComponentScrollbar(element);
+                    createVSCodeScrollbar(element);
                   }
                 });
               }
               
-              // Main scroll handling
               function handleMainScroll() {
                 updateMainScrollbar();
                 showMainScrollbar();
               }
               
-              // Initialize everything
+              // Main page scrollbar setup
               window.addEventListener('scroll', handleMainScroll, { passive: true });
               window.addEventListener('resize', updateMainScrollbar, { passive: true });
               
-              // Setup main scrollbar
               updateMainScrollbar();
-              setTimeout(() => showMainScrollbar(), 500);
+              setTimeout(showMainScrollbar, 500);
               
-              // Setup component scrollbars
+              // Component scrollbars setup
               if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', () => {
-                  initComponentScrollbars();
-                  // Re-check after components might have loaded
-                  setTimeout(initComponentScrollbars, 1000);
-                });
+                document.addEventListener('DOMContentLoaded', initScrollbars);
               } else {
-                initComponentScrollbars();
-                setTimeout(initComponentScrollbars, 1000);
+                initScrollbars();
               }
               
-              // Periodic check for new violet-bloom-scrollbar elements
+              // Re-check periodically for new elements (reduced frequency)
               setInterval(() => {
                 const elements = document.querySelectorAll('.violet-bloom-scrollbar');
                 elements.forEach(element => {
-                  if (!componentScrollbars.has(element) && element.scrollHeight > element.clientHeight) {
-                    createComponentScrollbar(element);
+                  if (!scrollbarElements.has(element) && element.scrollHeight > element.clientHeight) {
+                    createVSCodeScrollbar(element);
                   }
                 });
-              }, 2000);
+              }, 1500)
             `,
           }}
         />

@@ -260,10 +260,33 @@
   }
 }
 
-/* Hide native scrollbars for elements that will get custom scrollbars */
+/* =====================================
+   VS CODE CUSTOM SCROLLBAR SYSTEM
+   ===================================== */
+
+/* Hide native scrollbars globally except for specific elements */
+html {
+  scrollbar-width: none; /* Firefox */
+  overflow: auto;
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+body {
+  scrollbar-width: none; /* Firefox */
+  overflow-y: auto;
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+/* Hide native scrollbars for custom scrollbar elements */
 .violet-bloom-scrollbar {
   scrollbar-width: none !important; /* Firefox */
-  position: relative;
+  -ms-overflow-style: none !important; /* IE/Edge */
 }
 
 .violet-bloom-scrollbar::-webkit-scrollbar {
@@ -284,12 +307,53 @@
   display: none !important;
 }
 
-/* Custom scrollbar styling for components */
-.component-scrollbar {
+/* VS Code Main Page Scrollbar */
+.vscode-main-scrollbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 100vh;
+  background: transparent;
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.vscode-main-scrollbar.visible {
+  opacity: 1;
+}
+
+.vscode-main-scrollbar-thumb {
+  position: absolute;
+  width: 8px;
+  right: 2px;
+  background: linear-gradient(180deg, 
+    hsl(270 95% 75% / 0.8) 0%, 
+    hsl(280 80% 70% / 0.8) 50%, 
+    hsl(290 75% 65% / 0.8) 100%);
+  border-radius: 4px;
+  transition: all 0.2s ease-out;
+  box-shadow: 0 2px 4px hsl(270 50% 30% / 0.25);
+}
+
+.vscode-main-scrollbar:hover .vscode-main-scrollbar-thumb {
+  width: 10px;
+  background: linear-gradient(180deg, 
+    hsl(270 95% 75% / 0.95) 0%, 
+    hsl(280 80% 70% / 0.95) 50%, 
+    hsl(290 75% 65% / 0.95) 100%);
+  border-radius: 5px;
+  box-shadow: 0 3px 6px hsl(270 50% 30% / 0.35);
+}
+
+/* VS Code Component Scrollbars */
+.vscode-component-scrollbar {
   position: absolute;
   top: 0;
   right: 0;
-  width: 8px;
+  width: 10px;
   height: 100%;
   background: transparent;
   opacity: 0;
@@ -298,48 +362,121 @@
   z-index: 1000;
 }
 
-.component-scrollbar.visible {
+.vscode-component-scrollbar.visible {
   opacity: 1;
 }
 
-.component-scrollbar-thumb {
+.vscode-component-scrollbar-thumb {
   position: absolute;
   width: 6px;
-  right: 1px;
+  right: 2px;
   background: linear-gradient(180deg, 
     hsl(270 95% 75% / 0.75) 0%, 
     hsl(280 80% 70% / 0.75) 50%, 
     hsl(290 75% 65% / 0.75) 100%);
   border-radius: 3px;
   transition: all 0.2s ease-out;
-  box-shadow: 0 1px 2px hsl(270 50% 30% / 0.2);
+  box-shadow: 0 1px 3px hsl(270 50% 30% / 0.2);
 }
 
-.component-scrollbar:hover .component-scrollbar-thumb {
-  width: 7px;
+.vscode-component-scrollbar:hover .vscode-component-scrollbar-thumb {
+  width: 8px;
   background: linear-gradient(180deg, 
-    hsl(270 95% 75% / 0.95) 0%, 
-    hsl(280 80% 70% / 0.95) 50%, 
-    hsl(290 75% 65% / 0.95) 100%);
+    hsl(270 95% 75% / 0.9) 0%, 
+    hsl(280 80% 70% / 0.9) 50%, 
+    hsl(290 75% 65% / 0.9) 100%);
   border-radius: 4px;
   box-shadow: 0 2px 4px hsl(270 50% 30% / 0.3);
 }
 
-/* Dark mode for component scrollbars */
-.dark .component-scrollbar-thumb {
-  background: linear-gradient(180deg, 
-    hsl(270 80% 45% / 0.7) 0%, 
-    hsl(280 70% 40% / 0.7) 50%, 
-    hsl(290 65% 35% / 0.7) 100%);
-  box-shadow: 0 1px 2px hsl(270 40% 20% / 0.3);
+/* VS Code Pop-up Scrollbars (for modals/info-boxes) */
+.vscode-popup-scrollbar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 100%;
+  background: transparent;
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+  z-index: 10000; /* Higher than regular components */
 }
 
-.dark .component-scrollbar:hover .component-scrollbar-thumb {
+.vscode-popup-scrollbar.visible {
+  opacity: 1;
+}
+
+.vscode-popup-scrollbar-thumb {
+  position: absolute;
+  width: 6px;
+  right: 2px;
+  background: linear-gradient(180deg, 
+    hsl(270 95% 75% / 0.85) 0%, 
+    hsl(280 80% 70% / 0.85) 50%, 
+    hsl(290 75% 65% / 0.85) 100%);
+  border-radius: 3px;
+  transition: all 0.2s ease-out;
+  box-shadow: 0 2px 4px hsl(270 50% 30% / 0.3);
+}
+
+.vscode-popup-scrollbar:hover .vscode-popup-scrollbar-thumb {
+  width: 8px;
+  background: linear-gradient(180deg, 
+    hsl(270 95% 75% / 1) 0%, 
+    hsl(280 80% 70% / 1) 50%, 
+    hsl(290 75% 65% / 1) 100%);
+  border-radius: 4px;
+  box-shadow: 0 3px 6px hsl(270 50% 30% / 0.4);
+}
+
+/* Dark Mode Variants */
+.dark .vscode-main-scrollbar-thumb {
+  background: linear-gradient(180deg, 
+    hsl(270 80% 45% / 0.75) 0%, 
+    hsl(280 70% 40% / 0.75) 50%, 
+    hsl(290 65% 35% / 0.75) 100%);
+  box-shadow: 0 2px 4px hsl(270 40% 20% / 0.3);
+}
+
+.dark .vscode-main-scrollbar:hover .vscode-main-scrollbar-thumb {
   background: linear-gradient(180deg, 
     hsl(270 80% 45% / 0.9) 0%, 
     hsl(280 70% 40% / 0.9) 50%, 
     hsl(290 65% 35% / 0.9) 100%);
-  box-shadow: 0 2px 4px hsl(270 40% 20% / 0.4);
+  box-shadow: 0 3px 6px hsl(270 40% 20% / 0.4);
+}
+
+.dark .vscode-component-scrollbar-thumb {
+  background: linear-gradient(180deg, 
+    hsl(270 80% 45% / 0.7) 0%, 
+    hsl(280 70% 40% / 0.7) 50%, 
+    hsl(290 65% 35% / 0.7) 100%);
+  box-shadow: 0 1px 3px hsl(270 40% 20% / 0.25);
+}
+
+.dark .vscode-component-scrollbar:hover .vscode-component-scrollbar-thumb {
+  background: linear-gradient(180deg, 
+    hsl(270 80% 45% / 0.85) 0%, 
+    hsl(280 70% 40% / 0.85) 50%, 
+    hsl(290 65% 35% / 0.85) 100%);
+  box-shadow: 0 2px 4px hsl(270 40% 20% / 0.35);
+}
+
+.dark .vscode-popup-scrollbar-thumb {
+  background: linear-gradient(180deg, 
+    hsl(270 80% 45% / 0.8) 0%, 
+    hsl(280 70% 40% / 0.8) 50%, 
+    hsl(290 65% 35% / 0.8) 100%);
+  box-shadow: 0 2px 4px hsl(270 40% 20% / 0.35);
+}
+
+.dark .vscode-popup-scrollbar:hover .vscode-popup-scrollbar-thumb {
+  background: linear-gradient(180deg, 
+    hsl(270 80% 45% / 0.95) 0%, 
+    hsl(280 70% 40% / 0.95) 50%, 
+    hsl(290 65% 35% / 0.95) 100%);
+  box-shadow: 0 3px 6px hsl(270 40% 20% / 0.45);
 }
 
 /* Force standard scrollbars for specific elements */
