@@ -132,7 +132,7 @@ export default function RootLayout({
                       ratio,
                       thumbHeight,
                       thumbTop,
-                      formula: `(${scrollTop} / ${scrollHeight}) * (${clientHeight} - ${thumbHeight}) = ${thumbTop}`
+                      formula: '(' + scrollTop + ' / ' + scrollHeight + ') * (' + clientHeight + ' - ' + thumbHeight + ') = ' + thumbTop
                     });
                   }
                   
