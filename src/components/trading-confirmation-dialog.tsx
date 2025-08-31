@@ -127,7 +127,7 @@ export function TradingConfirmationDialog({
 
           <div className="space-y-6">
             {/* Uncertainty Assessment */}
-            <div className="space-y-4">
+            <div className="space-y-4 relative">
               <h3 className="font-medium text-foreground">Unsicherheits-Assessment</h3>
               
               {/* Perceived Uncertainty Slider */}
@@ -200,6 +200,18 @@ export function TradingConfirmationDialog({
                     </div>
                   ))}
                 </div>
+              </div>
+
+              {/* Absolutely Positioned Warning Box */}
+              <div 
+                className={`absolute right-[-280px] top-16 w-64 p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center gap-2 transition-opacity duration-300 ease-in-out ${
+                  perceivedUncertainty[0] >= 4 ? 'opacity-100' : 'opacity-0'
+                }`}
+              >
+                <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0" />
+                <p className="text-sm text-yellow-800">
+                  Sie haben eine hohe Unsicherheit angegeben. Möchten Sie die Entscheidung nochmals überdenken?
+                </p>
               </div>
             </div>
           </div>
