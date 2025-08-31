@@ -87,7 +87,7 @@ function UnsicherheitsAnalyseContent() {
             <ThemeToggle />
           </div>
         </header>
-        <div ref={scrollbarRef} className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-auto main-page-scrollbar">
+        <div ref={scrollbarRef} className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-auto violet-bloom-scrollbar">
           {!selectedStock ? (
             <div className="flex flex-1 items-center justify-center min-h-[60vh]">
               <div className="flex flex-col items-center justify-center space-y-8 w-full max-w-2xl px-4">

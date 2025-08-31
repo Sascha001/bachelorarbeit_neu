@@ -81,7 +81,7 @@ export function StockSearch({ onStockSelect }: StockSearchProps = {}) {
 
   return (
     <TooltipProvider>
-      <div className="relative w-full max-w-md" style={{zIndex: isOpen ? 9998 : 'auto'}}>
+      <div className="relative w-full max-w-md">
       <div className="relative">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
@@ -99,20 +99,9 @@ export function StockSearch({ onStockSelect }: StockSearchProps = {}) {
       
       {isOpen && (
         <div 
-          className="absolute top-full mt-1 w-full bg-card border border-primary/20 rounded-lg shadow-lg shadow-primary/10 max-h-80 overflow-y-auto violet-bloom-scrollbar"
+          className="absolute top-full mt-1 w-full bg-card border border-primary/20 rounded-lg shadow-lg shadow-primary/10 z-50 max-h-80 overflow-y-auto violet-bloom-scrollbar"
           data-dropdown="true"
-          style={{zIndex: 9999}}
-          onWheel={(e) => {
-            e.stopPropagation()
-            // Allow scrolling within dropdown but prevent page scroll when at boundaries
-            const target = e.currentTarget
-            const atTop = target.scrollTop === 0
-            const atBottom = target.scrollTop >= target.scrollHeight - target.clientHeight
-            
-            if ((atTop && e.deltaY < 0) || (atBottom && e.deltaY > 0)) {
-              e.preventDefault()
-            }
-          }}
+          onWheel={(e) => e.stopPropagation()}
           onTouchMove={(e) => e.stopPropagation()}
         >
           {isLoading && (
