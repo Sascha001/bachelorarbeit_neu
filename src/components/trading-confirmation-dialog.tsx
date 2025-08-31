@@ -126,92 +126,97 @@ export function TradingConfirmationDialog({
           </DialogHeader>
 
           <div className="space-y-6">
-            {/* Uncertainty Assessment */}
-            <div className="space-y-4">
-              <h3 className="font-medium text-foreground">Unsicherheits-Assessment</h3>
-              
-              {/* Perceived Uncertainty Slider */}
-              <div className="p-4 border border-primary/20 rounded-lg space-y-4">
-                <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium">
-                    Wie sicher fühlen Sie sich bei dieser Entscheidung?
-                  </label>
-                  <span className={`text-sm font-medium ${getUncertaintyColor(perceivedUncertainty[0])}`}>
-                    {getUncertaintyLabel(perceivedUncertainty[0])}
-                  </span>
+            {/* Assessment Box and Warning Side-by-Side */}
+            <div className="flex gap-4">
+              {/* Assessment Box */}
+              <div className="flex-1 space-y-4">
+                <h3 className="font-medium text-foreground">Unsicherheits-Assessment</h3>
+                
+                {/* Perceived Uncertainty Slider */}
+                <div className="p-4 border border-primary/20 rounded-lg space-y-4">
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-medium">
+                      Wie sicher fühlen Sie sich bei dieser Entscheidung?
+                    </label>
+                    <span className={`text-sm font-medium ${getUncertaintyColor(perceivedUncertainty[0])}`}>
+                      {getUncertaintyLabel(perceivedUncertainty[0])}
+                    </span>
+                  </div>
+                  <div className="px-2">
+                    <input
+                      type="range"
+                      min="1"
+                      max="5"
+                      step="1"
+                      value={perceivedUncertainty[0]}
+                      onChange={(e) => setPerceivedUncertainty([parseInt(e.target.value)])}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                    />
+                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                      <span>Sehr sicher</span>
+                      <span>Neutral</span>
+                      <span>Sehr unsicher</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="px-2">
-                  <input
-                    type="range"
-                    min="1"
-                    max="5"
-                    step="1"
-                    value={perceivedUncertainty[0]}
-                    onChange={(e) => setPerceivedUncertainty([parseInt(e.target.value)])}
-                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-                  />
-                  <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                    <span>Sehr sicher</span>
-                    <span>Neutral</span>
-                    <span>Sehr unsicher</span>
+
+                {/* Concept Understanding */}
+                <div className="p-4 border border-primary/20 rounded-lg space-y-3">
+                  <h4 className="text-sm font-medium">Verständnis-Check</h4>
+                  <p className="text-xs text-muted-foreground">
+                    Markieren Sie &quot;Unklar&quot;, wenn Sie Konzepte nicht vollständig verstehen
+                  </p>
+                  
+                  <div className="space-y-3">
+                    {concepts.map(concept => (
+                      <div key={concept.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Checkbox 
+                            id={concept.id}
+                            checked={!unclearConcepts.includes(concept.id)}
+                            onCheckedChange={(checked) => handleConceptToggle(concept.id, !checked)}
+                          />
+                          <label 
+                            htmlFor={concept.id} 
+                            className="text-sm cursor-pointer"
+                          >
+                            {concept.label}
+                          </label>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="max-w-xs">{concept.tooltip}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleConceptToggle(concept.id, true)}
+                          className={`text-xs ${unclearConcepts.includes(concept.id) ? 'bg-red-100 text-red-700' : ''}`}
+                        >
+                          {unclearConcepts.includes(concept.id) ? 'Unklar ✓' : 'Unklar?'}
+                        </Button>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
 
-              {/* Concept Understanding */}
-              <div className="p-4 border border-primary/20 rounded-lg space-y-3">
-                <h4 className="text-sm font-medium">Verständnis-Check</h4>
-                <p className="text-xs text-muted-foreground">
-                  Markieren Sie &quot;Unklar&quot;, wenn Sie Konzepte nicht vollständig verstehen
-                </p>
-                
-                <div className="space-y-3">
-                  {concepts.map(concept => (
-                    <div key={concept.id} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Checkbox 
-                          id={concept.id}
-                          checked={!unclearConcepts.includes(concept.id)}
-                          onCheckedChange={(checked) => handleConceptToggle(concept.id, !checked)}
-                        />
-                        <label 
-                          htmlFor={concept.id} 
-                          className="text-sm cursor-pointer"
-                        >
-                          {concept.label}
-                        </label>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <HelpCircle className="h-4 w-4 text-muted-foreground" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p className="max-w-xs">{concept.tooltip}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleConceptToggle(concept.id, true)}
-                        className={`text-xs ${unclearConcepts.includes(concept.id) ? 'bg-red-100 text-red-700' : ''}`}
-                      >
-                        {unclearConcepts.includes(concept.id) ? 'Unklar ✓' : 'Unklar?'}
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Warning for high uncertainty */}
-            {perceivedUncertainty[0] >= 4 && (
-              <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center gap-2">
-                <AlertCircle className="h-5 w-5 text-yellow-600" />
+              {/* Warning Box with Fade Effect - Outside Assessment Box */}
+              <div 
+                className={`w-64 h-fit mt-12 p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center gap-2 transition-opacity duration-300 ease-in-out ${
+                  perceivedUncertainty[0] >= 4 ? 'opacity-100' : 'opacity-0'
+                }`}
+              >
+                <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0" />
                 <p className="text-sm text-yellow-800">
                   Sie haben eine hohe Unsicherheit angegeben. Möchten Sie die Entscheidung nochmals überdenken?
                 </p>
               </div>
-            )}
+            </div>
           </div>
 
           <DialogFooter className="gap-2">
