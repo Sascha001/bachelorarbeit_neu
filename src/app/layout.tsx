@@ -173,6 +173,15 @@ export default function RootLayout({
                   if (element.scrollHeight > element.clientHeight) {
                     createComponentScrollbar(element);
                   }
+                  // Special handling for dropdown containers
+                  if (element.hasAttribute('data-dropdown')) {
+                    // Force re-check after a delay for dynamic content
+                    setTimeout(() => {
+                      if (element.scrollHeight > element.clientHeight && !componentScrollbars.has(element)) {
+                        createComponentScrollbar(element);
+                      }
+                    }, 100);
+                  }
                 });
               }
               
@@ -209,8 +218,14 @@ export default function RootLayout({
                   if (!componentScrollbars.has(element) && element.scrollHeight > element.clientHeight) {
                     createComponentScrollbar(element);
                   }
+                  // Extra check for dropdown elements that might need scrollbar activation
+                  if (element.hasAttribute('data-dropdown') && !componentScrollbars.has(element)) {
+                    if (element.scrollHeight > element.clientHeight) {
+                      createComponentScrollbar(element);
+                    }
+                  }
                 });
-              }, 2000);
+              }, 1000); // Reduced from 2000ms to 1000ms for faster dropdown detection
             `,
           }}
         />
