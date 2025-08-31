@@ -216,6 +216,7 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
   const { addUncertaintyData } = useTradingUncertainty()
   
   const [purchaseAmount, setPurchaseAmount] = useState(0)
+  const [isRecommendedSelected, setIsRecommendedSelected] = useState(false)
   const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false)
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false)
   const [isUncertaintyModalOpen, setIsUncertaintyModalOpen] = useState(false)
@@ -342,9 +343,23 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                     <div className="text-sm text-muted-foreground">Minimum</div>
                     <div className="text-lg font-bold">€{data.minAmount}</div>
                   </div>
-                  <div className="p-3 border-2 border-primary rounded-lg bg-primary/5">
-                    <div className="text-sm text-primary font-medium">Empfohlen</div>
-                    <div className="text-2xl font-bold text-primary">€{data.recommendedAmount.toFixed(2)}</div>
+                  <div 
+                    className={`p-3 rounded-lg cursor-pointer transition-all duration-200 ${
+                      isRecommendedSelected 
+                        ? 'border-2 border-primary bg-primary/5 violet-bloom-active' 
+                        : 'border border-gray-200 hover:border-primary/50 hover:bg-primary/5'
+                    }`}
+                    onClick={() => {
+                      setIsRecommendedSelected(true)
+                      setPurchaseAmount(data.recommendedAmount)
+                    }}
+                  >
+                    <div className={`text-sm font-medium ${isRecommendedSelected ? 'text-primary' : 'text-muted-foreground'}`}>
+                      Empfohlen
+                    </div>
+                    <div className={`text-2xl font-bold ${isRecommendedSelected ? 'text-primary' : 'text-foreground'}`}>
+                      €{data.recommendedAmount.toFixed(2)}
+                    </div>
                   </div>
                   <div className="p-3 border rounded-lg">
                     <div className="text-sm text-muted-foreground">Maximum</div>
@@ -360,8 +375,11 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                   <Input
                     id="purchase-amount"
                     type="number"
-                    value={purchaseAmount || ""}
-                    onChange={(e) => setPurchaseAmount(Number(e.target.value) || 0)}
+                    value={purchaseAmount > 0 ? purchaseAmount : ""}
+                    onChange={(e) => {
+                      setPurchaseAmount(Number(e.target.value) || 0)
+                      setIsRecommendedSelected(false) // Deselect recommended when manually typing
+                    }}
                     min={data.minAmount}
                     max={data.maxAmount}
                     placeholder={`Empfohlen: €${data.recommendedAmount.toFixed(2)}`}
@@ -540,12 +558,20 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
 
       {/* Transaction Success Message */}
       {transactionCompleted && (
-        <Card className="border-green-500/50 bg-green-500/5">
+        <Card className={`${
+          transactionType === 'BUY' 
+            ? 'border-green-500/50 bg-green-500/5' 
+            : 'border-red-500/50 bg-red-500/5'
+        }`}>
           <CardContent className="pt-6">
-            <div className="flex items-center gap-3 text-green-600">
+            <div className={`flex items-center gap-3 ${
+              transactionType === 'BUY' ? 'text-green-600' : 'text-red-600'
+            }`}>
               <CheckCircle className="h-5 w-5" />
               <span className="font-medium">
-                Transaktion erfolgreich! {calculateShares()} Aktien von {selectedStock} gekauft.
+                Transaktion erfolgreich! {calculateShares()} Aktien von {selectedStock} {
+                  transactionType === 'BUY' ? 'gekauft' : 'verkauft'
+                }.
               </span>
             </div>
           </CardContent>
