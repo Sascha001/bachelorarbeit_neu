@@ -554,11 +554,11 @@ body::-webkit-scrollbar {
   font-size: 1rem !important;
 }
 
-/* Side-by-Side Modal Layout for Uncertainty Assessment */
+/* Centered Modal Layout for Uncertainty Assessment */
 .uncertainty-modal-positioning {
   position: fixed !important;
-  left: 65% !important;
-  top: 80% !important;
+  left: 50% !important;
+  top: 50% !important;
   transform: translate(-50%, -50%) !important;
   z-index: 51 !important;
   max-width: 500px !important;
