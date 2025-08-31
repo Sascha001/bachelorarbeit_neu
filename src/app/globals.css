@@ -401,6 +401,11 @@ body::-webkit-scrollbar {
   transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   pointer-events: none;
   z-index: 10000; /* Higher than regular components */
+  /* Fix transform interference */
+  transform: translateZ(0); /* Create new stacking context */
+  will-change: opacity;
+  /* DEBUG: Visual indication */
+  /* border: 1px solid red; */
 }
 
 .vscode-popup-scrollbar.visible {
@@ -409,6 +414,8 @@ body::-webkit-scrollbar {
 
 .vscode-popup-scrollbar-thumb {
   position: absolute;
+  top: 0; /* EXPLICIT initial position */
+  left: 0; /* Reset any inherited positioning */
   width: 6px;
   right: 2px;
   background: linear-gradient(180deg, 
@@ -418,6 +425,11 @@ body::-webkit-scrollbar {
   border-radius: 3px;
   transition: all 0.2s ease-out;
   box-shadow: 0 2px 4px hsl(270 50% 30% / 0.3);
+  /* Fix transform and positioning issues */
+  transform: translateZ(0); /* Isolate from parent transforms */
+  will-change: transform, height;
+  /* DEBUG: Visual indication */
+  /* border: 1px solid blue; */
 }
 
 .vscode-popup-scrollbar:hover .vscode-popup-scrollbar-thumb {

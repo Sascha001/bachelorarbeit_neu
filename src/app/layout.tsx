@@ -106,6 +106,17 @@ export default function RootLayout({
                   const scrollHeight = element.scrollHeight - element.clientHeight;
                   const clientHeight = element.clientHeight;
                   
+                  // DEBUG: Log all values for troubleshooting
+                  if (isPopup) {
+                    console.log('🔧 POPUP SCROLLBAR DEBUG:', {
+                      scrollTop,
+                      scrollHeight,
+                      clientHeight,
+                      elementScrollHeight: element.scrollHeight,
+                      elementClientHeight: element.clientHeight
+                    });
+                  }
+                  
                   if (scrollHeight <= 0) {
                     scrollbar.classList.remove('visible');
                     return;
@@ -115,9 +126,28 @@ export default function RootLayout({
                   const thumbHeight = Math.max(20, clientHeight * ratio);
                   const thumbTop = (scrollTop / scrollHeight) * (clientHeight - thumbHeight);
                   
+                  // DEBUG: Log positioning calculations
+                  if (isPopup) {
+                    console.log('🔧 THUMB POSITION CALC:', {
+                      ratio,
+                      thumbHeight,
+                      thumbTop,
+                      formula: `(${scrollTop} / ${scrollHeight}) * (${clientHeight} - ${thumbHeight}) = ${thumbTop}`
+                    });
+                  }
+                  
                   thumb.style.height = thumbHeight + 'px';
                   thumb.style.top = thumbTop + 'px';
                   scrollbar.style.height = clientHeight + 'px';
+                  
+                  // DEBUG: Log final applied styles
+                  if (isPopup) {
+                    console.log('🔧 APPLIED STYLES:', {
+                      thumbHeight: thumb.style.height,
+                      thumbTop: thumb.style.top,
+                      scrollbarHeight: scrollbar.style.height
+                    });
+                  }
                 }
                 
                 function showScrollbar() {
@@ -136,6 +166,22 @@ export default function RootLayout({
                 function handleScroll(event) {
                   updateScrollbar();
                   showScrollbar();
+                  
+                  // DEBUG: Track scroll direction for pop-ups
+                  if (isPopup && event.type === 'scroll') {
+                    const currentScrollTop = element.scrollTop;
+                    const previousScrollTop = element._prevScrollTop || 0;
+                    const direction = currentScrollTop > previousScrollTop ? 'DOWN' : 'UP';
+                    element._prevScrollTop = currentScrollTop;
+                    
+                    console.log('🔧 SCROLL DIRECTION:', {
+                      direction,
+                      currentScrollTop,
+                      previousScrollTop,
+                      thumbElement: thumb,
+                      thumbTop: thumb.style.top
+                    });
+                  }
                   
                   // For pop-ups: prevent page scroll at boundaries
                   if (isPopup && event.type === 'wheel') {
@@ -174,8 +220,22 @@ export default function RootLayout({
                   }
                 });
                 
-                // Initial setup
-                updateScrollbar();
+                // Enhanced initial setup with container layout fix
+                if (isPopup) {
+                  // For pop-ups: ensure proper container dimensions
+                  setTimeout(() => {
+                    console.log('🔧 POPUP CONTAINER DEBUG:', {
+                      elementOffsetHeight: element.offsetHeight,
+                      elementClientHeight: element.clientHeight,
+                      elementScrollHeight: element.scrollHeight,
+                      computedHeight: window.getComputedStyle(element).height,
+                      parentHeight: element.parentElement?.offsetHeight
+                    });
+                    updateScrollbar();
+                  }, 100);
+                } else {
+                  updateScrollbar();
+                }
                 
                 // Auto-show for new elements
                 const observer = new IntersectionObserver((entries) => {
