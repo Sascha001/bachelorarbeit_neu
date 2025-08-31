@@ -267,24 +267,36 @@
   -ms-overflow-style: none !important; /* IE/Edge */
 }
 
-.violet-bloom-scrollbar::-webkit-scrollbar {
+/* Main page container scrollbar - lower z-index to avoid dropdown conflicts */
+.main-page-scrollbar {
+  scrollbar-width: none !important; /* Firefox */
+  position: relative;
+  -ms-overflow-style: none !important; /* IE/Edge */
+  z-index: 1; /* Lower than dropdown */
+}
+
+.violet-bloom-scrollbar::-webkit-scrollbar,
+.main-page-scrollbar::-webkit-scrollbar {
   display: none !important; /* Chrome/Safari */
   width: 0 !important;
   height: 0 !important;
   background: transparent !important;
 }
 
-.violet-bloom-scrollbar::-webkit-scrollbar-track {
+.violet-bloom-scrollbar::-webkit-scrollbar-track,
+.main-page-scrollbar::-webkit-scrollbar-track {
   display: none !important;
   background: transparent !important;
 }
 
-.violet-bloom-scrollbar::-webkit-scrollbar-thumb {
+.violet-bloom-scrollbar::-webkit-scrollbar-thumb,
+.main-page-scrollbar::-webkit-scrollbar-thumb {
   display: none !important;
   background: transparent !important;
 }
 
-.violet-bloom-scrollbar::-webkit-scrollbar-corner {
+.violet-bloom-scrollbar::-webkit-scrollbar-corner,
+.main-page-scrollbar::-webkit-scrollbar-corner {
   display: none !important;
   background: transparent !important;
 }
@@ -315,6 +327,47 @@
   transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   pointer-events: none;
   z-index: 1000;
+}
+
+/* Specialized dropdown scrollbar */
+.dropdown-scrollbar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 100%;
+  background: transparent;
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+  z-index: 9999; /* Higher z-index for dropdowns */
+}
+
+.dropdown-scrollbar.visible {
+  opacity: 1;
+}
+
+.dropdown-scrollbar-thumb {
+  position: absolute;
+  width: 6px;
+  right: 1px;
+  background: linear-gradient(180deg, 
+    hsl(270 95% 75% / 0.75) 0%, 
+    hsl(280 80% 70% / 0.75) 50%, 
+    hsl(290 75% 65% / 0.75) 100%);
+  border-radius: 3px;
+  transition: all 0.2s ease-out;
+  box-shadow: 0 1px 2px hsl(270 50% 30% / 0.2);
+}
+
+.dropdown-scrollbar:hover .dropdown-scrollbar-thumb {
+  width: 7px;
+  background: linear-gradient(180deg, 
+    hsl(270 95% 75% / 0.95) 0%, 
+    hsl(280 80% 70% / 0.95) 50%, 
+    hsl(290 75% 65% / 0.95) 100%);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px hsl(270 50% 30% / 0.3);
 }
 
 .component-scrollbar.visible {
@@ -354,6 +407,23 @@
 }
 
 .dark .component-scrollbar:hover .component-scrollbar-thumb {
+  background: linear-gradient(180deg, 
+    hsl(270 80% 45% / 0.9) 0%, 
+    hsl(280 70% 40% / 0.9) 50%, 
+    hsl(290 65% 35% / 0.9) 100%);
+  box-shadow: 0 2px 4px hsl(270 40% 20% / 0.4);
+}
+
+/* Dark mode for dropdown scrollbars */
+.dark .dropdown-scrollbar-thumb {
+  background: linear-gradient(180deg, 
+    hsl(270 80% 45% / 0.7) 0%, 
+    hsl(280 70% 40% / 0.7) 50%, 
+    hsl(290 65% 35% / 0.7) 100%);
+  box-shadow: 0 1px 2px hsl(270 40% 20% / 0.3);
+}
+
+.dark .dropdown-scrollbar:hover .dropdown-scrollbar-thumb {
   background: linear-gradient(180deg, 
     hsl(270 80% 45% / 0.9) 0%, 
     hsl(280 70% 40% / 0.9) 50%, 

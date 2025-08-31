@@ -84,11 +84,14 @@ export default function RootLayout({
                 // Make the element itself the container for the scrollbar
                 element.style.position = element.style.position || 'relative';
                 
-                // Create scrollbar DOM elements
+                // Determine scrollbar type based on element attributes
+                const isDropdown = element.hasAttribute('data-dropdown');
+                
+                // Create scrollbar DOM elements with appropriate classes
                 const scrollbar = document.createElement('div');
-                scrollbar.className = 'component-scrollbar';
+                scrollbar.className = isDropdown ? 'dropdown-scrollbar' : 'component-scrollbar';
                 const thumb = document.createElement('div');
-                thumb.className = 'component-scrollbar-thumb';
+                thumb.className = isDropdown ? 'dropdown-scrollbar-thumb' : 'component-scrollbar-thumb';
                 scrollbar.appendChild(thumb);
                 element.appendChild(scrollbar);
                 
@@ -133,9 +136,16 @@ export default function RootLayout({
                   showComponentScrollbar();
                 }
                 
-                // Event listeners
-                element.addEventListener('scroll', handleComponentScroll, { passive: true });
-                window.addEventListener('resize', updateComponentScrollbar, { passive: true });
+                // Event listeners - dropdowns need different handling
+                if (isDropdown) {
+                  // For dropdowns, don't interfere with main page scrolling
+                  element.addEventListener('scroll', handleComponentScroll, { passive: true });
+                  // Don't add window resize listener for dropdowns as they're temporary
+                } else {
+                  // Standard component scrollbar behavior
+                  element.addEventListener('scroll', handleComponentScroll, { passive: true });
+                  window.addEventListener('resize', updateComponentScrollbar, { passive: true });
+                }
                 
                 componentScrollbars.set(element, {
                   scrollbar,
@@ -144,7 +154,9 @@ export default function RootLayout({
                   show: showComponentScrollbar,
                   cleanup: () => {
                     element.removeEventListener('scroll', handleComponentScroll);
-                    window.removeEventListener('resize', updateComponentScrollbar);
+                    if (!isDropdown) {
+                      window.removeEventListener('resize', updateComponentScrollbar);
+                    }
                     if (fadeTimeout) clearTimeout(fadeTimeout);
                     if (scrollbar.parentElement) scrollbar.parentElement.removeChild(scrollbar);
                     componentScrollbars.delete(element);
@@ -167,7 +179,7 @@ export default function RootLayout({
               
               // Initialize component scrollbars
               function initComponentScrollbars() {
-                const elements = document.querySelectorAll('.violet-bloom-scrollbar');
+                const elements = document.querySelectorAll('.violet-bloom-scrollbar, .main-page-scrollbar');
                 elements.forEach(element => {
                   // Only create scrollbar if element is actually scrollable
                   if (element.scrollHeight > element.clientHeight) {
@@ -213,7 +225,7 @@ export default function RootLayout({
               
               // Periodic check for new violet-bloom-scrollbar elements
               setInterval(() => {
-                const elements = document.querySelectorAll('.violet-bloom-scrollbar');
+                const elements = document.querySelectorAll('.violet-bloom-scrollbar, .main-page-scrollbar');
                 elements.forEach(element => {
                   if (!componentScrollbars.has(element) && element.scrollHeight > element.clientHeight) {
                     createComponentScrollbar(element);
