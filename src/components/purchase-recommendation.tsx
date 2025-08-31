@@ -65,11 +65,11 @@ const getPurchaseData = (stock: string): PurchaseData => {
   const stockData = COMPREHENSIVE_MOCK_DATA[stock] || COMPREHENSIVE_MOCK_DATA.AAPL
   const currentPrice = stockData.price
   
-  // Calculate uncertainty scores from parameters
-  const fundamentalParams = getFundamentalDataParams()
-  const newsParams = getNewsReliabilityParams() 
-  const timeSeriesParams = getTimeSeriesIntegrityParams()
-  const tradingVolumeParams = getTradingVolumeParams()
+  // Calculate uncertainty scores from parameters (stock-specific)
+  const fundamentalParams = getFundamentalDataParams(stock)
+  const newsParams = getNewsReliabilityParams(stock) 
+  const timeSeriesParams = getTimeSeriesIntegrityParams(stock)
+  const tradingVolumeParams = getTradingVolumeParams(stock)
   
   // Calculate dimension certainties using calculation functions
   const fundamentalCalculated = {
@@ -120,21 +120,31 @@ const getPurchaseData = (stock: string): PurchaseData => {
   const overallCertainty = (fundamentalCertainty + newsCertainty + timeSeriesCertainty + tradingVolumeCertainty) / 4
   const uncertaintyScore = 100 - overallCertainty
   
-  // Generate recommendation based on data quality
-  const getRecommendation = (certainty: number, stock: string) => {
-    // German stocks and traditional US companies get more conservative recommendations
-    if (stock.includes('.DE') || ['BRK.B', 'JNJ', 'PG', 'KO', 'UNH'].includes(stock)) {
-      if (certainty >= 85) return "BUY"
-      if (certainty >= 75) return "HOLD"
-      return "SELL"
+  // Generate recommendation using 2-step process: market analysis + uncertainty filter
+  const getRecommendation = (uncertainty: number, stock: string) => {
+    // STEP 1: Market-based fundamental recommendation
+    const stockAnalysis: Record<string, string> = {
+      // Growth stocks with strong fundamentals
+      AAPL: "BUY", MSFT: "BUY", GOOGL: "BUY", V: "BUY", MA: "BUY",
+      // Stable value stocks  
+      JNJ: "BUY", PG: "BUY", KO: "BUY", UNH: "BUY",
+      // Mixed signals / mature markets
+      HD: "HOLD", JPM: "HOLD",
+      // High volatility / risk concerns
+      TSLA: "SELL", META: "HOLD", NVDA: "SELL", AMZN: "HOLD"
+    };
+    
+    const marketRecommendation = stockAnalysis[stock] || "HOLD";
+    
+    // STEP 2: Uncertainty filter - if uncertainty > 50%, force to HOLD
+    if (uncertainty > 50) {
+      return "HOLD"; // Too uncertain to trade
     }
-    // Tech stocks need higher certainty for BUY
-    if (certainty >= 90) return "BUY"
-    if (certainty >= 70) return "HOLD" 
-    return "SELL"
+    
+    return marketRecommendation;
   }
   
-  const recommendation = getRecommendation(overallCertainty, stock)
+  const recommendation = getRecommendation(uncertaintyScore, stock)
   
   // Calculate portfolio metrics based on uncertainty and stock characteristics
   const calculatePortfolioMetrics = (certainty: number) => {

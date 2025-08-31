@@ -242,10 +242,10 @@ const getPredictionIntervalStatus = (intervalString: string) => {
 
 const getTechnicalData = (stock: string): TechnicalData => {
   // Calculate actual scores from parameter functions
-  const fundamentalParams = getFundamentalDataParams()
-  const newsParams = getNewsReliabilityParams() 
-  const timeSeriesParams = getTimeSeriesIntegrityParams()
-  const tradingVolumeParams = getTradingVolumeParams()
+  const fundamentalParams = getFundamentalDataParams(stock)
+  const newsParams = getNewsReliabilityParams(stock) 
+  const timeSeriesParams = getTimeSeriesIntegrityParams(stock)
+  const tradingVolumeParams = getTradingVolumeParams(stock)
   
   // Calculate weighted averages for each dimension using calculation functions
   const fundamentalCalculated = calculateAllFundamentalData(fundamentalParams);
@@ -456,8 +456,119 @@ const calculateAllFundamentalData = (params: FundamentalDataParams) => {
   };
 };
 
-export const getFundamentalDataParams = (): FundamentalDataParams => {
-  // Use default parameters - no stock-specific variation for simplicity
+export const getFundamentalDataParams = (stock?: string): FundamentalDataParams => {
+  // Stock-specific fundamental data parameters for diversified uncertainty patterns
+  const params: Record<string, FundamentalDataParams> = {
+    // HIGH DATA UNCERTAINTY - Poor fundamental data quality
+    TSLA: { // Data uncertainty dominant
+      completeness: { missingValues: 8, totalValues: 25 }, // More missing data
+      timeliness: { daysOld: 4, maxAcceptableDays: 7 }, // Older data
+      consistency: { inconsistentEntries: 5, totalEntries: 25 }, // Less consistent  
+      accuracy: { accurateReports: 18, totalReports: 25 }, // Lower accuracy
+      stability: { revisions: 4, totalDataPoints: 25 } // More revisions
+    },
+    NVDA: { // Data uncertainty dominant
+      completeness: { missingValues: 7, totalValues: 25 },
+      timeliness: { daysOld: 3, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 4, totalEntries: 25 },
+      accuracy: { accurateReports: 19, totalReports: 25 },
+      stability: { revisions: 3, totalDataPoints: 25 }
+    },
+    META: { // Model uncertainty dominant, decent data
+      completeness: { missingValues: 3, totalValues: 25 },
+      timeliness: { daysOld: 2, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 2, totalEntries: 25 },
+      accuracy: { accurateReports: 22, totalReports: 25 },
+      stability: { revisions: 2, totalDataPoints: 25 }
+    },
+    AAPL: { // Model uncertainty dominant, decent data
+      completeness: { missingValues: 2, totalValues: 25 },
+      timeliness: { daysOld: 1, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 1, totalEntries: 25 },
+      accuracy: { accurateReports: 23, totalReports: 25 },
+      stability: { revisions: 1, totalDataPoints: 25 }
+    },
+    // MEDIUM UNCERTAINTY - Mixed data quality
+    MSFT: { // Human uncertainty dominant, good data
+      completeness: { missingValues: 1, totalValues: 25 },
+      timeliness: { daysOld: 1, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 1, totalEntries: 25 },
+      accuracy: { accurateReports: 24, totalReports: 25 },
+      stability: { revisions: 0, totalDataPoints: 25 }
+    },
+    GOOGL: { // Human uncertainty dominant, good data
+      completeness: { missingValues: 1, totalValues: 25 },
+      timeliness: { daysOld: 1, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 1, totalEntries: 25 },
+      accuracy: { accurateReports: 24, totalReports: 25 },
+      stability: { revisions: 1, totalDataPoints: 25 }
+    },
+    AMZN: { // Model uncertainty dominant, average data
+      completeness: { missingValues: 4, totalValues: 25 },
+      timeliness: { daysOld: 2, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 3, totalEntries: 25 },
+      accuracy: { accurateReports: 21, totalReports: 25 },
+      stability: { revisions: 2, totalDataPoints: 25 }
+    },
+    HD: { // Balanced uncertainty, good data
+      completeness: { missingValues: 1, totalValues: 25 },
+      timeliness: { daysOld: 1, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 1, totalEntries: 25 },
+      accuracy: { accurateReports: 23, totalReports: 25 },
+      stability: { revisions: 1, totalDataPoints: 25 }
+    },
+    JPM: { // Balanced uncertainty, excellent financial reporting
+      completeness: { missingValues: 0, totalValues: 25 },
+      timeliness: { daysOld: 0, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 0, totalEntries: 25 },
+      accuracy: { accurateReports: 25, totalReports: 25 },
+      stability: { revisions: 0, totalDataPoints: 25 }
+    },
+    // LOW UNCERTAINTY - Excellent data quality
+    JNJ: { // Balanced low uncertainty, pharmaceutical compliance
+      completeness: { missingValues: 0, totalValues: 25 },
+      timeliness: { daysOld: 0, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 0, totalEntries: 25 },
+      accuracy: { accurateReports: 25, totalReports: 25 },
+      stability: { revisions: 0, totalDataPoints: 25 }
+    },
+    PG: { // Balanced low uncertainty, consumer goods stability
+      completeness: { missingValues: 0, totalValues: 25 },
+      timeliness: { daysOld: 0, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 0, totalEntries: 25 },
+      accuracy: { accurateReports: 25, totalReports: 25 },
+      stability: { revisions: 0, totalDataPoints: 25 }
+    },
+    KO: { // Balanced low uncertainty, established company
+      completeness: { missingValues: 0, totalValues: 25 },
+      timeliness: { daysOld: 0, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 0, totalEntries: 25 },
+      accuracy: { accurateReports: 25, totalReports: 25 },
+      stability: { revisions: 0, totalDataPoints: 25 }
+    },
+    UNH: { // Balanced low uncertainty, healthcare regulations
+      completeness: { missingValues: 0, totalValues: 25 },
+      timeliness: { daysOld: 0, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 0, totalEntries: 25 },
+      accuracy: { accurateReports: 25, totalReports: 25 },
+      stability: { revisions: 0, totalDataPoints: 25 }
+    },
+    V: { // Balanced low uncertainty, financial services
+      completeness: { missingValues: 0, totalValues: 25 },
+      timeliness: { daysOld: 0, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 0, totalEntries: 25 },
+      accuracy: { accurateReports: 25, totalReports: 25 },
+      stability: { revisions: 0, totalDataPoints: 25 }
+    },
+    MA: { // Balanced low uncertainty, financial services
+      completeness: { missingValues: 0, totalValues: 25 },
+      timeliness: { daysOld: 0, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 0, totalEntries: 25 },
+      accuracy: { accurateReports: 25, totalReports: 25 },
+      stability: { revisions: 0, totalDataPoints: 25 }
+    }
+  };
+  
   const defaultParams = {
     completeness: { missingValues: 2, totalValues: 25 },
     timeliness: { daysOld: 1, maxAcceptableDays: 7 },
@@ -465,7 +576,8 @@ export const getFundamentalDataParams = (): FundamentalDataParams => {
     accuracy: { accurateReports: 23, totalReports: 25 },
     stability: { revisions: 1, totalDataPoints: 25 }
   };
-  return defaultParams;
+  
+  return stock ? (params[stock] || defaultParams) : defaultParams;
 }
 
 // FormulaTooltip component removed to fix build issues
@@ -844,6 +956,7 @@ const getUncertaintyParameterPopup = (parameterName: string, selectedStock: stri
 
 export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams => {
   const params: Record<string, ModelUncertaintyParams> = {
+    // HIGH UNCERTAINTY STOCKS (55-80%) - Model uncertainty dominant
     AAPL: {
       epistemicUncertainty: { 
         predictionStdDev: 0.008,
@@ -866,6 +979,344 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
       },
       explanationConsistency: { 
         featureImportanceCorrelation: 0.89
+      }
+    },
+    TSLA: { // High uncertainty, data uncertainty dominant
+      epistemicUncertainty: { 
+        predictionStdDev: 0.022,
+        meanPrediction: 0.045,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.008,
+        maxExpectedVariance: 0.012,
+        confidenceInterval95: 4.2
+      },
+      overfittingRisk: { 
+        trainLoss: 0.095,
+        testLoss: 0.125,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.012,
+        baselinePrediction: 0.045
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.65
+      }
+    },
+    META: { // High uncertainty, model uncertainty dominant
+      epistemicUncertainty: { 
+        predictionStdDev: 0.018,
+        meanPrediction: 0.032,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.009,
+        maxExpectedVariance: 0.014,
+        confidenceInterval95: 3.8
+      },
+      overfittingRisk: { 
+        trainLoss: 0.08,
+        testLoss: 0.115,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.015,
+        baselinePrediction: 0.032
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.58
+      }
+    },
+    NVDA: { // High uncertainty, data uncertainty dominant
+      epistemicUncertainty: { 
+        predictionStdDev: 0.025,
+        meanPrediction: 0.038,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.011,
+        maxExpectedVariance: 0.016,
+        confidenceInterval95: 5.1
+      },
+      overfittingRisk: { 
+        trainLoss: 0.092,
+        testLoss: 0.135,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.019,
+        baselinePrediction: 0.038
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.62
+      }
+    },
+    // MEDIUM UNCERTAINTY STOCKS (40-50%)
+    MSFT: { // Medium uncertainty, human uncertainty dominant
+      epistemicUncertainty: { 
+        predictionStdDev: 0.006,
+        meanPrediction: 0.028,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.003,
+        maxExpectedVariance: 0.008,
+        confidenceInterval95: 2.1
+      },
+      overfittingRisk: { 
+        trainLoss: 0.042,
+        testLoss: 0.055,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.005,
+        baselinePrediction: 0.028
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.82
+      }
+    },
+    GOOGL: { // Medium uncertainty, human uncertainty dominant
+      epistemicUncertainty: { 
+        predictionStdDev: 0.007,
+        meanPrediction: 0.026,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.0035,
+        maxExpectedVariance: 0.009,
+        confidenceInterval95: 2.3
+      },
+      overfittingRisk: { 
+        trainLoss: 0.038,
+        testLoss: 0.052,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.006,
+        baselinePrediction: 0.026
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.78
+      }
+    },
+    AMZN: { // Medium uncertainty, model uncertainty dominant
+      epistemicUncertainty: { 
+        predictionStdDev: 0.011,
+        meanPrediction: 0.033,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.005,
+        maxExpectedVariance: 0.011,
+        confidenceInterval95: 2.8
+      },
+      overfittingRisk: { 
+        trainLoss: 0.055,
+        testLoss: 0.078,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.009,
+        baselinePrediction: 0.033
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.71
+      }
+    },
+    HD: { // Medium uncertainty, balanced
+      epistemicUncertainty: { 
+        predictionStdDev: 0.005,
+        meanPrediction: 0.022,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.002,
+        maxExpectedVariance: 0.006,
+        confidenceInterval95: 1.9
+      },
+      overfittingRisk: { 
+        trainLoss: 0.035,
+        testLoss: 0.048,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.004,
+        baselinePrediction: 0.022
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.85
+      }
+    },
+    JPM: { // Medium uncertainty, balanced
+      epistemicUncertainty: { 
+        predictionStdDev: 0.0045,
+        meanPrediction: 0.024,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.0025,
+        maxExpectedVariance: 0.007,
+        confidenceInterval95: 2.0
+      },
+      overfittingRisk: { 
+        trainLoss: 0.032,
+        testLoss: 0.045,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.0035,
+        baselinePrediction: 0.024
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.87
+      }
+    },
+    // LOW UNCERTAINTY STOCKS (15-35%) - Balanced/stable
+    JNJ: { // Low uncertainty, balanced distribution
+      epistemicUncertainty: { 
+        predictionStdDev: 0.003,
+        meanPrediction: 0.018,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.001,
+        maxExpectedVariance: 0.004,
+        confidenceInterval95: 1.2
+      },
+      overfittingRisk: { 
+        trainLoss: 0.022,
+        testLoss: 0.028,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.002,
+        baselinePrediction: 0.018
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.92
+      }
+    },
+    PG: { // Low uncertainty, balanced distribution
+      epistemicUncertainty: { 
+        predictionStdDev: 0.0025,
+        meanPrediction: 0.016,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.0008,
+        maxExpectedVariance: 0.0035,
+        confidenceInterval95: 1.1
+      },
+      overfittingRisk: { 
+        trainLoss: 0.019,
+        testLoss: 0.025,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.0018,
+        baselinePrediction: 0.016
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.94
+      }
+    },
+    KO: { // Low uncertainty, balanced distribution
+      epistemicUncertainty: { 
+        predictionStdDev: 0.0022,
+        meanPrediction: 0.015,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.0007,
+        maxExpectedVariance: 0.003,
+        confidenceInterval95: 1.0
+      },
+      overfittingRisk: { 
+        trainLoss: 0.018,
+        testLoss: 0.023,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.0015,
+        baselinePrediction: 0.015
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.95
+      }
+    },
+    UNH: { // Low uncertainty, balanced distribution
+      epistemicUncertainty: { 
+        predictionStdDev: 0.0032,
+        meanPrediction: 0.019,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.0012,
+        maxExpectedVariance: 0.0042,
+        confidenceInterval95: 1.3
+      },
+      overfittingRisk: { 
+        trainLoss: 0.024,
+        testLoss: 0.031,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.0022,
+        baselinePrediction: 0.019
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.91
+      }
+    },
+    V: { // Low uncertainty, balanced distribution  
+      epistemicUncertainty: { 
+        predictionStdDev: 0.0028,
+        meanPrediction: 0.017,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.0009,
+        maxExpectedVariance: 0.0038,
+        confidenceInterval95: 1.15
+      },
+      overfittingRisk: { 
+        trainLoss: 0.021,
+        testLoss: 0.027,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.0019,
+        baselinePrediction: 0.017
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.93
+      }
+    },
+    MA: { // Low uncertainty, balanced distribution
+      epistemicUncertainty: { 
+        predictionStdDev: 0.003,
+        meanPrediction: 0.0175,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.001,
+        maxExpectedVariance: 0.004,
+        confidenceInterval95: 1.2
+      },
+      overfittingRisk: { 
+        trainLoss: 0.0215,
+        testLoss: 0.0275,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.002,
+        baselinePrediction: 0.0175
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.925
       }
     }
   };
@@ -1092,33 +1543,312 @@ const getHumanUncertaintyParameterPopup = (parameterName: string, selectedStock:
 }
 
 // Data Parameter Export Functions
-export const getNewsReliabilityParams = (): NewsReliabilityParams => {
+export const getNewsReliabilityParams = (stock?: string): NewsReliabilityParams => {
+  // Stock-specific news reliability parameters for diversified uncertainty patterns
+  const params: Record<string, NewsReliabilityParams> = {
+    // HIGH DATA UNCERTAINTY - Poor news reliability
+    TSLA: { // Data uncertainty dominant - volatile news coverage
+      sourceReliability: { totalSources: 15, averageReliability: 0.72 }, // Lower reliability
+      reputationAccuracy: { totalNews: 100, falseNews: 25 }, // More false news
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 6.2 }, // Less consensus
+      biasCheck: { biasIndex: 0.38, maxBiasValue: 1.0 } // Higher bias
+    },
+    NVDA: { // Data uncertainty dominant - hyped coverage
+      sourceReliability: { totalSources: 15, averageReliability: 0.75 },
+      reputationAccuracy: { totalNews: 100, falseNews: 22 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 6.8 },
+      biasCheck: { biasIndex: 0.32, maxBiasValue: 1.0 }
+    },
+    META: { // Model uncertainty dominant - mixed news quality
+      sourceReliability: { totalSources: 15, averageReliability: 0.81 },
+      reputationAccuracy: { totalNews: 100, falseNews: 15 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 7.5 },
+      biasCheck: { biasIndex: 0.22, maxBiasValue: 1.0 }
+    },
+    AAPL: { // Model uncertainty dominant - decent news quality
+      sourceReliability: { totalSources: 15, averageReliability: 0.85 },
+      reputationAccuracy: { totalNews: 100, falseNews: 12 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 8.1 },
+      biasCheck: { biasIndex: 0.18, maxBiasValue: 1.0 }
+    },
+    // MEDIUM UNCERTAINTY - Average news reliability
+    MSFT: { // Human uncertainty dominant - stable news coverage
+      sourceReliability: { totalSources: 15, averageReliability: 0.91 }, // High reliability
+      reputationAccuracy: { totalNews: 100, falseNews: 6 }, // Less false news
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 8.8 }, // Good consensus
+      biasCheck: { biasIndex: 0.12, maxBiasValue: 1.0 } // Lower bias
+    },
+    GOOGL: { // Human uncertainty dominant - stable coverage
+      sourceReliability: { totalSources: 15, averageReliability: 0.89 },
+      reputationAccuracy: { totalNews: 100, falseNews: 8 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 8.6 },
+      biasCheck: { biasIndex: 0.14, maxBiasValue: 1.0 }
+    },
+    AMZN: { // Model uncertainty dominant - mixed coverage
+      sourceReliability: { totalSources: 15, averageReliability: 0.83 },
+      reputationAccuracy: { totalNews: 100, falseNews: 16 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 7.3 },
+      biasCheck: { biasIndex: 0.25, maxBiasValue: 1.0 }
+    },
+    HD: { // Balanced uncertainty - steady coverage
+      sourceReliability: { totalSources: 15, averageReliability: 0.87 },
+      reputationAccuracy: { totalNews: 100, falseNews: 9 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 8.3 },
+      biasCheck: { biasIndex: 0.16, maxBiasValue: 1.0 }
+    },
+    JPM: { // Balanced uncertainty - financial expertise
+      sourceReliability: { totalSources: 15, averageReliability: 0.93 },
+      reputationAccuracy: { totalNews: 100, falseNews: 4 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 9.1 },
+      biasCheck: { biasIndex: 0.09, maxBiasValue: 1.0 }
+    },
+    // LOW UNCERTAINTY - Excellent news reliability
+    JNJ: { // Balanced low uncertainty - established coverage
+      sourceReliability: { totalSources: 15, averageReliability: 0.95 },
+      reputationAccuracy: { totalNews: 100, falseNews: 2 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 9.4 },
+      biasCheck: { biasIndex: 0.06, maxBiasValue: 1.0 }
+    },
+    PG: { // Balanced low uncertainty - consumer goods stability
+      sourceReliability: { totalSources: 15, averageReliability: 0.94 },
+      reputationAccuracy: { totalNews: 100, falseNews: 3 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 9.3 },
+      biasCheck: { biasIndex: 0.07, maxBiasValue: 1.0 }
+    },
+    KO: { // Balanced low uncertainty - iconic brand coverage
+      sourceReliability: { totalSources: 15, averageReliability: 0.96 },
+      reputationAccuracy: { totalNews: 100, falseNews: 2 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 9.5 },
+      biasCheck: { biasIndex: 0.05, maxBiasValue: 1.0 }
+    },
+    UNH: { // Balanced low uncertainty - regulated industry
+      sourceReliability: { totalSources: 15, averageReliability: 0.92 },
+      reputationAccuracy: { totalNews: 100, falseNews: 4 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 9.0 },
+      biasCheck: { biasIndex: 0.08, maxBiasValue: 1.0 }
+    },
+    V: { // Balanced low uncertainty - financial stability
+      sourceReliability: { totalSources: 15, averageReliability: 0.93 },
+      reputationAccuracy: { totalNews: 100, falseNews: 3 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 9.2 },
+      biasCheck: { biasIndex: 0.07, maxBiasValue: 1.0 }
+    },
+    MA: { // Balanced low uncertainty - financial stability
+      sourceReliability: { totalSources: 15, averageReliability: 0.94 },
+      reputationAccuracy: { totalNews: 100, falseNews: 3 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 9.2 },
+      biasCheck: { biasIndex: 0.06, maxBiasValue: 1.0 }
+    }
+  };
+  
   const defaultParams = {
     sourceReliability: { totalSources: 15, averageReliability: 0.89 },
     reputationAccuracy: { totalNews: 100, falseNews: 10 },
     crossSourceConsensus: { totalNews: 10, confirmedNews: 8.5 },
     biasCheck: { biasIndex: 0.15, maxBiasValue: 1.0 }
   };
-  return defaultParams;
+  
+  return stock ? (params[stock] || defaultParams) : defaultParams;
 };
 
-export const getTimeSeriesIntegrityParams = (): TimeSeriesIntegrityParams => {
+export const getTimeSeriesIntegrityParams = (stock?: string): TimeSeriesIntegrityParams => {
+  // Stock-specific time series integrity parameters for diversified uncertainty patterns
+  const params: Record<string, TimeSeriesIntegrityParams> = {
+    // HIGH DATA UNCERTAINTY - Poor time series quality
+    TSLA: { // Data uncertainty dominant - volatile time series
+      completeness: { missingTimepoints: 8, expectedTimepoints: 100 }, // More gaps
+      outlierFreedom: { outliers: 12, totalObservations: 100 }, // Many outliers
+      revisionStability: { revisedValues: 6, totalValues: 100 }, // Frequent revisions
+      continuity: { gaps: 7, totalIntervals: 100 } // Many gaps
+    },
+    NVDA: { // Data uncertainty dominant - erratic patterns
+      completeness: { missingTimepoints: 6, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 10, totalObservations: 100 },
+      revisionStability: { revisedValues: 5, totalValues: 100 },
+      continuity: { gaps: 5, totalIntervals: 100 }
+    },
+    META: { // Model uncertainty dominant - decent time series
+      completeness: { missingTimepoints: 3, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 5, totalObservations: 100 },
+      revisionStability: { revisedValues: 2, totalValues: 100 },
+      continuity: { gaps: 3, totalIntervals: 100 }
+    },
+    AAPL: { // Model uncertainty dominant - decent time series
+      completeness: { missingTimepoints: 2, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 3, totalObservations: 100 },
+      revisionStability: { revisedValues: 1, totalValues: 100 },
+      continuity: { gaps: 2, totalIntervals: 100 }
+    },
+    // MEDIUM UNCERTAINTY - Average time series quality
+    MSFT: { // Human uncertainty dominant - stable time series
+      completeness: { missingTimepoints: 1, expectedTimepoints: 100 }, // Minimal gaps
+      outlierFreedom: { outliers: 2, totalObservations: 100 }, // Few outliers
+      revisionStability: { revisedValues: 0, totalValues: 100 }, // No revisions
+      continuity: { gaps: 1, totalIntervals: 100 } // Excellent continuity
+    },
+    GOOGL: { // Human uncertainty dominant - stable patterns
+      completeness: { missingTimepoints: 1, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 2, totalObservations: 100 },
+      revisionStability: { revisedValues: 1, totalValues: 100 },
+      continuity: { gaps: 1, totalIntervals: 100 }
+    },
+    AMZN: { // Model uncertainty dominant - moderate volatility
+      completeness: { missingTimepoints: 4, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 6, totalObservations: 100 },
+      revisionStability: { revisedValues: 3, totalValues: 100 },
+      continuity: { gaps: 3, totalIntervals: 100 }
+    },
+    HD: { // Balanced uncertainty - steady time series
+      completeness: { missingTimepoints: 2, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 3, totalObservations: 100 },
+      revisionStability: { revisedValues: 1, totalValues: 100 },
+      continuity: { gaps: 2, totalIntervals: 100 }
+    },
+    JPM: { // Balanced uncertainty - financial regulatory stability
+      completeness: { missingTimepoints: 0, expectedTimepoints: 100 }, // Perfect completeness
+      outlierFreedom: { outliers: 1, totalObservations: 100 }, // Minimal outliers
+      revisionStability: { revisedValues: 0, totalValues: 100 }, // No revisions
+      continuity: { gaps: 0, totalIntervals: 100 } // Perfect continuity
+    },
+    // LOW UNCERTAINTY - Excellent time series quality
+    JNJ: { // Balanced low uncertainty - pharmaceutical stability
+      completeness: { missingTimepoints: 0, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 0, totalObservations: 100 },
+      revisionStability: { revisedValues: 0, totalValues: 100 },
+      continuity: { gaps: 0, totalIntervals: 100 }
+    },
+    PG: { // Balanced low uncertainty - consumer stability
+      completeness: { missingTimepoints: 0, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 0, totalObservations: 100 },
+      revisionStability: { revisedValues: 0, totalValues: 100 },
+      continuity: { gaps: 0, totalIntervals: 100 }
+    },
+    KO: { // Balanced low uncertainty - iconic stability
+      completeness: { missingTimepoints: 0, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 0, totalObservations: 100 },
+      revisionStability: { revisedValues: 0, totalValues: 100 },
+      continuity: { gaps: 0, totalIntervals: 100 }
+    },
+    UNH: { // Balanced low uncertainty - healthcare regulation
+      completeness: { missingTimepoints: 0, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 1, totalObservations: 100 },
+      revisionStability: { revisedValues: 0, totalValues: 100 },
+      continuity: { gaps: 0, totalIntervals: 100 }
+    },
+    V: { // Balanced low uncertainty - payment stability
+      completeness: { missingTimepoints: 0, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 0, totalObservations: 100 },
+      revisionStability: { revisedValues: 0, totalValues: 100 },
+      continuity: { gaps: 0, totalIntervals: 100 }
+    },
+    MA: { // Balanced low uncertainty - payment stability
+      completeness: { missingTimepoints: 0, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 0, totalObservations: 100 },
+      revisionStability: { revisedValues: 0, totalValues: 100 },
+      continuity: { gaps: 0, totalIntervals: 100 }
+    }
+  };
+  
   const defaultParams = {
     completeness: { missingTimepoints: 2, expectedTimepoints: 100 },
     outlierFreedom: { outliers: 3, totalObservations: 100 },
     revisionStability: { revisedValues: 1, totalValues: 100 },
     continuity: { gaps: 2, totalIntervals: 100 }
   };
-  return defaultParams;
+  
+  return stock ? (params[stock] || defaultParams) : defaultParams;
 };
 
-export const getTradingVolumeParams = (): TradingVolumeParams => {
+export const getTradingVolumeParams = (stock?: string): TradingVolumeParams => {
+  // Stock-specific trading volume parameters for diversified uncertainty patterns
+  const params: Record<string, TradingVolumeParams> = {
+    // HIGH DATA UNCERTAINTY - Volatile trading patterns
+    TSLA: { // Data uncertainty dominant - erratic volume patterns
+      concentration: { topTradersVolume: 0.55, totalVolume: 1.0 }, // High concentration
+      anomalousSpikes: { spikes: 45, totalTradingDays: 250 }, // Frequent spikes
+      timeStability: { varianceCoefficient: 0.68, maxVarianceCoefficient: 1.0 } // High variance
+    },
+    NVDA: { // Data uncertainty dominant - momentum-driven volatility
+      concentration: { topTradersVolume: 0.48, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 38, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.62, maxVarianceCoefficient: 1.0 }
+    },
+    META: { // Model uncertainty dominant - moderate volume issues
+      concentration: { topTradersVolume: 0.38, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 20, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.42, maxVarianceCoefficient: 1.0 }
+    },
+    AAPL: { // Model uncertainty dominant - decent volume stability
+      concentration: { topTradersVolume: 0.3, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 12, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.25, maxVarianceCoefficient: 1.0 }
+    },
+    // MEDIUM UNCERTAINTY - Moderate trading patterns
+    MSFT: { // Human uncertainty dominant - stable institutional trading
+      concentration: { topTradersVolume: 0.22, totalVolume: 1.0 }, // Lower concentration
+      anomalousSpikes: { spikes: 8, totalTradingDays: 250 }, // Rare spikes
+      timeStability: { varianceCoefficient: 0.18, maxVarianceCoefficient: 1.0 } // Low variance
+    },
+    GOOGL: { // Human uncertainty dominant - predictable patterns
+      concentration: { topTradersVolume: 0.25, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 10, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.21, maxVarianceCoefficient: 1.0 }
+    },
+    AMZN: { // Model uncertainty dominant - mixed patterns
+      concentration: { topTradersVolume: 0.35, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 18, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.38, maxVarianceCoefficient: 1.0 }
+    },
+    HD: { // Balanced uncertainty - steady retail patterns
+      concentration: { topTradersVolume: 0.28, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 10, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.23, maxVarianceCoefficient: 1.0 }
+    },
+    JPM: { // Balanced uncertainty - institutional stability
+      concentration: { topTradersVolume: 0.18, totalVolume: 1.0 }, // Very distributed
+      anomalousSpikes: { spikes: 5, totalTradingDays: 250 }, // Minimal spikes
+      timeStability: { varianceCoefficient: 0.12, maxVarianceCoefficient: 1.0 } // Excellent stability
+    },
+    // LOW UNCERTAINTY - Excellent trading stability
+    JNJ: { // Balanced low uncertainty - dividend-focused stability
+      concentration: { topTradersVolume: 0.15, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 3, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.08, maxVarianceCoefficient: 1.0 }
+    },
+    PG: { // Balanced low uncertainty - consumer goods stability
+      concentration: { topTradersVolume: 0.14, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 2, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.07, maxVarianceCoefficient: 1.0 }
+    },
+    KO: { // Balanced low uncertainty - iconic brand stability
+      concentration: { topTradersVolume: 0.12, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 1, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.06, maxVarianceCoefficient: 1.0 }
+    },
+    UNH: { // Balanced low uncertainty - healthcare sector stability
+      concentration: { topTradersVolume: 0.16, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 3, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.09, maxVarianceCoefficient: 1.0 }
+    },
+    V: { // Balanced low uncertainty - payment processor stability
+      concentration: { topTradersVolume: 0.13, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 2, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.08, maxVarianceCoefficient: 1.0 }
+    },
+    MA: { // Balanced low uncertainty - payment processor stability
+      concentration: { topTradersVolume: 0.14, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 2, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.08, maxVarianceCoefficient: 1.0 }
+    }
+  };
+  
   const defaultParams = {
     concentration: { topTradersVolume: 0.3, totalVolume: 1.0 },
     anomalousSpikes: { spikes: 5, totalTradingDays: 250 },
     timeStability: { varianceCoefficient: 0.2, maxVarianceCoefficient: 1.0 }
   };
-  return defaultParams;
+  
+  return stock ? (params[stock] || defaultParams) : defaultParams;
 };
 
 // Compute human uncertainty parameters from trading data (now using static dummy data)
@@ -1717,7 +2447,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     
                     {/* Fundamentaldaten detailed parameters */}
                     {activeInfoBox === 'fundamentalData' && (() => {
-                      const params = getFundamentalDataParams()
+                      const params = getFundamentalDataParams(selectedStock)
                       const calculatedValues = calculateAllFundamentalData(params)
                       const overallScore = ((calculatedValues.completeness + calculatedValues.timeliness + calculatedValues.consistency + calculatedValues.accuracy + calculatedValues.stability) / 5 * 100).toFixed(1)
                       
@@ -1985,7 +2715,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     
                     {/* Time Series Integrity Details */}
                     {activeInfoBox === 'timeSeriesIntegrity' && (() => {
-                      const params = getTimeSeriesIntegrityParams()
+                      const params = getTimeSeriesIntegrityParams(selectedStock)
                       const calculatedValues = calculateAllTimeSeries(params)
                       const overallScoreNum = (calculatedValues.completeness + calculatedValues.outlierFreedom + calculatedValues.revisionStability + calculatedValues.continuity) / 4 * 100
                       const overallScore = overallScoreNum.toFixed(1)
@@ -2213,7 +2943,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     
                     {/* News Reliability Details */}
                     {activeInfoBox === 'newsReliability' && (() => {
-                      const params = getNewsReliabilityParams()
+                      const params = getNewsReliabilityParams(selectedStock)
                       const calculatedValues = calculateAllNewsReliability(params)
                       // Weighted calculation: w1=0.3, w2=0.3, w3=0.25, w4=0.15
                       const w1 = 0.3, w2 = 0.3, w3 = 0.25, w4 = 0.15
@@ -2465,7 +3195,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     {(() => {
                       if (activeInfoBox !== 'tradingVolume') return null
                       
-                      const params = getTradingVolumeParams()
+                      const params = getTradingVolumeParams(selectedStock)
                       const calculatedValues = calculateAllTradingVolume(params)
                       const w1 = 0.4, w2 = 0.3, w3 = 0.3 // Gewichtungen
                       const overallScoreNum = (w1 * calculatedValues.concentration + w2 * calculatedValues.anomalousSpikes + w3 * calculatedValues.timeStability) * 100

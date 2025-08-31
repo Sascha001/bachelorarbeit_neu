@@ -40,11 +40,11 @@ interface SimplifiedData {
 }
 
 const getSimplifiedData = (stock: string): SimplifiedData => {
-  // Calculate uncertainty scores from parameters
-  const fundamentalParams = getFundamentalDataParams()
-  const newsParams = getNewsReliabilityParams() 
-  const timeSeriesParams = getTimeSeriesIntegrityParams()
-  const tradingVolumeParams = getTradingVolumeParams()
+  // Calculate uncertainty scores from parameters (stock-specific)
+  const fundamentalParams = getFundamentalDataParams(stock)
+  const newsParams = getNewsReliabilityParams(stock) 
+  const timeSeriesParams = getTimeSeriesIntegrityParams(stock)
+  const tradingVolumeParams = getTradingVolumeParams(stock)
   
   // Calculate dimension certainties using calculation functions
   const fundamentalCalculated = {

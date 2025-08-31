@@ -15,11 +15,11 @@ import { TradingUncertaintyData, UncertaintyAnalytics } from "@/hooks/use-tradin
 
 // Calculate uncertainty data from actual parameters - now receives human uncertainty data
 const getUncertaintyData = (stock: string, stockData: TradingUncertaintyData[], analytics: UncertaintyAnalytics | null) => {
-  // Get calculated scores from parameter functions
-  const fundamentalParams = getFundamentalDataParams()
-  const newsParams = getNewsReliabilityParams() 
-  const timeSeriesParams = getTimeSeriesIntegrityParams()
-  const tradingVolumeParams = getTradingVolumeParams()
+  // Get calculated scores from parameter functions (stock-specific)
+  const fundamentalParams = getFundamentalDataParams(stock)
+  const newsParams = getNewsReliabilityParams(stock) 
+  const timeSeriesParams = getTimeSeriesIntegrityParams(stock)
+  const tradingVolumeParams = getTradingVolumeParams(stock)
   
   // Calculate individual dimension certainties using calculation functions (higher score = lower uncertainty)
   const fundamentalCalculated = {
@@ -111,11 +111,46 @@ const getUncertaintyData = (stock: string, stockData: TradingUncertaintyData[], 
   const modelUncertaintyPercent = Math.round((modelUncertaintyRaw / totalRawUncertainty) * 100 * 10) / 10
   const humanUncertaintyPercent = Math.round((humanUncertaintyRaw / totalRawUncertainty) * 100 * 10) / 10
   
-  // Determine recommendation and confidence level
-  const getRecommendation = (uncertainty: number) => {
-    if (uncertainty < 25) return "BUY"
-    if (uncertainty < 55) return "HOLD" 
-    return "SELL"
+  // Determine recommendation using 2-step process: market analysis + uncertainty filter
+  const getRecommendation = (uncertainty: number, stock: string) => {
+    // STEP 1: Market-based fundamental recommendation
+    let marketRecommendation = "HOLD"; // Default
+    
+    // Analyze stock characteristics for market recommendation
+    const stockAnalysis: Record<string, string> = {
+      // Growth stocks with strong fundamentals
+      AAPL: "BUY",   // Strong tech fundamentals
+      MSFT: "BUY",   // Cloud growth leader  
+      GOOGL: "BUY",  // Search dominance + AI
+      V: "BUY",      // Payment processing growth
+      MA: "BUY",     // Payment processing growth
+      
+      // Stable value stocks
+      JNJ: "BUY",    // Healthcare stability
+      PG: "BUY",     // Consumer staples
+      KO: "BUY",     // Dividend aristocrat
+      UNH: "BUY",    // Healthcare growth
+      
+      // Mixed signals / mature markets
+      HD: "HOLD",    // Cyclical retail
+      JPM: "HOLD",   // Banking sector challenges
+      
+      // High volatility / risk concerns
+      TSLA: "SELL",  // Overvaluation concerns
+      META: "HOLD",  // Regulatory challenges  
+      NVDA: "SELL",  // AI bubble concerns
+      AMZN: "HOLD"   // Mixed business segments
+    };
+    
+    marketRecommendation = stockAnalysis[stock] || "HOLD";
+    
+    // STEP 2: Uncertainty filter - if uncertainty > 50%, force to HOLD
+    if (uncertainty > 50) {
+      return "HOLD"; // Too uncertain to trade
+    }
+    
+    // Return market-based recommendation if uncertainty is manageable
+    return marketRecommendation;
   }
   
   const getConfidenceLevel = (uncertainty: number) => {
@@ -130,7 +165,7 @@ const getUncertaintyData = (stock: string, stockData: TradingUncertaintyData[], 
     dataUncertainty: dataUncertaintyPercent,      // Shows relative percentage (part of 100%)
     modelUncertainty: modelUncertaintyPercent,    // Shows relative percentage (part of 100%)  
     humanUncertainty: humanUncertaintyPercent,    // Shows relative percentage (part of 100%)
-    recommendation: getRecommendation(totalUncertainty),
+    recommendation: getRecommendation(totalUncertainty, stock),
     confidenceLevel: getConfidenceLevel(totalUncertainty)
   }
 }
