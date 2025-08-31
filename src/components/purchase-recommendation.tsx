@@ -40,6 +40,8 @@ interface PurchaseRecommendationProps {
 // Import parameter functions and mock stock prices
 import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams } from "./technical-analysis-tab"
 import { COMPREHENSIVE_MOCK_DATA } from "../data/mockStockData"
+import { TradingConfirmationDialog } from "./trading-confirmation-dialog"
+import { useTradingUncertainty, TradingUncertaintyData } from "@/hooks/use-trading-uncertainty"
 
 // Mock purchase data
 interface PurchaseData {
@@ -211,14 +213,27 @@ const getRecommendationColor = (rec: string) => {
 
 export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendationProps) {
   const data = getPurchaseData(selectedStock)
+  const { addUncertaintyData } = useTradingUncertainty()
+  
   const [purchaseAmount, setPurchaseAmount] = useState(0)
   const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false)
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false)
+  const [isUncertaintyModalOpen, setIsUncertaintyModalOpen] = useState(false)
   const [feedbackRating, setFeedbackRating] = useState(0)
   const [feedbackText, setFeedbackText] = useState("")
   const [transactionCompleted, setTransactionCompleted] = useState(false)
   const [transactionType, setTransactionType] = useState<'BUY' | 'SELL'>('BUY')
   const [scheduleForValidation, setScheduleForValidation] = useState(false)
+  const [currentTradingData, setCurrentTradingData] = useState<{
+    symbol: string;
+    action: 'buy' | 'sell';
+    amount: number;
+    price: number;
+    totalValue: number;
+    aiConfidence: number;
+    aiRecommendation: string;
+    marketSentiment: string;
+  } | null>(null)
 
   const calculateShares = () => {
     return purchaseAmount > 0 ? Math.floor(purchaseAmount / data.currentPrice) : 0
@@ -227,9 +242,37 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
   const handlePurchase = () => {
     setTransactionCompleted(true)
     setIsTransactionModalOpen(false)
+    
+    // Prepare trading data for uncertainty modal
+    const tradingData = {
+      symbol: selectedStock,
+      action: transactionType.toLowerCase() as 'buy' | 'sell',
+      amount: calculateShares(),
+      price: data.currentPrice,
+      totalValue: calculateShares() * data.currentPrice,
+      aiConfidence: data.riskScore / 100, // Convert risk score to confidence
+      aiRecommendation: data.recommendation,
+      marketSentiment: 'neutral' // Could be derived from data
+    }
+    setCurrentTradingData(tradingData)
+    
     setTimeout(() => {
       setIsFeedbackModalOpen(true)
+      setIsUncertaintyModalOpen(true) // Open both modals simultaneously
     }, 1000)
+  }
+
+  const handleUncertaintySubmit = (uncertaintyData: TradingUncertaintyData) => {
+    // Send uncertainty data to hook
+    addUncertaintyData(uncertaintyData)
+    console.log("Uncertainty data submitted:", uncertaintyData)
+    
+    // Close uncertainty modal
+    setIsUncertaintyModalOpen(false)
+  }
+
+  const handleUncertaintyClose = () => {
+    setIsUncertaintyModalOpen(false)
   }
 
   const submitFeedback = () => {
@@ -579,6 +622,16 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Uncertainty Assessment Modal - parallel to feedback */}
+      {currentTradingData && (
+        <TradingConfirmationDialog
+          isOpen={isUncertaintyModalOpen}
+          onClose={handleUncertaintyClose}
+          onConfirm={handleUncertaintySubmit}
+          tradingData={currentTradingData}
+        />
+      )}
     </div>
   )
 }

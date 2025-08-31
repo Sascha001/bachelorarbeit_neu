@@ -553,3 +553,23 @@ body::-webkit-scrollbar {
 .formula-container-large .katex {
   font-size: 1rem !important;
 }
+
+/* Side-by-Side Modal Layout for Uncertainty Assessment */
+.uncertainty-modal-positioning {
+  position: fixed !important;
+  left: 65% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 51 !important;
+  max-width: 500px !important;
+  width: 95% !important;
+}
+
+/* Ensure feedback modal stays on the left */
+[data-radix-dialog-content]:not(.uncertainty-modal-positioning) {
+  position: fixed !important;
+  left: 35% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 50 !important;
+}

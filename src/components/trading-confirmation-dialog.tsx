@@ -107,7 +107,7 @@ export function TradingConfirmationDialog({
   return (
     <TooltipProvider>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-2xl violet-bloom-card">
+        <DialogContent className="sm:max-w-2xl violet-bloom-card uncertainty-modal-positioning">
           <DialogHeader>
             <div className="flex items-center gap-2">
               {tradingData.action === 'buy' ? (
@@ -115,8 +115,9 @@ export function TradingConfirmationDialog({
               ) : (
                 <TrendingDown className="h-6 w-6 text-red-600" />
               )}
-              <DialogTitle>
-                Trading-Entscheidung bestätigen
+              <DialogTitle className="flex items-center gap-2">
+                <HelpCircle className="h-5 w-5" />
+                Unsicherheits-Assessment
               </DialogTitle>
             </div>
             <DialogDescription>
@@ -253,10 +254,11 @@ export function TradingConfirmationDialog({
 
           <DialogFooter className="gap-2">
             <Button variant="outline" onClick={onClose}>
-              Überdenken
+              Überspringen
             </Button>
             <Button onClick={handleConfirm} className="violet-bloom-button">
-              {tradingData.action === 'buy' ? 'Kauf bestätigen' : 'Verkauf bestätigen'}
+              <HelpCircle className="h-4 w-4 mr-2" />
+              Assessment senden
             </Button>
           </DialogFooter>
         </DialogContent>
