@@ -126,44 +126,6 @@ export function TradingConfirmationDialog({
           </DialogHeader>
 
           <div className="space-y-6">
-            {/* Trading Details */}
-            <div className="p-4 bg-gradient-to-r from-card via-card to-primary/5 border border-primary/20 rounded-lg">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <span className="text-sm text-muted-foreground">Wertpapier</span>
-                  <p className="font-mono font-bold text-lg">{tradingData.symbol}</p>
-                </div>
-                <div>
-                  <span className="text-sm text-muted-foreground">Aktion</span>
-                  <div className="flex items-center gap-2">
-                    <Badge variant={tradingData.action === 'buy' ? 'default' : 'secondary'}>
-                      {tradingData.action === 'buy' ? 'KAUFEN' : 'VERKAUFEN'}
-                    </Badge>
-                  </div>
-                </div>
-                <div>
-                  <span className="text-sm text-muted-foreground">Menge × Preis</span>
-                  <p className="font-medium">{tradingData.amount} × ${tradingData.price.toFixed(2)}</p>
-                </div>
-                <div>
-                  <span className="text-sm text-muted-foreground">Gesamtwert</span>
-                  <p className="font-bold text-lg">${tradingData.totalValue.toLocaleString()}</p>
-                </div>
-              </div>
-              
-              <div className="mt-4 pt-4 border-t border-primary/10">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">KI-Empfehlung</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">{tradingData.aiRecommendation}</span>
-                    <Badge variant="outline">
-                      {(tradingData.aiConfidence * 100).toFixed(0)}% Konfidenz
-                    </Badge>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             {/* Uncertainty Assessment */}
             <div className="space-y-4">
               <h3 className="font-medium text-foreground">Unsicherheits-Assessment</h3>
