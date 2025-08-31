@@ -264,43 +264,24 @@
 .violet-bloom-scrollbar {
   scrollbar-width: none !important; /* Firefox */
   position: relative;
-  -ms-overflow-style: none !important; /* IE/Edge */
 }
 
 .violet-bloom-scrollbar::-webkit-scrollbar {
   display: none !important; /* Chrome/Safari */
   width: 0 !important;
   height: 0 !important;
-  background: transparent !important;
 }
 
 .violet-bloom-scrollbar::-webkit-scrollbar-track {
   display: none !important;
-  background: transparent !important;
 }
 
 .violet-bloom-scrollbar::-webkit-scrollbar-thumb {
   display: none !important;
-  background: transparent !important;
 }
 
 .violet-bloom-scrollbar::-webkit-scrollbar-corner {
   display: none !important;
-  background: transparent !important;
-}
-
-/* Force override for dropdown containers specifically */
-.violet-bloom-scrollbar[data-dropdown="true"],
-.violet-bloom-scrollbar.absolute {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
-}
-
-.violet-bloom-scrollbar[data-dropdown="true"]::-webkit-scrollbar,
-.violet-bloom-scrollbar.absolute::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
 }
 
 /* Custom scrollbar styling for components */
