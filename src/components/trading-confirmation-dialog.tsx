@@ -204,7 +204,7 @@ export function TradingConfirmationDialog({
 
               {/* Absolutely Positioned Warning Box */}
               <div 
-                className={`absolute right-[-280px] top-16 w-64 p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center gap-2 transition-opacity duration-300 ease-in-out ${
+                className={`absolute right-[-350px] top-8 w-64 p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center gap-2 transition-opacity duration-300 ease-in-out ${
                   perceivedUncertainty[0] >= 4 ? 'opacity-100' : 'opacity-0'
                 }`}
               >
