@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 // Dialog components removed as they're no longer used - replaced with Info-Box pattern
 import React, { useState } from "react"
+import { useTradingUncertainty, TradingUncertaintyData, UncertaintyAnalytics } from "@/hooks/use-trading-uncertainty"
 import 'katex/dist/katex.min.css'
 
 // Custom CSS for formula scaling
@@ -164,7 +165,7 @@ const calculateHumanDecisionStability = (params: HumanUncertaintyParams['decisio
   return 1 - stability; // Return instability for uncertainty measure
 };
 
-const calculateAllHumanUncertainty = (params: HumanUncertaintyParams): HumanUncertaintyCalculated => ({
+export const calculateAllHumanUncertainty = (params: HumanUncertaintyParams): HumanUncertaintyCalculated => ({
   perceivedUncertainty: calculatePerceivedUncertainty(params.perceivedUncertainty),
   epistemicUncertainty: calculateHumanEpistemicUncertainty(params.epistemicUncertainty),
   aleatoricUncertainty: calculateHumanAleatoricUncertainty(params.aleatoricUncertainty),
@@ -241,10 +242,10 @@ const getPredictionIntervalStatus = (intervalString: string) => {
 
 const getTechnicalData = (stock: string): TechnicalData => {
   // Calculate actual scores from parameter functions
-  const fundamentalParams = getFundamentalDataParams(stock)
-  const newsParams = getNewsReliabilityParams(stock) 
-  const timeSeriesParams = getTimeSeriesIntegrityParams(stock)
-  const tradingVolumeParams = getTradingVolumeParams(stock)
+  const fundamentalParams = getFundamentalDataParams()
+  const newsParams = getNewsReliabilityParams() 
+  const timeSeriesParams = getTimeSeriesIntegrityParams()
+  const tradingVolumeParams = getTradingVolumeParams()
   
   // Calculate weighted averages for each dimension using calculation functions
   const fundamentalCalculated = calculateAllFundamentalData(fundamentalParams);
@@ -455,31 +456,16 @@ const calculateAllFundamentalData = (params: FundamentalDataParams) => {
   };
 };
 
-export const getFundamentalDataParams = (stock: string): FundamentalDataParams => {
-  const params: Record<string, FundamentalDataParams> = {
-    AAPL: {
-      completeness: { missingValues: 2, totalValues: 25 },
-      timeliness: { daysOld: 1, maxAcceptableDays: 7 },
-      consistency: { inconsistentEntries: 1, totalEntries: 25 },
-      accuracy: { accurateReports: 23, totalReports: 25 },
-      stability: { revisions: 1, totalDataPoints: 25 }
-    },
-    MSFT: {
-      completeness: { missingValues: 1, totalValues: 25 },
-      timeliness: { daysOld: 1, maxAcceptableDays: 7 },
-      consistency: { inconsistentEntries: 0, totalEntries: 25 },
-      accuracy: { accurateReports: 24, totalReports: 25 },
-      stability: { revisions: 0, totalDataPoints: 25 }
-    },
-    TSLA: {
-      completeness: { missingValues: 6, totalValues: 25 },
-      timeliness: { daysOld: 3, maxAcceptableDays: 7 },
-      consistency: { inconsistentEntries: 4, totalEntries: 25 },
-      accuracy: { accurateReports: 19, totalReports: 25 },
-      stability: { revisions: 3, totalDataPoints: 25 }
-    }
-  }
-  return params[stock] || params.AAPL
+export const getFundamentalDataParams = (): FundamentalDataParams => {
+  // Use default parameters - no stock-specific variation for simplicity
+  const defaultParams = {
+    completeness: { missingValues: 2, totalValues: 25 },
+    timeliness: { daysOld: 1, maxAcceptableDays: 7 },
+    consistency: { inconsistentEntries: 1, totalEntries: 25 },
+    accuracy: { accurateReports: 23, totalReports: 25 },
+    stability: { revisions: 1, totalDataPoints: 25 }
+  };
+  return defaultParams;
 }
 
 // FormulaTooltip component removed to fix build issues
@@ -1106,7 +1092,7 @@ const getHumanUncertaintyParameterPopup = (parameterName: string, selectedStock:
 }
 
 // Data Parameter Export Functions
-export const getNewsReliabilityParams = (_stock: string): NewsReliabilityParams => {
+export const getNewsReliabilityParams = (): NewsReliabilityParams => {
   const defaultParams = {
     sourceReliability: { totalSources: 15, averageReliability: 0.89 },
     reputationAccuracy: { totalNews: 100, falseNews: 10 },
@@ -1116,7 +1102,7 @@ export const getNewsReliabilityParams = (_stock: string): NewsReliabilityParams 
   return defaultParams;
 };
 
-export const getTimeSeriesIntegrityParams = (_stock: string): TimeSeriesIntegrityParams => {
+export const getTimeSeriesIntegrityParams = (): TimeSeriesIntegrityParams => {
   const defaultParams = {
     completeness: { missingTimepoints: 2, expectedTimepoints: 100 },
     outlierFreedom: { outliers: 3, totalObservations: 100 },
@@ -1126,7 +1112,7 @@ export const getTimeSeriesIntegrityParams = (_stock: string): TimeSeriesIntegrit
   return defaultParams;
 };
 
-export const getTradingVolumeParams = (_stock: string): TradingVolumeParams => {
+export const getTradingVolumeParams = (): TradingVolumeParams => {
   const defaultParams = {
     concentration: { topTradersVolume: 0.3, totalVolume: 1.0 },
     anomalousSpikes: { spikes: 5, totalTradingDays: 250 },
@@ -1135,8 +1121,61 @@ export const getTradingVolumeParams = (_stock: string): TradingVolumeParams => {
   return defaultParams;
 };
 
+// Compute human uncertainty parameters from trading data (now using static dummy data)
+export const computeHumanUncertaintyFromTradingData = (
+  stockData: TradingUncertaintyData[], 
+  analytics: UncertaintyAnalytics | null
+): HumanUncertaintyParams => {
+  if (!stockData || stockData.length === 0 || !analytics) {
+    // Fallback to default values when no trading data exists
+    return {
+      perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
+      epistemicUncertainty: { unclearAnswers: 0, totalQuestions: 1 },
+      aleatoricUncertainty: { consistencyScore: 5, maxPossibleConsistency: 10 },
+      decisionStability: { decisionChange: 0.2, inputChange: 0.1 }
+    };
+  }
+
+  // 1. Perceived Uncertainty: Average Likert response from stock decisions
+  const avgPerceivedUncertainty = stockData.length > 0 
+    ? stockData.reduce((sum, d) => sum + d.perceivedUncertainty, 0) / stockData.length 
+    : 3;
+
+  // 2. Epistemic Uncertainty: Based on unclear concepts from stock decisions
+  const allUnclearConcepts = stockData.flatMap(d => d.unclearConcepts || []);
+  const unclearAnswers = allUnclearConcepts.length;
+  const totalQuestions = stockData.length * 4; // 4 concepts per decision
+
+  // 3. Aleatorische Uncertainty: Based on decision consistency
+  const consistencyScore = analytics ? Math.round(analytics.decisionConsistency * 10) : 7;
+  
+  // 4. Decision Stability: Based on uncertainty variance (lower variance = higher stability)
+  const stabilityScore = analytics ? analytics.stabilityScore : 0.5;
+  const decisionChange = 1 - stabilityScore; // Higher instability = higher decision change
+  const inputChange = 0.1; // Assume 10% input variation
+
+  return {
+    perceivedUncertainty: { 
+      likertResponse: Math.round(avgPerceivedUncertainty), 
+      maxScale: 5 
+    },
+    epistemicUncertainty: { 
+      unclearAnswers: unclearAnswers, 
+      totalQuestions: Math.max(totalQuestions, 1) // Prevent division by zero
+    },
+    aleatoricUncertainty: { 
+      consistencyScore: consistencyScore, 
+      maxPossibleConsistency: 10 
+    },
+    decisionStability: { 
+      decisionChange: decisionChange, 
+      inputChange: inputChange 
+    }
+  };
+};
+
 export const getHumanUncertaintyParams = (stock: string): HumanUncertaintyParams => {
-  // Stock-specific variations for realistic mock data
+  // Stock-specific variations for realistic mock data (fallback)
   const stockVariations: Record<string, Partial<HumanUncertaintyParams>> = {
     'AAPL': {
       perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
@@ -1172,6 +1211,9 @@ export const getHumanUncertaintyParams = (stock: string): HumanUncertaintyParams
 export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProps) {
   const data = getTechnicalData(selectedStock)
   const [activeInfoBox, setActiveInfoBox] = useState<string | null>(null)
+  
+  // Get real trading uncertainty data
+  const { getStockUncertaintyHistory, analytics } = useTradingUncertainty()
   const [isInfoBoxVisible, setIsInfoBoxVisible] = useState(false)
 
   // Inject custom CSS for formula scaling
@@ -1501,7 +1543,9 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
             </CardHeader>
             <CardContent>
               {(() => {
-                const humanParams = getHumanUncertaintyParams(selectedStock)
+                // Use real trading data from hook for human uncertainty
+                const stockData = getStockUncertaintyHistory(selectedStock)
+                const humanParams = computeHumanUncertaintyFromTradingData(stockData, analytics)
                 const humanCalculated = calculateAllHumanUncertainty(humanParams)
                 
                 
@@ -1673,7 +1717,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     
                     {/* Fundamentaldaten detailed parameters */}
                     {activeInfoBox === 'fundamentalData' && (() => {
-                      const params = getFundamentalDataParams(selectedStock)
+                      const params = getFundamentalDataParams()
                       const calculatedValues = calculateAllFundamentalData(params)
                       const overallScore = ((calculatedValues.completeness + calculatedValues.timeliness + calculatedValues.consistency + calculatedValues.accuracy + calculatedValues.stability) / 5 * 100).toFixed(1)
                       
@@ -1941,7 +1985,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     
                     {/* Time Series Integrity Details */}
                     {activeInfoBox === 'timeSeriesIntegrity' && (() => {
-                      const params = getTimeSeriesIntegrityParams(selectedStock)
+                      const params = getTimeSeriesIntegrityParams()
                       const calculatedValues = calculateAllTimeSeries(params)
                       const overallScoreNum = (calculatedValues.completeness + calculatedValues.outlierFreedom + calculatedValues.revisionStability + calculatedValues.continuity) / 4 * 100
                       const overallScore = overallScoreNum.toFixed(1)
@@ -2169,7 +2213,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     
                     {/* News Reliability Details */}
                     {activeInfoBox === 'newsReliability' && (() => {
-                      const params = getNewsReliabilityParams(selectedStock)
+                      const params = getNewsReliabilityParams()
                       const calculatedValues = calculateAllNewsReliability(params)
                       // Weighted calculation: w1=0.3, w2=0.3, w3=0.25, w4=0.15
                       const w1 = 0.3, w2 = 0.3, w3 = 0.25, w4 = 0.15
@@ -2421,7 +2465,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     {(() => {
                       if (activeInfoBox !== 'tradingVolume') return null
                       
-                      const params = getTradingVolumeParams(selectedStock)
+                      const params = getTradingVolumeParams()
                       const calculatedValues = calculateAllTradingVolume(params)
                       const w1 = 0.4, w2 = 0.3, w3 = 0.3 // Gewichtungen
                       const overallScoreNum = (w1 * calculatedValues.concentration + w2 * calculatedValues.anomalousSpikes + w3 * calculatedValues.timeStability) * 100
@@ -2648,7 +2692,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
 
                     {/* Human Uncertainty Info Panels */}
                     {activeInfoBox === 'perceivedUncertainty' && (() => {
-                      const humanParams = getHumanUncertaintyParams(selectedStock)
+                      const stockData = getStockUncertaintyHistory(selectedStock)
+                      const humanParams = computeHumanUncertaintyFromTradingData(stockData, analytics)
                       return (
                         <>
                           {/* Short intro text */}
@@ -2667,7 +2712,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     })()}
 
                     {activeInfoBox === 'epistemicUncertaintyHuman' && (() => {
-                      const humanParams = getHumanUncertaintyParams(selectedStock)
+                      const stockData = getStockUncertaintyHistory(selectedStock)
+                      const humanParams = computeHumanUncertaintyFromTradingData(stockData, analytics)
                       return (
                         <>
                           {/* Short intro text */}
@@ -2686,7 +2732,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     })()}
 
                     {activeInfoBox === 'aleatoricUncertaintyHuman' && (() => {
-                      const humanParams = getHumanUncertaintyParams(selectedStock)
+                      const stockData = getStockUncertaintyHistory(selectedStock)
+                      const humanParams = computeHumanUncertaintyFromTradingData(stockData, analytics)
                       return (
                         <>
                           {/* Short intro text */}
@@ -2705,7 +2752,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     })()}
 
                     {activeInfoBox === 'decisionStabilityHuman' && (() => {
-                      const humanParams = getHumanUncertaintyParams(selectedStock)
+                      const stockData = getStockUncertaintyHistory(selectedStock)
+                      const humanParams = computeHumanUncertaintyFromTradingData(stockData, analytics)
                       return (
                         <>
                           {/* Short intro text */}

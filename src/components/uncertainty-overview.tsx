@@ -10,15 +10,16 @@ interface UncertaintyOverviewProps {
 }
 
 // Import parameter functions from technical analysis
-import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams, getModelUncertaintyParams } from "./technical-analysis-tab"
+import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams, getModelUncertaintyParams, calculateAllHumanUncertainty, computeHumanUncertaintyFromTradingData } from "./technical-analysis-tab"
+import { TradingUncertaintyData, UncertaintyAnalytics } from "@/hooks/use-trading-uncertainty"
 
-// Calculate uncertainty data from actual parameters
-const getUncertaintyData = (stock: string) => {
+// Calculate uncertainty data from actual parameters - now receives human uncertainty data
+const getUncertaintyData = (stock: string, stockData: TradingUncertaintyData[], analytics: UncertaintyAnalytics | null) => {
   // Get calculated scores from parameter functions
-  const fundamentalParams = getFundamentalDataParams(stock)
-  const newsParams = getNewsReliabilityParams(stock) 
-  const timeSeriesParams = getTimeSeriesIntegrityParams(stock)
-  const tradingVolumeParams = getTradingVolumeParams(stock)
+  const fundamentalParams = getFundamentalDataParams()
+  const newsParams = getNewsReliabilityParams() 
+  const timeSeriesParams = getTimeSeriesIntegrityParams()
+  const tradingVolumeParams = getTradingVolumeParams()
   
   // Calculate individual dimension certainties using calculation functions (higher score = lower uncertainty)
   const fundamentalCalculated = {
@@ -84,8 +85,15 @@ const getUncertaintyData = (stock: string) => {
                          0.20 * robustnessValue + 
                          0.20 * explanationValue) * 100
   
-  // STEP 3: Calculate human certainty (existing logic, no new parameters yet)  
-  const humanCertainty = Math.max(60, Math.min(95, 80 - (fundamentalCertainty + newsCertainty) / 12)) // Experts more uncertain with complex situations
+  // STEP 3: Calculate human certainty from real trading data
+  const humanParams = computeHumanUncertaintyFromTradingData(stockData, analytics)
+  const humanCalculated = calculateAllHumanUncertainty(humanParams)
+  
+  // Convert human uncertainty to certainty (weighted average of 4 dimensions)
+  const humanCertainty = (1 - (0.3 * humanCalculated.perceivedUncertainty + 
+                               0.25 * humanCalculated.epistemicUncertainty + 
+                               0.25 * humanCalculated.aleatoricUncertainty + 
+                               0.2 * humanCalculated.decisionStability)) * 100
   
   // STEP 4: Convert certainties to uncertainties (inversion)
   const dataUncertaintyRaw = 100 - dataCertainty
@@ -126,7 +134,11 @@ const getUncertaintyData = (stock: string) => {
 }
 
 export function UncertaintyOverview({ selectedStock }: UncertaintyOverviewProps) {
-  const data = getUncertaintyData(selectedStock)
+  // This component can't use hooks directly since it's called from server components
+  // We'll use a placeholder for now and will need to restructure later
+  const stockData: TradingUncertaintyData[] = []
+  const analytics: UncertaintyAnalytics | null = null
+  const data = getUncertaintyData(selectedStock, stockData, analytics)
   
   const getUncertaintyColor = (level: number) => {
     if (level < 20) return "text-green-600"    // HOCH confidence = green

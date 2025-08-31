@@ -39,6 +39,82 @@ All commands should be run from the `frontend-app/` directory, not the repositor
 - All pages follow consistent layout pattern
 - Custom VSCode-style scrollbar system implemented via inline script in layout.tsx
 
+#### Custom Scrollbar System Requirements
+
+##### Core System Architecture
+- **Main System**: Located in `src/app/layout.tsx` inline script
+- **Component Class**: Use `violet-bloom-scrollbar` for scrollable elements
+- **Hook Integration**: Use `useCoolScrollbar()` hook for component refs
+- **Periodic Detection**: 2000ms interval checks for new scrollable elements
+- **Fade Effect**: VS Code-style fade out after 1000ms of inactivity
+
+##### Required Scrollbar Implementations
+
+###### 1. Sidebar Custom Scrollbar
+- **Location**: `src/components/app-sidebar.tsx` 
+- **Requirements**: 
+  - Add custom scrollbar to main sidebar navigation container
+  - Apply `violet-bloom-scrollbar` class to scrollable sidebar content
+  - Ensure proper fade effects when navigating between sidebar items
+  - Handle collapsible sidebar states (icon mode vs full mode)
+
+###### 2. Stock Search Scrollbar
+- **Header Location**: `src/components/stock-search.tsx` - search results dropdown
+- **Uncertainty Analysis**: Search results on `/statistik/unsicherheits-analyse` page
+- **Requirements**:
+  - Custom scrollbar for search results dropdown (max-h-80 overflow-y-auto)
+  - Proper scrollbar positioning within dropdown container
+  - VS Code fade effects for search result scrolling
+  - Maintain violet-bloom theming consistency
+
+###### 3. Pop-up Scrollbar System Redesign
+- **Current Issues**: 
+  - Pop-up scrollbars interfere with background page scrolling
+  - Event bubbling causes background scroll when pop-up reaches scroll limit
+  - Inconsistent fade behavior in modal/dialog contexts
+- **Requirements**:
+  - Remove existing pop-up scrollbar implementations
+  - Implement isolated scroll containers with event.stopPropagation()
+  - Add custom scrollbars with proper VS Code fade effects
+  - Prevent scroll event bubbling to background page
+  - Apply to all Dialog, Tooltip, and Popover scrollable content
+
+##### Implementation Patterns
+
+###### Basic Component Scrollbar
+```tsx
+// Component with custom scrollbar
+const scrollbarRef = useCoolScrollbar()
+
+return (
+  <div 
+    ref={scrollbarRef}
+    className="violet-bloom-scrollbar overflow-auto"
+  >
+    {/* Scrollable content */}
+  </div>
+)
+```
+
+###### Scroll Event Isolation for Pop-ups
+```tsx
+// Prevent background scroll in pop-ups
+<div 
+  className="violet-bloom-scrollbar overflow-auto"
+  onWheel={(e) => e.stopPropagation()}
+  onTouchMove={(e) => e.stopPropagation()}
+>
+  {/* Pop-up scrollable content */}
+</div>
+```
+
+##### VS Code Fade Effect Specifications
+- **Show Duration**: Scrollbar visible during active scrolling
+- **Fade Delay**: 1000ms delay before fade out begins
+- **Fade Duration**: Smooth CSS transition fade
+- **Re-trigger**: Any scroll activity immediately shows scrollbar again
+- **Hover Behavior**: Scrollbar remains visible during hover
+
 #### Component Organization
 - **UI Components**: Located in `src/components/ui/` - reusable Radix-based components
 - **Feature Components**: Located in `src/components/` - application-specific components

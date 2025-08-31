@@ -64,10 +64,10 @@ const getPurchaseData = (stock: string): PurchaseData => {
   const currentPrice = stockData.price
   
   // Calculate uncertainty scores from parameters
-  const fundamentalParams = getFundamentalDataParams(stock)
-  const newsParams = getNewsReliabilityParams(stock) 
-  const timeSeriesParams = getTimeSeriesIntegrityParams(stock)
-  const tradingVolumeParams = getTradingVolumeParams(stock)
+  const fundamentalParams = getFundamentalDataParams()
+  const newsParams = getNewsReliabilityParams() 
+  const timeSeriesParams = getTimeSeriesIntegrityParams()
+  const tradingVolumeParams = getTradingVolumeParams()
   
   // Calculate dimension certainties using calculation functions
   const fundamentalCalculated = {
