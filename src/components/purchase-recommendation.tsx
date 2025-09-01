@@ -355,13 +355,10 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
 {data.recommendation === "HOLD" ? (
                   <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
                     <div className="text-sm text-yellow-700 mb-2">
-                      🤖 KI-Empfehlung: Position halten
+                      Empfehlung: Position halten
                     </div>
-                    <div className="text-lg font-medium text-yellow-800 mb-3">
-                      Aufgrund hoher Unsicherheit wird Abwarten empfohlen
-                    </div>
-                    <div className="text-sm text-yellow-600">
-                      Sie können trotzdem handeln - die finale Entscheidung liegt bei Ihnen
+                    <div className="text-lg font-medium text-yellow-800">
+                      Kein Handel empfohlen - Aktuelle Position beibehalten
                     </div>
                   </div>
                 ) : (
@@ -396,8 +393,8 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                 )}
               </div>
 
-              {/* Custom Amount Input - now always shown */}
-              {(
+{data.recommendation !== "HOLD" && (
+                /* Custom Amount Input */
                 <div className="space-y-2">
                   <Label htmlFor="purchase-amount">Ihr gewünschter Betrag</Label>
                   <div className="flex items-center gap-2">
@@ -420,6 +417,7 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                   </div>
                 </div>
               )}
+            </div>
 
             {/* Portfolio Impact */}
             <div className="space-y-4">
@@ -507,8 +505,8 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
               </div>
             </div>
 
-            {/* Purchase/Sell Buttons - now always shown */}
-            {(
+{data.recommendation !== "HOLD" && (
+              /* Purchase/Sell Buttons */
               <div className="flex justify-center gap-4 pt-4">
                 <Dialog open={isTransactionModalOpen} onOpenChange={setIsTransactionModalOpen}>
                   <DialogTrigger asChild>
@@ -520,7 +518,6 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                     >
                       <TrendingUp className="h-4 w-4 mr-2" />
                       {selectedStock} kaufen
-                      {data.recommendation === "HOLD" && <span className="ml-2 text-xs">(trotz HOLD)</span>}
                     </Button>
                   </DialogTrigger>
                   <DialogTrigger asChild>
@@ -533,7 +530,6 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                     >
                       <TrendingDown className="h-4 w-4 mr-2" />
                       {selectedStock} verkaufen
-                      {data.recommendation === "HOLD" && <span className="ml-2 text-xs">(trotz HOLD)</span>}
                     </Button>
                   </DialogTrigger>
                 <DialogContent>
