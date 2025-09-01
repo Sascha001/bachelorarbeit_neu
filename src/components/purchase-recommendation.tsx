@@ -168,10 +168,12 @@ const getPurchaseData = (stock: string): PurchaseData => {
     }
   }
   
-  // Calculate investment amounts based on certainty
+  // Calculate investment amounts based on recommendation type
   const getInvestmentAmounts = (certainty: number, price: number, rec: string) => {
-    if (rec === "SELL") return { recommended: 0, min: 100, max: Math.round(price * 10) }
+    // HOLD = 0€ (position halten, nichts tun)
+    if (rec === "HOLD") return { recommended: 0, min: 0, max: 0 }
     
+    // BUY und SELL bekommen beide empfohlene Beträge basierend auf Certainty
     const baseAmount = certainty >= 85 ? 3000 : certainty >= 75 ? 2000 : 1000
     const priceAdjusted = Math.round(baseAmount / price) * price  // Round to whole shares
     
@@ -346,60 +348,75 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
               <div>
                 <h4 className="font-medium mb-2 flex items-center gap-2">
                   <Euro className="h-4 w-4" />
-                  Empfohlener Investitionsbetrag
+                  {data.recommendation === "BUY" && "Empfohlener Kaufbetrag"}
+                  {data.recommendation === "SELL" && "Empfohlener Verkaufsbetrag"}  
+                  {data.recommendation === "HOLD" && "Position halten"}
                 </h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                  <div className="p-3 border rounded-lg">
-                    <div className="text-sm text-muted-foreground">Minimum</div>
-                    <div className="text-lg font-bold">€{data.minAmount}</div>
-                  </div>
-                  <div 
-                    className={`p-3 rounded-lg cursor-pointer transition-all duration-200 ${
-                      isRecommendedSelected 
-                        ? 'border-2 border-primary bg-primary/5 violet-bloom-active' 
-                        : 'border border-gray-200 hover:border-primary/50 hover:bg-primary/5'
-                    }`}
-                    onClick={() => {
-                      setIsRecommendedSelected(true)
-                      setPurchaseAmount(Math.round(data.recommendedAmount * 100) / 100)
-                    }}
-                  >
-                    <div className={`text-sm font-medium ${isRecommendedSelected ? 'text-primary' : 'text-muted-foreground'}`}>
-                      Empfohlen
+{data.recommendation === "HOLD" ? (
+                  <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
+                    <div className="text-sm text-yellow-700 mb-2">
+                      Empfehlung: Position halten
                     </div>
-                    <div className={`text-2xl font-bold ${isRecommendedSelected ? 'text-primary' : 'text-foreground'}`}>
-                      €{data.recommendedAmount.toFixed(2)}
+                    <div className="text-lg font-medium text-yellow-800">
+                      Kein Handel empfohlen - Aktuelle Position beibehalten
                     </div>
                   </div>
-                  <div className="p-3 border rounded-lg">
-                    <div className="text-sm text-muted-foreground">Maximum</div>
-                    <div className="text-lg font-bold">€{data.maxAmount}</div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    <div className="p-3 border rounded-lg">
+                      <div className="text-sm text-muted-foreground">Minimum</div>
+                      <div className="text-lg font-bold">€{data.minAmount}</div>
+                    </div>
+                    <div 
+                      className={`p-3 rounded-lg cursor-pointer transition-all duration-200 ${
+                        isRecommendedSelected 
+                          ? 'border-2 border-primary bg-primary/5 violet-bloom-active' 
+                          : 'border border-gray-200 hover:border-primary/50 hover:bg-primary/5'
+                      }`}
+                      onClick={() => {
+                        setIsRecommendedSelected(true)
+                        setPurchaseAmount(Math.round(data.recommendedAmount * 100) / 100)
+                      }}
+                    >
+                      <div className={`text-sm font-medium ${isRecommendedSelected ? 'text-primary' : 'text-muted-foreground'}`}>
+                        Empfohlen
+                      </div>
+                      <div className={`text-2xl font-bold ${isRecommendedSelected ? 'text-primary' : 'text-foreground'}`}>
+                        €{data.recommendedAmount.toFixed(2)}
+                      </div>
+                    </div>
+                    <div className="p-3 border rounded-lg">
+                      <div className="text-sm text-muted-foreground">Maximum</div>
+                      <div className="text-lg font-bold">€{data.maxAmount}</div>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
-              {/* Custom Amount Input */}
-              <div className="space-y-2">
-                <Label htmlFor="purchase-amount">Ihr gewünschter Betrag</Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    id="purchase-amount"
-                    type="number"
-                    value={purchaseAmount > 0 ? purchaseAmount : ""}
-                    onChange={(e) => {
-                      setPurchaseAmount(Number(e.target.value) || 0)
-                      setIsRecommendedSelected(false) // Deselect recommended when manually typing
-                    }}
-                    min={data.minAmount}
-                    max={data.maxAmount}
-                    placeholder="Betrag eingeben"
-                    className="flex-1"
-                  />
-                  <div className="text-sm text-muted-foreground whitespace-nowrap">
-                    ≈ {calculateShares()} Aktien
+{data.recommendation !== "HOLD" && (
+                /* Custom Amount Input */
+                <div className="space-y-2">
+                  <Label htmlFor="purchase-amount">Ihr gewünschter Betrag</Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="purchase-amount"
+                      type="number"
+                      value={purchaseAmount > 0 ? purchaseAmount : ""}
+                      onChange={(e) => {
+                        setPurchaseAmount(Number(e.target.value) || 0)
+                        setIsRecommendedSelected(false) // Deselect recommended when manually typing
+                      }}
+                      min={data.minAmount}
+                      max={data.maxAmount}
+                      placeholder="Betrag eingeben"
+                      className="flex-1"
+                    />
+                    <div className="text-sm text-muted-foreground whitespace-nowrap">
+                      ≈ {calculateShares()} Aktien
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Portfolio Impact */}
@@ -488,32 +505,33 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
               </div>
             </div>
 
-            {/* Purchase/Sell Buttons */}
-            <div className="flex justify-center gap-4 pt-4">
-              <Dialog open={isTransactionModalOpen} onOpenChange={setIsTransactionModalOpen}>
-                <DialogTrigger asChild>
-                  <Button 
-                    size="lg" 
-                    className="px-8 bg-green-600 hover:bg-green-700"
-                    onClick={() => setTransactionType('BUY')}
-                    disabled={purchaseAmount <= 0}
-                  >
-                    <TrendingUp className="h-4 w-4 mr-2" />
-                    {selectedStock} kaufen
-                  </Button>
-                </DialogTrigger>
-                <DialogTrigger asChild>
-                  <Button 
-                    size="lg" 
-                    variant="destructive"
-                    className="px-8"
-                    onClick={() => setTransactionType('SELL')}
-                    disabled={purchaseAmount <= 0}
-                  >
-                    <TrendingDown className="h-4 w-4 mr-2" />
-                    {selectedStock} verkaufen
-                  </Button>
-                </DialogTrigger>
+{data.recommendation !== "HOLD" && (
+              /* Purchase/Sell Buttons */
+              <div className="flex justify-center gap-4 pt-4">
+                <Dialog open={isTransactionModalOpen} onOpenChange={setIsTransactionModalOpen}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      size="lg" 
+                      className="px-8 bg-green-600 hover:bg-green-700"
+                      onClick={() => setTransactionType('BUY')}
+                      disabled={purchaseAmount <= 0}
+                    >
+                      <TrendingUp className="h-4 w-4 mr-2" />
+                      {selectedStock} kaufen
+                    </Button>
+                  </DialogTrigger>
+                  <DialogTrigger asChild>
+                    <Button 
+                      size="lg" 
+                      variant="destructive"
+                      className="px-8"
+                      onClick={() => setTransactionType('SELL')}
+                      disabled={purchaseAmount <= 0}
+                    >
+                      <TrendingDown className="h-4 w-4 mr-2" />
+                      {selectedStock} verkaufen
+                    </Button>
+                  </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>
@@ -564,6 +582,7 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                 </DialogContent>
               </Dialog>
             </div>
+            )}
           </div>
         </CardContent>
       </Card>
