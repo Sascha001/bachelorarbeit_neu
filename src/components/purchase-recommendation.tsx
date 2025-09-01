@@ -136,9 +136,9 @@ const getPurchaseData = (stock: string): PurchaseData => {
                          0.20 * explanationValue) * 100
   
   // STEP 3: Calculate human certainty from real trading data (using empty arrays like uncertainty-overview)
-  const stockData: TradingUncertaintyData[] = []
-  const analytics: UncertaintyAnalytics | null = null
-  const humanParams = computeHumanUncertaintyFromTradingData(stockData, analytics)
+  const emptyStockData: TradingUncertaintyData[] = []
+  const emptyAnalytics: UncertaintyAnalytics | null = null
+  const humanParams = computeHumanUncertaintyFromTradingData(emptyStockData, emptyAnalytics)
   const humanCalculated = calculateAllHumanUncertainty(humanParams)
   
   // Convert human uncertainty to certainty (weighted average of 4 dimensions)
@@ -222,7 +222,7 @@ const getPurchaseData = (stock: string): PurchaseData => {
     }
   }
   
-  const amounts = getInvestmentAmounts(overallCertainty, currentPrice, recommendation)
+  const amounts = getInvestmentAmounts(dataCertainty, currentPrice, recommendation)
   
   // Calculate expected return based on data quality and recommendation
   const getExpectedReturn = (certainty: number, rec: string) => {
@@ -245,10 +245,10 @@ const getPurchaseData = (stock: string): PurchaseData => {
     recommendedAmount: amounts.recommended,
     minAmount: amounts.min,
     maxAmount: amounts.max,
-    expectedReturn: getExpectedReturn(overallCertainty, recommendation),
+    expectedReturn: getExpectedReturn(dataCertainty, recommendation),
     timeHorizon: getTimeHorizon(timeSeriesCertainty, newsCertainty),
     riskScore: Math.round(uncertaintyScore),
-    portfolioImpact: calculatePortfolioMetrics(overallCertainty)
+    portfolioImpact: calculatePortfolioMetrics(dataCertainty)
   }
 }
 
