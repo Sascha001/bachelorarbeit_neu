@@ -38,10 +38,10 @@ interface PurchaseRecommendationProps {
 }
 
 // Import parameter functions and mock stock prices
-import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams } from "./technical-analysis-tab"
+import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams, getModelUncertaintyParams, computeHumanUncertaintyFromTradingData, calculateAllHumanUncertainty } from "./technical-analysis-tab"
 import { COMPREHENSIVE_MOCK_DATA } from "../data/mockStockData"
 import { TradingConfirmationDialog } from "./trading-confirmation-dialog"
-import { useTradingUncertainty, TradingUncertaintyData } from "@/hooks/use-trading-uncertainty"
+import { useTradingUncertainty, TradingUncertaintyData, UncertaintyAnalytics } from "@/hooks/use-trading-uncertainty"
 
 // Mock purchase data
 interface PurchaseData {
@@ -116,9 +116,47 @@ const getPurchaseData = (stock: string): PurchaseData => {
                                  0.3 * tradingVolumeCalculated.anomalousSpikes + 
                                  0.3 * tradingVolumeCalculated.timeStability) * 100
   
-  // Overall data certainty
-  const overallCertainty = (fundamentalCertainty + newsCertainty + timeSeriesCertainty + tradingVolumeCertainty) / 4
-  const uncertaintyScore = 100 - overallCertainty
+  // STEP 1: Calculate average certainty for data dimension (4 parameters)
+  const dataCertainty = (fundamentalCertainty + newsCertainty + timeSeriesCertainty + tradingVolumeCertainty) / 4
+  
+  // STEP 2: Calculate model certainty using ChatGPT Framework
+  const modelParams = getModelUncertaintyParams(stock)
+  
+  // Calculate the actual values using the calculation functions
+  const epistemicValue = 1 - (modelParams.epistemicUncertainty.predictionStdDev / (modelParams.epistemicUncertainty.meanPrediction + modelParams.epistemicUncertainty.epsilon))
+  const aleatoricValue = 1 - (modelParams.aleatoricUncertainty.meanPredictionVariance / modelParams.aleatoricUncertainty.maxExpectedVariance)
+  const overfittingValue = 1 - (Math.abs(modelParams.overfittingRisk.trainLoss - modelParams.overfittingRisk.testLoss) / (modelParams.overfittingRisk.trainLoss + modelParams.overfittingRisk.epsilon))
+  const robustnessValue = 1 - (modelParams.robustness.meanPerturbationChange / modelParams.robustness.baselinePrediction)
+  const explanationValue = (modelParams.explanationConsistency.featureImportanceCorrelation + 1) / 2
+  
+  const modelCertainty = (0.25 * epistemicValue + 
+                         0.15 * aleatoricValue + 
+                         0.20 * overfittingValue + 
+                         0.20 * robustnessValue + 
+                         0.20 * explanationValue) * 100
+  
+  // STEP 3: Calculate human certainty from real trading data (using empty arrays like uncertainty-overview)
+  const stockData: TradingUncertaintyData[] = []
+  const analytics: UncertaintyAnalytics | null = null
+  const humanParams = computeHumanUncertaintyFromTradingData(stockData, analytics)
+  const humanCalculated = calculateAllHumanUncertainty(humanParams)
+  
+  // Convert human uncertainty to certainty (weighted average of 4 dimensions)
+  const humanCertainty = (1 - (0.3 * humanCalculated.perceivedUncertainty + 
+                               0.25 * humanCalculated.epistemicUncertainty + 
+                               0.25 * humanCalculated.aleatoricUncertainty + 
+                               0.2 * humanCalculated.decisionStability)) * 100
+  
+  // STEP 4: Convert certainties to uncertainties (inversion)
+  const dataUncertaintyRaw = 100 - dataCertainty
+  const modelUncertaintyRaw = 100 - modelCertainty  
+  const humanUncertaintyRaw = 100 - humanCertainty
+  
+  // STEP 5: Calculate total uncertainty (sum divided by maximum possible = 300%)
+  const totalUncertaintyRaw = dataUncertaintyRaw + modelUncertaintyRaw + humanUncertaintyRaw
+  const totalUncertainty = Math.round((totalUncertaintyRaw / 300) * 100)
+  
+  const uncertaintyScore = totalUncertainty
   
   // Generate recommendation using 2-step process: market analysis + uncertainty filter
   const getRecommendation = (uncertainty: number, stock: string) => {
