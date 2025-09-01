@@ -297,6 +297,77 @@ The project uses specific versions:
 - **Parameter-Based Calculations**: Input parameters only, results derived through calculation functions
 - **TypeScript Safety**: Comprehensive interface definitions prevent property access errors
 - **Build Stability**: Eliminated `.value` property dependencies that caused compilation errors
+
+#### Stock-Specific Uncertainty Parameter System (2025-09-01 Update)
+The application now features a comprehensive stock-specific uncertainty parameter system with individualized data for all 15 supported stocks:
+
+##### Supported Stocks & Uncertainty Categories
+**15 Stocks with Full Parameter Support:**
+- **US Tech Giants**: AAPL, MSFT, GOOGL, AMZN, TSLA, META, NVDA
+- **Financial Services**: JPM, V, MA
+- **Healthcare & Consumer**: JNJ, UNH, PG, KO
+- **Retail**: HD
+
+**Uncertainty Level Distribution:**
+- **High Uncertainty (55-80%)**: AAPL, TSLA, META, NVDA (4 stocks)
+- **Medium Uncertainty (40-50%)**: MSFT, GOOGL, AMZN, HD, JPM (5 stocks)
+- **Low Uncertainty (15-35%)**: JNJ, PG, KO, UNH, V, MA (6 stocks)
+
+##### Parameter Categories (All Stock-Specific)
+**1. Model Uncertainty Parameters (`getModelUncertaintyParams(stock)`):**
+- **Epistemische Unsicherheit**: predictionStdDev, meanPrediction, epsilon
+- **Aleatorische Unsicherheit**: meanPredictionVariance, maxExpectedVariance, confidenceInterval95
+- **Overfitting Risk**: trainLoss, testLoss, epsilon
+- **Robustheit**: meanPerturbationChange, baselinePrediction
+- **Explanation Consistency**: featureImportanceCorrelation
+
+**2. Data Uncertainty Parameters (All functions accept stock parameter):**
+- `getFundamentalDataParams(stock)`: completeness, timeliness, consistency, accuracy, stability
+- `getNewsReliabilityParams(stock)`: sourceReliability, reputationAccuracy, crossSourceConsensus, biasCheck
+- `getTimeSeriesIntegrityParams(stock)`: completeness, outlierFreedom, revisionStability, continuity
+- `getTradingVolumeParams(stock)`: concentration, anomalousSpikes, timeStability
+
+##### Diversified Uncertainty Breakdown Patterns
+**Data Uncertainty Dominant (50-60% of total):**
+- **TSLA**: Volatile news coverage + erratic time series + poor fundamentals
+- **NVDA**: Hyped media coverage + momentum-driven patterns + inconsistent data
+
+**Model Uncertainty Dominant (45-55% of total):**
+- **META**: Complex AI predictions + regulatory challenges + moderate data quality
+- **AMZN**: Multi-business complexity + mixed trading patterns + average data
+
+**Human Uncertainty Dominant (40-50% of total):**
+- **MSFT**: Stable tech with trader behavior influence + good data quality
+- **GOOGL**: Predictable patterns but human psychology important + reliable sources
+
+**Balanced Distribution (30-35% each dimension):**
+- **Blue-chip stocks** (JNJ, PG, KO, UNH, V, MA): Consistent across all dimensions
+
+##### Recommendation Logic (2-Step Process)
+**Step 1: Market-Based Analysis**
+```typescript
+const stockAnalysis: Record<string, string> = {
+  // Growth stocks with strong fundamentals
+  AAPL: "BUY", MSFT: "BUY", GOOGL: "BUY", V: "BUY", MA: "BUY",
+  // Stable value stocks  
+  JNJ: "BUY", PG: "BUY", KO: "BUY", UNH: "BUY",
+  // Mixed signals / mature markets
+  HD: "HOLD", JPM: "HOLD",
+  // High volatility / risk concerns
+  TSLA: "SELL", META: "HOLD", NVDA: "SELL", AMZN: "HOLD"
+};
+```
+
+**Step 2: Uncertainty Filter**
+- **Threshold**: >50% total uncertainty → automatic "HOLD"
+- **Rationale**: Too uncertain to recommend active trading
+- **Application**: Applied uniformly across uncertainty-overview.tsx and purchase-recommendation.tsx
+
+##### Implementation Files
+- **Core Functions**: `src/components/technical-analysis-tab.tsx` (lines 845-1852)
+- **Uncertainty Overview**: `src/components/uncertainty-overview.tsx` (lines 19-22, 115-154)
+- **Purchase Logic**: `src/components/purchase-recommendation.tsx` (lines 69-72, 124-147)
+- **Simplified Analysis**: `src/components/simplified-analysis-tab.tsx` (lines 44-47)
 - Uses mock notification data that matches validation page items
 - Stock data and trading information are simulated for development  
 - Real-time updates are simulated through React state management
@@ -309,7 +380,12 @@ Located in `src/components/technical-analysis-tab.tsx`:
 - `calculateAllNewsReliability()`: Evaluates news source reliability
 - `calculateAllTimeSeries()`: Analyzes time series data integrity  
 - `calculateAllTradingVolume()`: Assesses trading volume patterns
-- Export functions: `getFundamentalDataParams()`, `getNewsReliabilityParams()`, etc.
+- **Stock-specific parameter functions** (Updated 2025-09-01):
+  - `getModelUncertaintyParams(stock)`: Individual model parameters for each of 15 stocks
+  - `getFundamentalDataParams(stock)`: Stock-specific fundamental data quality
+  - `getNewsReliabilityParams(stock)`: Stock-specific news reliability metrics
+  - `getTimeSeriesIntegrityParams(stock)`: Stock-specific time series patterns
+  - `getTradingVolumeParams(stock)`: Stock-specific trading volume characteristics
 
 ### UI/UX Architecture Decisions
 - **Info-Box over Dialogs**: Replaced nested Dialog systems with slide-in Info-Boxes for better event handling
@@ -326,7 +402,13 @@ Located in `src/components/technical-analysis-tab.tsx`:
 - **Code Organization**: Cleaned up 278+ lines of obsolete code, added 110 lines of structured functions
 - **Tooltip Standardization (2025-08-30)**: Unified all 16 Data Uncertainty parameter tooltips to identical 4-block structure for consistent user experience
 - **KaTeX Rendering Fixes (2025-08-30)**: Resolved formula rendering issues in Gesamtberechnung tooltips using remove/re-add methodology
-- **Deployment Ready**: Build compiles successfully in ~20s with only harmless ESLint warnings
+- **Stock-Specific Parameter System (2025-09-01)**: Major enhancement with individual uncertainty parameters for all 15 stocks:
+  - Added 764+ lines of stock-specific parameter data across 4 data uncertainty categories
+  - Implemented diversified uncertainty breakdown patterns (data/model/human dominance)
+  - Created 2-step recommendation logic with uncertainty filter (>50% → HOLD)
+  - Established mathematical consistency across all components (uncertainty-overview, purchase-recommendation, simplified-analysis)
+  - Resolved all recommendation inconsistencies (e.g., SAP HOLD vs BUY conflict)
+- **Deployment Ready**: Build compiles successfully with comprehensive parameter validation
 
 ### Production Deployment Status
 - **Build Status**: ✅ Compiled successfully
