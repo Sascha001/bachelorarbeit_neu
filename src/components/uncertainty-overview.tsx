@@ -144,8 +144,8 @@ const getUncertaintyData = (stock: string, stockData: TradingUncertaintyData[], 
     
     marketRecommendation = stockAnalysis[stock] || "HOLD";
     
-    // STEP 2: Uncertainty filter - if uncertainty > 50%, force to HOLD
-    if (uncertainty > 50) {
+    // STEP 2: Uncertainty filter - if uncertainty > 40%, force to HOLD
+    if (uncertainty > 40) {
       return "HOLD"; // Too uncertain to trade
     }
     
@@ -154,10 +154,10 @@ const getUncertaintyData = (stock: string, stockData: TradingUncertaintyData[], 
   }
   
   const getConfidenceLevel = (uncertainty: number) => {
-    if (uncertainty < 20) return "HOCH"
-    if (uncertainty < 40) return "MITTEL"
-    if (uncertainty < 70) return "NIEDRIG"
-    return "SEHR NIEDRIG"
+    if (uncertainty < 11) return "SEHR SICHER"
+    if (uncertainty < 21) return "SICHER"
+    if (uncertainty < 36) return "UNSICHER"
+    return "SEHR UNSICHER"
   }
   
   return {
@@ -178,18 +178,18 @@ export function UncertaintyOverview({ selectedStock }: UncertaintyOverviewProps)
   const data = getUncertaintyData(selectedStock, stockData, analytics)
   
   const getUncertaintyColor = (level: number) => {
-    if (level < 20) return "text-green-600"    // HOCH confidence = green
-    if (level < 40) return "text-yellow-600"   // MITTEL confidence = yellow
-    if (level < 70) return "text-orange-600"   // NIEDRIG confidence = orange
-    return "text-red-600"                      // SEHR NIEDRIG confidence = red
+    if (level < 11) return "text-green-600"    // SEHR SICHER = green
+    if (level < 21) return "text-blue-600"     // SICHER = blue  
+    if (level < 36) return "text-orange-600"   // UNSICHER = orange
+    return "text-red-600"                      // SEHR UNSICHER = red
   }
 
   const getConfidenceColor = (confidence: string) => {
     switch (confidence) {
-      case "HOCH": return "bg-green-500/10 text-green-600"
-      case "MITTEL": return "bg-yellow-500/10 text-yellow-600"
-      case "NIEDRIG": return "bg-orange-500/10 text-orange-600"
-      case "SEHR NIEDRIG": return "bg-red-500/10 text-red-600"
+      case "SEHR SICHER": return "bg-green-500/10 text-green-600"
+      case "SICHER": return "bg-blue-500/10 text-blue-600"
+      case "UNSICHER": return "bg-orange-500/10 text-orange-600"
+      case "SEHR UNSICHER": return "bg-red-500/10 text-red-600"
       default: return "bg-gray-500/10 text-gray-600"
     }
   }
