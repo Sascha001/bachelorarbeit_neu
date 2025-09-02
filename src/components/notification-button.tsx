@@ -68,7 +68,7 @@ export function NotificationButton() {
         </Button>
       </PopoverTrigger>
       <PopoverContent 
-        className="w-80 p-0 border-primary/20 bg-gradient-to-br from-card via-card to-primary/5" 
+        className="w-80 p-0 border-primary/20 bg-card shadow-lg" 
         align="end"
         sideOffset={8}
       >
