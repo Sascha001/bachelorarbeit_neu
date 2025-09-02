@@ -2311,94 +2311,94 @@ export const getHumanUncertaintyParams = (stock: string): HumanUncertaintyParams
       perceivedUncertainty: { likertResponse: 1, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 0, totalQuestions: 10 },
       aleatoricUncertainty: { consistencyScore: 10, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.05, inputChange: 0.03 }
+      decisionStability: { decisionChange: 0.01, inputChange: 0.10 }
     },
     'MA': { // 9% Ziel
       perceivedUncertainty: { likertResponse: 1, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 0, totalQuestions: 10 },
       aleatoricUncertainty: { consistencyScore: 10, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.06, inputChange: 0.03 }
+      decisionStability: { decisionChange: 0.01, inputChange: 0.08 }
     },
     'JNJ': { // 7% Ziel
       perceivedUncertainty: { likertResponse: 1, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 0, totalQuestions: 10 },
       aleatoricUncertainty: { consistencyScore: 10, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.04, inputChange: 0.02 }
+      decisionStability: { decisionChange: 0.01, inputChange: 0.12 }
     },
     'PG': { // 6% Ziel
       perceivedUncertainty: { likertResponse: 1, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 0, totalQuestions: 10 },
       aleatoricUncertainty: { consistencyScore: 10, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.03, inputChange: 0.02 }
+      decisionStability: { decisionChange: 0.01, inputChange: 0.15 }
     },
     // SICHER (11-20% Gesamtunsicherheit) - Geringe menschliche Unsicherheit
     'KO': { // 15% Ziel
       perceivedUncertainty: { likertResponse: 2, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 1, totalQuestions: 10 },
       aleatoricUncertainty: { consistencyScore: 8, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.10, inputChange: 0.05 }
+      decisionStability: { decisionChange: 0.02, inputChange: 0.10 }
     },
     'UNH': { // 18% Ziel
       perceivedUncertainty: { likertResponse: 2, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 1, totalQuestions: 10 },
       aleatoricUncertainty: { consistencyScore: 8, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.12, inputChange: 0.06 }
+      decisionStability: { decisionChange: 0.03, inputChange: 0.12 }
     },
     'MSFT': { // 17% Ziel
       perceivedUncertainty: { likertResponse: 2, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 1, totalQuestions: 10 },
       aleatoricUncertainty: { consistencyScore: 8, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.11, inputChange: 0.05 }
+      decisionStability: { decisionChange: 0.03, inputChange: 0.13 }
     },
     'JPM': { // 19% Ziel
       perceivedUncertainty: { likertResponse: 2, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 1, totalQuestions: 10 },
       aleatoricUncertainty: { consistencyScore: 8, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.13, inputChange: 0.06 }
+      decisionStability: { decisionChange: 0.03, inputChange: 0.11 }
     },
     // UNSICHER (21-35% Gesamtunsicherheit) - Moderate menschliche Unsicherheit
     'GOOGL': { // 28% Ziel
       perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 3, totalQuestions: 12 },
       aleatoricUncertainty: { consistencyScore: 6, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.18, inputChange: 0.09 }
+      decisionStability: { decisionChange: 0.05, inputChange: 0.12 }
     },
     'HD': { // 32% Ziel
       perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 3, totalQuestions: 12 },
       aleatoricUncertainty: { consistencyScore: 6, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.22, inputChange: 0.11 }
+      decisionStability: { decisionChange: 0.06, inputChange: 0.12 }
     },
     'AMZN': { // 29% Ziel
       perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 3, totalQuestions: 12 },
       aleatoricUncertainty: { consistencyScore: 6, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.19, inputChange: 0.10 }
+      decisionStability: { decisionChange: 0.05, inputChange: 0.11 }
     },
     'AAPL': { // 31% Ziel
       perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 3, totalQuestions: 12 },
       aleatoricUncertainty: { consistencyScore: 6, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.21, inputChange: 0.11 }
+      decisionStability: { decisionChange: 0.06, inputChange: 0.13 }
     },
     // SEHR UNSICHER (36-50%+ Gesamtunsicherheit) - Höchste menschliche Unsicherheit
     'TSLA': { // 47% Ziel
       perceivedUncertainty: { likertResponse: 5, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 5, totalQuestions: 12 },
       aleatoricUncertainty: { consistencyScore: 4, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.35, inputChange: 0.15 }
+      decisionStability: { decisionChange: 0.08, inputChange: 0.12 }
     },
     'META': { // 43% Ziel
       perceivedUncertainty: { likertResponse: 4, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 4, totalQuestions: 12 },
       aleatoricUncertainty: { consistencyScore: 5, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.32, inputChange: 0.14 }
+      decisionStability: { decisionChange: 0.07, inputChange: 0.11 }
     },
     'NVDA': { // 45% Ziel
       perceivedUncertainty: { likertResponse: 4, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 4, totalQuestions: 12 },
       aleatoricUncertainty: { consistencyScore: 4, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.33, inputChange: 0.14 }
+      decisionStability: { decisionChange: 0.08, inputChange: 0.13 }
     },
     // NEW STOCKS - 8 additional stocks
     // SICHER (11-20% uncertainty)
@@ -2406,50 +2406,50 @@ export const getHumanUncertaintyParams = (stock: string): HumanUncertaintyParams
       perceivedUncertainty: { likertResponse: 2, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 1, totalQuestions: 10 },
       aleatoricUncertainty: { consistencyScore: 8, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.12, inputChange: 0.06 }
+      decisionStability: { decisionChange: 0.025, inputChange: 0.11 }
     },
     'NESN.SW': { // Sicher - 14% uncertainty target, BUY - Consumer staples familiarity
       perceivedUncertainty: { likertResponse: 2, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 1, totalQuestions: 10 },
       aleatoricUncertainty: { consistencyScore: 9, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.10, inputChange: 0.05 }
+      decisionStability: { decisionChange: 0.02, inputChange: 0.10 }
     },
     'SAP.DE': { // Sicher - 20% uncertainty target, SELL - Software transition complexity
       perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 2, totalQuestions: 10 },
       aleatoricUncertainty: { consistencyScore: 7, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.18, inputChange: 0.08 }
+      decisionStability: { decisionChange: 0.035, inputChange: 0.13 }
     },
     'SIE.DE': { // Sicher - 18% uncertainty target, SELL - Industrial complexity
       perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 2, totalQuestions: 10 },
       aleatoricUncertainty: { consistencyScore: 8, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.15, inputChange: 0.07 }
+      decisionStability: { decisionChange: 0.03, inputChange: 0.12 }
     },
     // UNSICHER (21-35% uncertainty)
     'BRK_B': { // Unsicher - 25% uncertainty target, BUY - Conglomerate complexity
       perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 3, totalQuestions: 12 },
       aleatoricUncertainty: { consistencyScore: 6, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.22, inputChange: 0.10 }
+      decisionStability: { decisionChange: 0.05, inputChange: 0.12 }
     },
     'ASML.AS': { // Unsicher - 27% uncertainty target, BUY - Tech sector but European
       perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 3, totalQuestions: 12 },
       aleatoricUncertainty: { consistencyScore: 6, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.25, inputChange: 0.11 }
+      decisionStability: { decisionChange: 0.055, inputChange: 0.12 }
     },
     'BMW.DE': { // Unsicher - 34% uncertainty target, SELL - Auto industry disruption
       perceivedUncertainty: { likertResponse: 4, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 4, totalQuestions: 12 },
       aleatoricUncertainty: { consistencyScore: 5, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.32, inputChange: 0.14 }
+      decisionStability: { decisionChange: 0.06, inputChange: 0.12 }
     },
     'BAS.DE': { // Unsicher - 33% uncertainty target, SELL - Chemical cyclical complexity
       perceivedUncertainty: { likertResponse: 4, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 4, totalQuestions: 12 },
       aleatoricUncertainty: { consistencyScore: 5, maxPossibleConsistency: 10 },
-      decisionStability: { decisionChange: 0.30, inputChange: 0.13 }
+      decisionStability: { decisionChange: 0.058, inputChange: 0.12 }
     }
   };
 

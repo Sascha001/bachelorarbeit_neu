@@ -298,20 +298,22 @@ The project uses specific versions:
 - **TypeScript Safety**: Comprehensive interface definitions prevent property access errors
 - **Build Stability**: Eliminated `.value` property dependencies that caused compilation errors
 
-#### Stock-Specific Uncertainty Parameter System (2025-09-01 Update)
-The application now features a comprehensive stock-specific uncertainty parameter system with individualized data for all 15 supported stocks:
+#### Stock-Specific Uncertainty Parameter System (2025-09-02 Update)
+The application now features a comprehensive stock-specific uncertainty parameter system with individualized data for all 23 supported stocks:
 
 ##### Supported Stocks & Uncertainty Categories
-**15 Stocks with Full Parameter Support:**
+**23 Stocks with Full Parameter Support:**
 - **US Tech Giants**: AAPL, MSFT, GOOGL, AMZN, TSLA, META, NVDA
-- **Financial Services**: JPM, V, MA
+- **Financial Services**: JPM, V, MA, BRK_B
 - **Healthcare & Consumer**: JNJ, UNH, PG, KO
 - **Retail**: HD
+- **European Stocks**: ALV.DE (Insurance), NESN.SW (Consumer), SAP.DE (Software), SIE.DE (Industrial), ASML.AS (Tech), BMW.DE (Automotive), BAS.DE (Chemicals)
 
 **Uncertainty Level Distribution:**
-- **High Uncertainty (55-80%)**: AAPL, TSLA, META, NVDA (4 stocks)
-- **Medium Uncertainty (40-50%)**: MSFT, GOOGL, AMZN, HD, JPM (5 stocks)
-- **Low Uncertainty (15-35%)**: JNJ, PG, KO, UNH, V, MA (6 stocks)
+- **SEHR UNSICHER (43-47%)**: TSLA, META, NVDA (3 stocks)
+- **UNSICHER (25-34%)**: GOOGL, HD, AMZN, AAPL, BRK_B, ASML.AS, BMW.DE, BAS.DE (8 stocks)
+- **SICHER (14-20%)**: KO, UNH, MSFT, JPM, ALV.DE, NESN.SW, SAP.DE, SIE.DE (8 stocks)
+- **SEHR SICHER (6-9%)**: V, MA, JNJ, PG (4 stocks)
 
 ##### Parameter Categories (All Stock-Specific)
 **1. Model Uncertainty Parameters (`getModelUncertaintyParams(stock)`):**
@@ -381,7 +383,7 @@ Located in `src/components/technical-analysis-tab.tsx`:
 - `calculateAllTimeSeries()`: Analyzes time series data integrity  
 - `calculateAllTradingVolume()`: Assesses trading volume patterns
 - **Stock-specific parameter functions** (Updated 2025-09-01):
-  - `getModelUncertaintyParams(stock)`: Individual model parameters for each of 15 stocks
+  - `getModelUncertaintyParams(stock)`: Individual model parameters for each of 23 stocks
   - `getFundamentalDataParams(stock)`: Stock-specific fundamental data quality
   - `getNewsReliabilityParams(stock)`: Stock-specific news reliability metrics
   - `getTimeSeriesIntegrityParams(stock)`: Stock-specific time series patterns
@@ -402,7 +404,7 @@ Located in `src/components/technical-analysis-tab.tsx`:
 - **Code Organization**: Cleaned up 278+ lines of obsolete code, added 110 lines of structured functions
 - **Tooltip Standardization (2025-08-30)**: Unified all 16 Data Uncertainty parameter tooltips to identical 4-block structure for consistent user experience
 - **KaTeX Rendering Fixes (2025-08-30)**: Resolved formula rendering issues in Gesamtberechnung tooltips using remove/re-add methodology
-- **Stock-Specific Parameter System (2025-09-01)**: Major enhancement with individual uncertainty parameters for all 15 stocks:
+- **Stock-Specific Parameter System (2025-09-02)**: Major enhancement with individual uncertainty parameters for all 23 stocks:
   - Added 764+ lines of stock-specific parameter data across 4 data uncertainty categories
   - Implemented diversified uncertainty breakdown patterns (data/model/human dominance)
   - Created 2-step recommendation logic with uncertainty filter (>50% → HOLD)
