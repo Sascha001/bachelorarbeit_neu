@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 // Dialog components removed as they're no longer used - replaced with Info-Box pattern
 import React, { useState } from "react"
-import { useTradingUncertainty, TradingUncertaintyData, UncertaintyAnalytics } from "@/hooks/use-trading-uncertainty"
+import { TradingUncertaintyData, UncertaintyAnalytics } from "@/hooks/use-trading-uncertainty"
 import 'katex/dist/katex.min.css'
 
 // Custom CSS for formula scaling
@@ -2468,8 +2468,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
   const data = getTechnicalData(selectedStock)
   const [activeInfoBox, setActiveInfoBox] = useState<string | null>(null)
   
-  // Get real trading uncertainty data
-  const { getStockUncertaintyHistory, analytics } = useTradingUncertainty()
+  // Using static parameters only - no trading data needed
   const [isInfoBoxVisible, setIsInfoBoxVisible] = useState(false)
 
   // Inject custom CSS for formula scaling
@@ -2799,9 +2798,8 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
             </CardHeader>
             <CardContent>
               {(() => {
-                // Use real trading data from hook for human uncertainty
-                const stockData = getStockUncertaintyHistory(selectedStock)
-                const humanParams = computeHumanUncertaintyFromTradingData(stockData, analytics)
+                // Use static parameters for human uncertainty (pure static data)
+                const humanParams = getHumanUncertaintyParams(selectedStock)
                 const humanCalculated = calculateAllHumanUncertainty(humanParams)
                 
                 
@@ -3948,8 +3946,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
 
                     {/* Human Uncertainty Info Panels */}
                     {activeInfoBox === 'perceivedUncertainty' && (() => {
-                      const stockData = getStockUncertaintyHistory(selectedStock)
-                      const humanParams = computeHumanUncertaintyFromTradingData(stockData, analytics)
+                      const humanParams = getHumanUncertaintyParams(selectedStock)
                       return (
                         <>
                           {/* Short intro text */}
@@ -3968,8 +3965,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     })()}
 
                     {activeInfoBox === 'epistemicUncertaintyHuman' && (() => {
-                      const stockData = getStockUncertaintyHistory(selectedStock)
-                      const humanParams = computeHumanUncertaintyFromTradingData(stockData, analytics)
+                      const humanParams = getHumanUncertaintyParams(selectedStock)
                       return (
                         <>
                           {/* Short intro text */}
@@ -3988,8 +3984,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     })()}
 
                     {activeInfoBox === 'aleatoricUncertaintyHuman' && (() => {
-                      const stockData = getStockUncertaintyHistory(selectedStock)
-                      const humanParams = computeHumanUncertaintyFromTradingData(stockData, analytics)
+                      const humanParams = getHumanUncertaintyParams(selectedStock)
                       return (
                         <>
                           {/* Short intro text */}
@@ -4008,8 +4003,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                     })()}
 
                     {activeInfoBox === 'decisionStabilityHuman' && (() => {
-                      const stockData = getStockUncertaintyHistory(selectedStock)
-                      const humanParams = computeHumanUncertaintyFromTradingData(stockData, analytics)
+                      const humanParams = getHumanUncertaintyParams(selectedStock)
                       return (
                         <>
                           {/* Short intro text */}
