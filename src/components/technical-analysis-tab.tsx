@@ -2923,7 +2923,7 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       </div>
                       <Progress value={humanCalculated.decisionStability * 100} className="h-2" />
                       <p className="text-xs text-muted-foreground">
-                        {(humanParams.decisionStability.decisionChange * 100).toFixed(1)}% Entscheidungsänderung
+                        {(humanCalculated.decisionStability * 100).toFixed(1)}% Entscheidungsänderung
                       </p>
                     </div>
                   </div>
