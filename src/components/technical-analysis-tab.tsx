@@ -2311,94 +2311,94 @@ export const getHumanUncertaintyParams = (stock: string): HumanUncertaintyParams
       perceivedUncertainty: { likertResponse: 1, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 0, totalQuestions: 50 },
       aleatoricUncertainty: { consistencyScore: 48, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 2, inputChange: 80 }
+      decisionStability: { decisionChange: 1, inputChange: 20 }
     },
     'MA': { // 7% Ziel - Payment processor stability
       perceivedUncertainty: { likertResponse: 1, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 1, totalQuestions: 40 },
       aleatoricUncertainty: { consistencyScore: 45, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 3, inputChange: 75 }
+      decisionStability: { decisionChange: 1, inputChange: 15 }
     },
     'JNJ': { // 8% Ziel - Healthcare sector familiarity
       perceivedUncertainty: { likertResponse: 1, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 2, totalQuestions: 40 },
       aleatoricUncertainty: { consistencyScore: 42, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 3, inputChange: 60 }
+      decisionStability: { decisionChange: 1, inputChange: 12 }
     },
     'PG': { // 9% Ziel - Consumer staples expertise
       perceivedUncertainty: { likertResponse: 1, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 3, totalQuestions: 40 },
       aleatoricUncertainty: { consistencyScore: 40, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 4, inputChange: 70 }
+      decisionStability: { decisionChange: 1, inputChange: 10 }
     },
     // SICHER (11-20% Gesamtunsicherheit) - Geringe menschliche Unsicherheit
     'KO': { // 15% Ziel - Dividend aristocrat familiarity
       perceivedUncertainty: { likertResponse: 2, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 3, totalQuestions: 40 },
       aleatoricUncertainty: { consistencyScore: 35, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 8, inputChange: 60 }
+      decisionStability: { decisionChange: 2, inputChange: 15 }
     },
     'UNH': { // 18% Ziel - Healthcare sector growth
       perceivedUncertainty: { likertResponse: 2, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 4, totalQuestions: 40 },
       aleatoricUncertainty: { consistencyScore: 32, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 12, inputChange: 80 }
+      decisionStability: { decisionChange: 3, inputChange: 20 }
     },
     'MSFT': { // 17% Ziel - Cloud leadership understanding
       perceivedUncertainty: { likertResponse: 2, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 5, totalQuestions: 50 },
       aleatoricUncertainty: { consistencyScore: 38, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 10, inputChange: 70 }
+      decisionStability: { decisionChange: 3, inputChange: 18 }
     },
     'JPM': { // 19% Ziel - Banking sector complexity
       perceivedUncertainty: { likertResponse: 2, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 6, totalQuestions: 50 },
       aleatoricUncertainty: { consistencyScore: 30, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 15, inputChange: 90 }
+      decisionStability: { decisionChange: 4, inputChange: 22 }
     },
     // UNSICHER (21-35% Gesamtunsicherheit) - Moderate menschliche Unsicherheit
     'GOOGL': { // 28% Ziel - Tech giant AI uncertainty
       perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 12, totalQuestions: 60 },
       aleatoricUncertainty: { consistencyScore: 25, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 18, inputChange: 60 }
+      decisionStability: { decisionChange: 6, inputChange: 20 }
     },
     'HD': { // 32% Ziel - Retail cyclical volatility
       perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 15, totalQuestions: 55 },
       aleatoricUncertainty: { consistencyScore: 20, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 25, inputChange: 80 }
+      decisionStability: { decisionChange: 7, inputChange: 22 }
     },
     'AMZN': { // 29% Ziel - Multi-business complexity
       perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 10, totalQuestions: 50 },
       aleatoricUncertainty: { consistencyScore: 28, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 22, inputChange: 70 }
+      decisionStability: { decisionChange: 6, inputChange: 21 }
     },
     'AAPL': { // 31% Ziel - Tech leadership transition
       perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 14, totalQuestions: 65 },
       aleatoricUncertainty: { consistencyScore: 22, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 28, inputChange: 90 }
+      decisionStability: { decisionChange: 7, inputChange: 23 }
     },
     // SEHR UNSICHER (36-50%+ Gesamtunsicherheit) - Höchste menschliche Unsicherheit
     'TSLA': { // 47% Ziel - Extreme volatility and uncertainty
       perceivedUncertainty: { likertResponse: 5, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 25, totalQuestions: 70 },
       aleatoricUncertainty: { consistencyScore: 10, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 35, inputChange: 60 }
+      decisionStability: { decisionChange: 12, inputChange: 20 }
     },
     'META': { // 43% Ziel - Regulatory and metaverse uncertainty
       perceivedUncertainty: { likertResponse: 4, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 20, totalQuestions: 60 },
       aleatoricUncertainty: { consistencyScore: 12, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 45, inputChange: 80 }
+      decisionStability: { decisionChange: 11, inputChange: 18 }
     },
     'NVDA': { // 45% Ziel - AI bubble and semiconductor cycles
       perceivedUncertainty: { likertResponse: 4, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 22, totalQuestions: 65 },
       aleatoricUncertainty: { consistencyScore: 8, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 50, inputChange: 90 }
+      decisionStability: { decisionChange: 13, inputChange: 22 }
     },
     // NEW STOCKS - 8 additional stocks
     // SICHER (11-20% uncertainty)
@@ -2406,50 +2406,50 @@ export const getHumanUncertaintyParams = (stock: string): HumanUncertaintyParams
       perceivedUncertainty: { likertResponse: 2, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 4, totalQuestions: 45 },
       aleatoricUncertainty: { consistencyScore: 36, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 9, inputChange: 65 }
+      decisionStability: { decisionChange: 3, inputChange: 19 }
     },
     'NESN.SW': { // 14% Ziel - Swiss consumer staples
       perceivedUncertainty: { likertResponse: 2, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 2, totalQuestions: 35 },
       aleatoricUncertainty: { consistencyScore: 42, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 7, inputChange: 55 }
+      decisionStability: { decisionChange: 2, inputChange: 16 }
     },
     'SAP.DE': { // 20% Ziel - German software transition
       perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 7, totalQuestions: 45 },
       aleatoricUncertainty: { consistencyScore: 25, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 18, inputChange: 95 }
+      decisionStability: { decisionChange: 4, inputChange: 21 }
     },
     'SIE.DE': { // 18% Ziel - German industrial complexity
       perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 5, totalQuestions: 40 },
       aleatoricUncertainty: { consistencyScore: 32, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 13, inputChange: 75 }
+      decisionStability: { decisionChange: 3, inputChange: 17 }
     },
     // UNSICHER (21-35% uncertainty)
     'BRK_B': { // 25% Ziel - Berkshire conglomerate complexity
       perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 8, totalQuestions: 45 },
       aleatoricUncertainty: { consistencyScore: 30, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 16, inputChange: 65 }
+      decisionStability: { decisionChange: 5, inputChange: 20 }
     },
     'ASML.AS': { // 27% Ziel - Dutch semiconductor complexity
       perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 9, totalQuestions: 50 },
       aleatoricUncertainty: { consistencyScore: 28, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 19, inputChange: 70 }
+      decisionStability: { decisionChange: 6, inputChange: 22 }
     },
     'BMW.DE': { // 34% Ziel - German auto industry disruption
       perceivedUncertainty: { likertResponse: 4, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 18, totalQuestions: 60 },
       aleatoricUncertainty: { consistencyScore: 15, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 32, inputChange: 85 }
+      decisionStability: { decisionChange: 8, inputChange: 24 }
     },
     'BAS.DE': { // 33% Ziel - German chemical cyclical volatility
       perceivedUncertainty: { likertResponse: 4, maxScale: 5 },
       epistemicUncertainty: { unclearAnswers: 16, totalQuestions: 55 },
       aleatoricUncertainty: { consistencyScore: 18, maxPossibleConsistency: 50 },
-      decisionStability: { decisionChange: 30, inputChange: 80 }
+      decisionStability: { decisionChange: 8, inputChange: 25 }
     }
   };
 
