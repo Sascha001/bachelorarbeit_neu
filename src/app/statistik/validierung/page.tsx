@@ -392,7 +392,7 @@ export default function ValidierungPage() {
                   </div>
 
                   {/* Feedback Section */}
-                  {validation.status === "pending" && validation.daysRemaining <= 7 && (
+                  {validation.status === "pending" && (
                     <div className="border border-blue-500/20 bg-blue-500/5 p-3 rounded-lg">
                       <p className="text-sm font-medium text-blue-600 mb-2">
                         Validierung bald verfügbar - Bereiten Sie Ihr Feedback vor
