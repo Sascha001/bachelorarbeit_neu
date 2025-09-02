@@ -131,6 +131,157 @@ const getDummyTradingData = (symbol: string): TradingUncertaintyData[] => {
         aiConfidence: 0.96,
         marketCondition: 'bullish'
       }
+    ],
+    // NEW STOCKS - 8 additional stocks with trading data
+    // SICHER (11-20% uncertainty)
+    'ALV.DE': [
+      {
+        timestamp: new Date('2024-08-22T11:15:00'),
+        symbol: 'ALV.DE',
+        action: 'buy',
+        amount: 50,
+        price: 268.90,
+        perceivedUncertainty: 2,
+        unclearConcepts: [],
+        aiConfidence: 0.89,
+        marketCondition: 'neutral'
+      },
+      {
+        timestamp: new Date('2024-08-28T14:30:00'),
+        symbol: 'ALV.DE',
+        action: 'buy',
+        amount: 25,
+        price: 265.40,
+        perceivedUncertainty: 2,
+        unclearConcepts: ['riskAssessment'],
+        aiConfidence: 0.86,
+        marketCondition: 'bearish'
+      }
+    ],
+    'NESN.SW': [
+      {
+        timestamp: new Date('2024-08-23T09:45:00'),
+        symbol: 'NESN.SW',
+        action: 'buy',
+        amount: 40,
+        price: 93.24,
+        perceivedUncertainty: 2,
+        unclearConcepts: [],
+        aiConfidence: 0.91,
+        marketCondition: 'bullish'
+      }
+    ],
+    'SAP.DE': [
+      {
+        timestamp: new Date('2024-08-24T16:20:00'),
+        symbol: 'SAP.DE',
+        action: 'sell',
+        amount: 30,
+        price: 145.82,
+        perceivedUncertainty: 3,
+        unclearConcepts: ['marketAnalysis'],
+        aiConfidence: 0.78,
+        marketCondition: 'volatile'
+      },
+      {
+        timestamp: new Date('2024-08-29T13:10:00'),
+        symbol: 'SAP.DE',
+        action: 'sell',
+        amount: 20,
+        price: 142.60,
+        perceivedUncertainty: 3,
+        unclearConcepts: ['riskAssessment', 'financialImpact'],
+        aiConfidence: 0.74,
+        marketCondition: 'bearish'
+      }
+    ],
+    'SIE.DE': [
+      {
+        timestamp: new Date('2024-08-25T10:50:00'),
+        symbol: 'SIE.DE',
+        action: 'sell',
+        amount: 35,
+        price: 172.45,
+        perceivedUncertainty: 3,
+        unclearConcepts: ['aiRecommendation'],
+        aiConfidence: 0.81,
+        marketCondition: 'neutral'
+      }
+    ],
+    // UNSICHER (21-35% uncertainty)
+    'BRK_B': [
+      {
+        timestamp: new Date('2024-08-26T15:40:00'),
+        symbol: 'BRK_B',
+        action: 'buy',
+        amount: 15,
+        price: 452.31,
+        perceivedUncertainty: 3,
+        unclearConcepts: ['marketAnalysis', 'riskAssessment'],
+        aiConfidence: 0.73,
+        marketCondition: 'volatile'
+      },
+      {
+        timestamp: new Date('2024-08-30T11:25:00'),
+        symbol: 'BRK_B',
+        action: 'buy',
+        amount: 10,
+        price: 448.20,
+        perceivedUncertainty: 4,
+        unclearConcepts: ['aiRecommendation', 'financialImpact', 'marketAnalysis'],
+        aiConfidence: 0.69,
+        marketCondition: 'bearish'
+      }
+    ],
+    'ASML.AS': [
+      {
+        timestamp: new Date('2024-08-27T12:35:00'),
+        symbol: 'ASML.AS',
+        action: 'buy',
+        amount: 8,
+        price: 745.60,
+        perceivedUncertainty: 3,
+        unclearConcepts: ['riskAssessment', 'marketAnalysis'],
+        aiConfidence: 0.76,
+        marketCondition: 'volatile'
+      }
+    ],
+    'BMW.DE': [
+      {
+        timestamp: new Date('2024-08-28T14:15:00'),
+        symbol: 'BMW.DE',
+        action: 'sell',
+        amount: 45,
+        price: 89.34,
+        perceivedUncertainty: 4,
+        unclearConcepts: ['aiRecommendation', 'marketAnalysis', 'riskAssessment'],
+        aiConfidence: 0.64,
+        marketCondition: 'bearish'
+      },
+      {
+        timestamp: new Date('2024-08-31T10:20:00'),
+        symbol: 'BMW.DE',
+        action: 'sell',
+        amount: 30,
+        price: 87.80,
+        perceivedUncertainty: 4,
+        unclearConcepts: ['financialImpact', 'riskAssessment', 'aiRecommendation', 'marketAnalysis'],
+        aiConfidence: 0.61,
+        marketCondition: 'bearish'
+      }
+    ],
+    'BAS.DE': [
+      {
+        timestamp: new Date('2024-08-29T16:45:00'),
+        symbol: 'BAS.DE',
+        action: 'sell',
+        amount: 60,
+        price: 48.62,
+        perceivedUncertainty: 4,
+        unclearConcepts: ['marketAnalysis', 'riskAssessment', 'financialImpact'],
+        aiConfidence: 0.66,
+        marketCondition: 'volatile'
+      }
     ]
   }
   

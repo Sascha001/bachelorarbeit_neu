@@ -566,6 +566,65 @@ export const getFundamentalDataParams = (stock?: string): FundamentalDataParams 
       consistency: { inconsistentEntries: 0, totalEntries: 25 },
       accuracy: { accurateReports: 25, totalReports: 25 },
       stability: { revisions: 0, totalDataPoints: 25 }
+    },
+    // NEW STOCKS - 8 additional stocks
+    // SICHER (11-20% uncertainty)
+    "ALV.DE": { // Sicher - 16% uncertainty target, BUY
+      completeness: { missingValues: 1, totalValues: 25 },
+      timeliness: { daysOld: 1, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 1, totalEntries: 25 },
+      accuracy: { accurateReports: 24, totalReports: 25 },
+      stability: { revisions: 1, totalDataPoints: 25 }
+    },
+    "NESN.SW": { // Sicher - 14% uncertainty target, BUY
+      completeness: { missingValues: 0, totalValues: 25 },
+      timeliness: { daysOld: 1, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 1, totalEntries: 25 },
+      accuracy: { accurateReports: 24, totalReports: 25 },
+      stability: { revisions: 0, totalDataPoints: 25 }
+    },
+    "SAP.DE": { // Sicher - 20% uncertainty target, SELL
+      completeness: { missingValues: 2, totalValues: 25 },
+      timeliness: { daysOld: 2, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 2, totalEntries: 25 },
+      accuracy: { accurateReports: 22, totalReports: 25 },
+      stability: { revisions: 2, totalDataPoints: 25 }
+    },
+    "SIE.DE": { // Sicher - 18% uncertainty target, SELL
+      completeness: { missingValues: 1, totalValues: 25 },
+      timeliness: { daysOld: 1, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 2, totalEntries: 25 },
+      accuracy: { accurateReports: 23, totalReports: 25 },
+      stability: { revisions: 1, totalDataPoints: 25 }
+    },
+    // UNSICHER (21-35% uncertainty)
+    BRK_B: { // Unsicher - 25% uncertainty target, BUY
+      completeness: { missingValues: 2, totalValues: 25 },
+      timeliness: { daysOld: 2, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 2, totalEntries: 25 },
+      accuracy: { accurateReports: 22, totalReports: 25 },
+      stability: { revisions: 2, totalDataPoints: 25 }
+    },
+    "ASML.AS": { // Unsicher - 27% uncertainty target, BUY
+      completeness: { missingValues: 3, totalValues: 25 },
+      timeliness: { daysOld: 2, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 2, totalEntries: 25 },
+      accuracy: { accurateReports: 22, totalReports: 25 },
+      stability: { revisions: 3, totalDataPoints: 25 }
+    },
+    "BMW.DE": { // Unsicher - 34% uncertainty target, SELL
+      completeness: { missingValues: 5, totalValues: 25 },
+      timeliness: { daysOld: 3, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 4, totalEntries: 25 },
+      accuracy: { accurateReports: 20, totalReports: 25 },
+      stability: { revisions: 3, totalDataPoints: 25 }
+    },
+    "BAS.DE": { // Unsicher - 33% uncertainty target, SELL
+      completeness: { missingValues: 4, totalValues: 25 },
+      timeliness: { daysOld: 3, maxAcceptableDays: 7 },
+      consistency: { inconsistentEntries: 3, totalEntries: 25 },
+      accuracy: { accurateReports: 20, totalReports: 25 },
+      stability: { revisions: 4, totalDataPoints: 25 }
     }
   };
   
@@ -1318,6 +1377,201 @@ export const getModelUncertaintyParams = (stock: string): ModelUncertaintyParams
       explanationConsistency: { 
         featureImportanceCorrelation: 0.925
       }
+    },
+    // NEW STOCKS - 8 additional stocks
+    // SICHER (11-20% uncertainty)
+    "ALV.DE": { // Sicher - 16% uncertainty target, BUY
+      epistemicUncertainty: { 
+        predictionStdDev: 0.0035,
+        meanPrediction: 0.019,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.0012,
+        maxExpectedVariance: 0.0045,
+        confidenceInterval95: 1.4
+      },
+      overfittingRisk: { 
+        trainLoss: 0.025,
+        testLoss: 0.032,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.0025,
+        baselinePrediction: 0.019
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.88
+      }
+    },
+    "NESN.SW": { // Sicher - 14% uncertainty target, BUY
+      epistemicUncertainty: { 
+        predictionStdDev: 0.003,
+        meanPrediction: 0.018,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.001,
+        maxExpectedVariance: 0.0042,
+        confidenceInterval95: 1.25
+      },
+      overfittingRisk: { 
+        trainLoss: 0.023,
+        testLoss: 0.029,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.0021,
+        baselinePrediction: 0.018
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.90
+      }
+    },
+    "SAP.DE": { // Sicher - 20% uncertainty target, SELL
+      epistemicUncertainty: { 
+        predictionStdDev: 0.0042,
+        meanPrediction: 0.021,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.0015,
+        maxExpectedVariance: 0.0048,
+        confidenceInterval95: 1.6
+      },
+      overfittingRisk: { 
+        trainLoss: 0.028,
+        testLoss: 0.036,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.003,
+        baselinePrediction: 0.021
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.85
+      }
+    },
+    "SIE.DE": { // Sicher - 18% uncertainty target, SELL
+      epistemicUncertainty: { 
+        predictionStdDev: 0.0038,
+        meanPrediction: 0.020,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.0013,
+        maxExpectedVariance: 0.0046,
+        confidenceInterval95: 1.5
+      },
+      overfittingRisk: { 
+        trainLoss: 0.026,
+        testLoss: 0.034,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.0028,
+        baselinePrediction: 0.020
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.86
+      }
+    },
+    // UNSICHER (21-35% uncertainty)
+    BRK_B: { // Unsicher - 25% uncertainty target, BUY
+      epistemicUncertainty: { 
+        predictionStdDev: 0.0055,
+        meanPrediction: 0.025,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.0022,
+        maxExpectedVariance: 0.0065,
+        confidenceInterval95: 2.1
+      },
+      overfittingRisk: { 
+        trainLoss: 0.038,
+        testLoss: 0.052,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.0045,
+        baselinePrediction: 0.025
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.79
+      }
+    },
+    "ASML.AS": { // Unsicher - 27% uncertainty target, BUY
+      epistemicUncertainty: { 
+        predictionStdDev: 0.006,
+        meanPrediction: 0.026,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.0025,
+        maxExpectedVariance: 0.007,
+        confidenceInterval95: 2.3
+      },
+      overfittingRisk: { 
+        trainLoss: 0.041,
+        testLoss: 0.056,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.005,
+        baselinePrediction: 0.026
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.77
+      }
+    },
+    "BMW.DE": { // Unsicher - 34% uncertainty target, SELL
+      epistemicUncertainty: { 
+        predictionStdDev: 0.008,
+        meanPrediction: 0.032,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.0035,
+        maxExpectedVariance: 0.009,
+        confidenceInterval95: 2.8
+      },
+      overfittingRisk: { 
+        trainLoss: 0.052,
+        testLoss: 0.072,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.0068,
+        baselinePrediction: 0.032
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.72
+      }
+    },
+    "BAS.DE": { // Unsicher - 33% uncertainty target, SELL
+      epistemicUncertainty: { 
+        predictionStdDev: 0.0075,
+        meanPrediction: 0.031,
+        epsilon: 0.00001
+      },
+      aleatoricUncertainty: { 
+        meanPredictionVariance: 0.0032,
+        maxExpectedVariance: 0.0085,
+        confidenceInterval95: 2.7
+      },
+      overfittingRisk: { 
+        trainLoss: 0.049,
+        testLoss: 0.068,
+        epsilon: 0.001
+      },
+      robustness: { 
+        meanPerturbationChange: 0.0065,
+        baselinePrediction: 0.031
+      },
+      explanationConsistency: { 
+        featureImportanceCorrelation: 0.73
+      }
     }
   };
   return params[stock] || params.AAPL;
@@ -1638,6 +1892,57 @@ export const getNewsReliabilityParams = (stock?: string): NewsReliabilityParams 
       reputationAccuracy: { totalNews: 100, falseNews: 3 },
       crossSourceConsensus: { totalNews: 10, confirmedNews: 9.2 },
       biasCheck: { biasIndex: 0.06, maxBiasValue: 1.0 }
+    },
+    // NEW STOCKS - 8 additional stocks
+    // SICHER (11-20% uncertainty)
+    "ALV.DE": { // Sicher - 16% uncertainty target, BUY - Insurance sector stability
+      sourceReliability: { totalSources: 15, averageReliability: 0.90 },
+      reputationAccuracy: { totalNews: 100, falseNews: 5 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 8.7 },
+      biasCheck: { biasIndex: 0.10, maxBiasValue: 1.0 }
+    },
+    "NESN.SW": { // Sicher - 14% uncertainty target, BUY - Consumer staples reliability
+      sourceReliability: { totalSources: 15, averageReliability: 0.92 },
+      reputationAccuracy: { totalNews: 100, falseNews: 4 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 8.9 },
+      biasCheck: { biasIndex: 0.08, maxBiasValue: 1.0 }
+    },
+    "SAP.DE": { // Sicher - 20% uncertainty target, SELL - Software transition coverage
+      sourceReliability: { totalSources: 15, averageReliability: 0.86 },
+      reputationAccuracy: { totalNews: 100, falseNews: 8 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 8.0 },
+      biasCheck: { biasIndex: 0.15, maxBiasValue: 1.0 }
+    },
+    "SIE.DE": { // Sicher - 18% uncertainty target, SELL - Industrial complexity
+      sourceReliability: { totalSources: 15, averageReliability: 0.88 },
+      reputationAccuracy: { totalNews: 100, falseNews: 6 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 8.4 },
+      biasCheck: { biasIndex: 0.12, maxBiasValue: 1.0 }
+    },
+    // UNSICHER (21-35% uncertainty)
+    BRK_B: { // Unsicher - 25% uncertainty target, BUY - Conglomerate complexity
+      sourceReliability: { totalSources: 15, averageReliability: 0.84 },
+      reputationAccuracy: { totalNews: 100, falseNews: 12 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 7.6 },
+      biasCheck: { biasIndex: 0.20, maxBiasValue: 1.0 }
+    },
+    "ASML.AS": { // Unsicher - 27% uncertainty target, BUY - Tech sector hype
+      sourceReliability: { totalSources: 15, averageReliability: 0.82 },
+      reputationAccuracy: { totalNews: 100, falseNews: 14 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 7.3 },
+      biasCheck: { biasIndex: 0.23, maxBiasValue: 1.0 }
+    },
+    "BMW.DE": { // Unsicher - 34% uncertainty target, SELL - Auto industry turmoil
+      sourceReliability: { totalSources: 15, averageReliability: 0.78 },
+      reputationAccuracy: { totalNews: 100, falseNews: 18 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 6.8 },
+      biasCheck: { biasIndex: 0.28, maxBiasValue: 1.0 }
+    },
+    "BAS.DE": { // Unsicher - 33% uncertainty target, SELL - Chemical cyclical volatility
+      sourceReliability: { totalSources: 15, averageReliability: 0.79 },
+      reputationAccuracy: { totalNews: 100, falseNews: 17 },
+      crossSourceConsensus: { totalNews: 10, confirmedNews: 6.9 },
+      biasCheck: { biasIndex: 0.26, maxBiasValue: 1.0 }
     }
   };
   
@@ -1746,6 +2051,57 @@ export const getTimeSeriesIntegrityParams = (stock?: string): TimeSeriesIntegrit
       outlierFreedom: { outliers: 0, totalObservations: 100 },
       revisionStability: { revisedValues: 0, totalValues: 100 },
       continuity: { gaps: 0, totalIntervals: 100 }
+    },
+    // NEW STOCKS - 8 additional stocks
+    // SICHER (11-20% uncertainty)
+    "ALV.DE": { // Sicher - 16% uncertainty target, BUY - Insurance stable patterns
+      completeness: { missingTimepoints: 1, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 2, totalObservations: 100 },
+      revisionStability: { revisedValues: 1, totalValues: 100 },
+      continuity: { gaps: 1, totalIntervals: 100 }
+    },
+    "NESN.SW": { // Sicher - 14% uncertainty target, BUY - Consumer staples consistency
+      completeness: { missingTimepoints: 0, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 1, totalObservations: 100 },
+      revisionStability: { revisedValues: 0, totalValues: 100 },
+      continuity: { gaps: 1, totalIntervals: 100 }
+    },
+    "SAP.DE": { // Sicher - 20% uncertainty target, SELL - Software transition volatility
+      completeness: { missingTimepoints: 2, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 3, totalObservations: 100 },
+      revisionStability: { revisedValues: 2, totalValues: 100 },
+      continuity: { gaps: 2, totalIntervals: 100 }
+    },
+    "SIE.DE": { // Sicher - 18% uncertainty target, SELL - Industrial cyclical variations
+      completeness: { missingTimepoints: 1, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 2, totalObservations: 100 },
+      revisionStability: { revisedValues: 1, totalValues: 100 },
+      continuity: { gaps: 2, totalIntervals: 100 }
+    },
+    // UNSICHER (21-35% uncertainty)
+    BRK_B: { // Unsicher - 25% uncertainty target, BUY - Conglomerate complexity
+      completeness: { missingTimepoints: 3, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 4, totalObservations: 100 },
+      revisionStability: { revisedValues: 2, totalValues: 100 },
+      continuity: { gaps: 3, totalIntervals: 100 }
+    },
+    "ASML.AS": { // Unsicher - 27% uncertainty target, BUY - Tech sector volatility
+      completeness: { missingTimepoints: 4, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 5, totalObservations: 100 },
+      revisionStability: { revisedValues: 3, totalValues: 100 },
+      continuity: { gaps: 3, totalIntervals: 100 }
+    },
+    "BMW.DE": { // Unsicher - 34% uncertainty target, SELL - Auto industry disruption
+      completeness: { missingTimepoints: 6, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 8, totalObservations: 100 },
+      revisionStability: { revisedValues: 4, totalValues: 100 },
+      continuity: { gaps: 5, totalIntervals: 100 }
+    },
+    "BAS.DE": { // Unsicher - 33% uncertainty target, SELL - Chemical cyclical nature
+      completeness: { missingTimepoints: 5, expectedTimepoints: 100 },
+      outlierFreedom: { outliers: 7, totalObservations: 100 },
+      revisionStability: { revisedValues: 4, totalValues: 100 },
+      continuity: { gaps: 4, totalIntervals: 100 }
     }
   };
   
@@ -1839,6 +2195,49 @@ export const getTradingVolumeParams = (stock?: string): TradingVolumeParams => {
       concentration: { topTradersVolume: 0.14, totalVolume: 1.0 },
       anomalousSpikes: { spikes: 2, totalTradingDays: 250 },
       timeStability: { varianceCoefficient: 0.08, maxVarianceCoefficient: 1.0 }
+    },
+    // NEW STOCKS - 8 additional stocks
+    // SICHER (11-20% uncertainty)
+    "ALV.DE": { // Sicher - 16% uncertainty target, BUY - Insurance sector institutional trading
+      concentration: { topTradersVolume: 0.18, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 5, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.12, maxVarianceCoefficient: 1.0 }
+    },
+    "NESN.SW": { // Sicher - 14% uncertainty target, BUY - Consumer staples steady trading
+      concentration: { topTradersVolume: 0.15, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 3, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.10, maxVarianceCoefficient: 1.0 }
+    },
+    "SAP.DE": { // Sicher - 20% uncertainty target, SELL - Software transition volatility
+      concentration: { topTradersVolume: 0.22, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 8, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.16, maxVarianceCoefficient: 1.0 }
+    },
+    "SIE.DE": { // Sicher - 18% uncertainty target, SELL - Industrial cyclical patterns
+      concentration: { topTradersVolume: 0.20, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 6, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.14, maxVarianceCoefficient: 1.0 }
+    },
+    // UNSICHER (21-35% uncertainty)
+    BRK_B: { // Unsicher - 25% uncertainty target, BUY - Conglomerate mixed patterns
+      concentration: { topTradersVolume: 0.28, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 12, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.22, maxVarianceCoefficient: 1.0 }
+    },
+    "ASML.AS": { // Unsicher - 27% uncertainty target, BUY - Tech sector momentum
+      concentration: { topTradersVolume: 0.32, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 15, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.25, maxVarianceCoefficient: 1.0 }
+    },
+    "BMW.DE": { // Unsicher - 34% uncertainty target, SELL - Auto industry disruption
+      concentration: { topTradersVolume: 0.42, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 28, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.38, maxVarianceCoefficient: 1.0 }
+    },
+    "BAS.DE": { // Unsicher - 33% uncertainty target, SELL - Chemical cyclical volatility
+      concentration: { topTradersVolume: 0.40, totalVolume: 1.0 },
+      anomalousSpikes: { spikes: 25, totalTradingDays: 250 },
+      timeStability: { varianceCoefficient: 0.35, maxVarianceCoefficient: 1.0 }
     }
   };
   
@@ -1924,6 +2323,57 @@ export const getHumanUncertaintyParams = (stock: string): HumanUncertaintyParams
       epistemicUncertainty: { unclearAnswers: 1, totalQuestions: 8 },
       aleatoricUncertainty: { consistencyScore: 9, maxPossibleConsistency: 10 },
       decisionStability: { decisionChange: 0.1, inputChange: 0.08 }
+    },
+    // NEW STOCKS - 8 additional stocks
+    // SICHER (11-20% uncertainty)
+    'ALV.DE': { // Sicher - 16% uncertainty target, BUY - Insurance sector familiarity
+      perceivedUncertainty: { likertResponse: 2, maxScale: 5 },
+      epistemicUncertainty: { unclearAnswers: 1, totalQuestions: 10 },
+      aleatoricUncertainty: { consistencyScore: 8, maxPossibleConsistency: 10 },
+      decisionStability: { decisionChange: 0.12, inputChange: 0.06 }
+    },
+    'NESN.SW': { // Sicher - 14% uncertainty target, BUY - Consumer staples familiarity
+      perceivedUncertainty: { likertResponse: 2, maxScale: 5 },
+      epistemicUncertainty: { unclearAnswers: 1, totalQuestions: 10 },
+      aleatoricUncertainty: { consistencyScore: 9, maxPossibleConsistency: 10 },
+      decisionStability: { decisionChange: 0.10, inputChange: 0.05 }
+    },
+    'SAP.DE': { // Sicher - 20% uncertainty target, SELL - Software transition complexity
+      perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
+      epistemicUncertainty: { unclearAnswers: 2, totalQuestions: 10 },
+      aleatoricUncertainty: { consistencyScore: 7, maxPossibleConsistency: 10 },
+      decisionStability: { decisionChange: 0.18, inputChange: 0.08 }
+    },
+    'SIE.DE': { // Sicher - 18% uncertainty target, SELL - Industrial complexity
+      perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
+      epistemicUncertainty: { unclearAnswers: 2, totalQuestions: 10 },
+      aleatoricUncertainty: { consistencyScore: 8, maxPossibleConsistency: 10 },
+      decisionStability: { decisionChange: 0.15, inputChange: 0.07 }
+    },
+    // UNSICHER (21-35% uncertainty)
+    'BRK_B': { // Unsicher - 25% uncertainty target, BUY - Conglomerate complexity
+      perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
+      epistemicUncertainty: { unclearAnswers: 3, totalQuestions: 12 },
+      aleatoricUncertainty: { consistencyScore: 6, maxPossibleConsistency: 10 },
+      decisionStability: { decisionChange: 0.22, inputChange: 0.10 }
+    },
+    'ASML.AS': { // Unsicher - 27% uncertainty target, BUY - Tech sector but European
+      perceivedUncertainty: { likertResponse: 3, maxScale: 5 },
+      epistemicUncertainty: { unclearAnswers: 3, totalQuestions: 12 },
+      aleatoricUncertainty: { consistencyScore: 6, maxPossibleConsistency: 10 },
+      decisionStability: { decisionChange: 0.25, inputChange: 0.11 }
+    },
+    'BMW.DE': { // Unsicher - 34% uncertainty target, SELL - Auto industry disruption
+      perceivedUncertainty: { likertResponse: 4, maxScale: 5 },
+      epistemicUncertainty: { unclearAnswers: 4, totalQuestions: 12 },
+      aleatoricUncertainty: { consistencyScore: 5, maxPossibleConsistency: 10 },
+      decisionStability: { decisionChange: 0.32, inputChange: 0.14 }
+    },
+    'BAS.DE': { // Unsicher - 33% uncertainty target, SELL - Chemical cyclical complexity
+      perceivedUncertainty: { likertResponse: 4, maxScale: 5 },
+      epistemicUncertainty: { unclearAnswers: 4, totalQuestions: 12 },
+      aleatoricUncertainty: { consistencyScore: 5, maxPossibleConsistency: 10 },
+      decisionStability: { decisionChange: 0.30, inputChange: 0.13 }
     }
   };
 
