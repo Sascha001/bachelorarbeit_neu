@@ -1,9 +1,6 @@
 "use client"
 
 import { AppSidebar } from "@/components/app-sidebar"
-import { StockSearch } from "@/components/stock-search"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { NotificationButton } from "@/components/notification-button"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,18 +15,268 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { useCoolScrollbar } from "@/hooks/use-cool-scrollbar"
+import { StockSearch } from "@/components/stock-search"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { NotificationButton } from "@/components/notification-button"
 
-export default function Page() {
-  const scrollbarRef = useCoolScrollbar()
+// Import uncertainty calculation functions
+import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams, getModelUncertaintyParams, calculateAllHumanUncertainty, getHumanUncertaintyParams } from "@/components/technical-analysis-tab"
+
+// Calculate uncertainty data for dashboard stocks
+const getDashboardStockData = (stock: string) => {
+  // Get calculated scores from parameter functions (stock-specific)
+  const fundamentalParams = getFundamentalDataParams(stock)
+  const newsParams = getNewsReliabilityParams(stock) 
+  const timeSeriesParams = getTimeSeriesIntegrityParams(stock)
+  const tradingVolumeParams = getTradingVolumeParams(stock)
+  
+  // Calculate individual dimension certainties using calculation functions (higher score = lower uncertainty)
+  const fundamentalCalculated = {
+    completeness: 1 - (fundamentalParams.completeness.missingValues / fundamentalParams.completeness.totalValues),
+    timeliness: Math.max(0, 1 - (fundamentalParams.timeliness.daysOld / fundamentalParams.timeliness.maxAcceptableDays)),
+    consistency: 1 - (fundamentalParams.consistency.inconsistentEntries / fundamentalParams.consistency.totalEntries),
+    accuracy: fundamentalParams.accuracy.accurateReports / fundamentalParams.accuracy.totalReports,
+    stability: 1 - (fundamentalParams.stability.revisions / fundamentalParams.stability.totalDataPoints)
+  };
+  const fundamentalCertainty = (0.2 * fundamentalCalculated.completeness + 
+                               0.2 * fundamentalCalculated.timeliness + 
+                               0.2 * fundamentalCalculated.consistency + 
+                               0.2 * fundamentalCalculated.accuracy + 
+                               0.2 * fundamentalCalculated.stability) * 100
+  
+  const newsCalculated = {
+    sourceReliability: newsParams.sourceReliability.averageReliability,
+    reputationAccuracy: 1 - (newsParams.reputationAccuracy.falseNews / newsParams.reputationAccuracy.totalNews),
+    crossSourceConsensus: newsParams.crossSourceConsensus.confirmedNews / newsParams.crossSourceConsensus.totalNews,
+    biasCheck: 1 - (newsParams.biasCheck.biasIndex / newsParams.biasCheck.maxBiasValue)
+  };
+  const newsCertainty = (0.3 * newsCalculated.sourceReliability + 
+                        0.3 * newsCalculated.reputationAccuracy + 
+                        0.25 * newsCalculated.crossSourceConsensus + 
+                        0.15 * newsCalculated.biasCheck) * 100
+  
+  const timeSeriesCalculated = {
+    completeness: 1 - (timeSeriesParams.completeness.missingTimepoints / timeSeriesParams.completeness.expectedTimepoints),
+    outlierFreedom: 1 - (timeSeriesParams.outlierFreedom.outliers / timeSeriesParams.outlierFreedom.totalObservations),
+    revisionStability: 1 - (timeSeriesParams.revisionStability.revisedValues / timeSeriesParams.revisionStability.totalValues),
+    continuity: 1 - (timeSeriesParams.continuity.gaps / timeSeriesParams.continuity.totalIntervals)
+  };
+  const timeSeriesCertainty = (0.25 * timeSeriesCalculated.completeness + 
+                              0.25 * timeSeriesCalculated.outlierFreedom + 
+                              0.25 * timeSeriesCalculated.revisionStability + 
+                              0.25 * timeSeriesCalculated.continuity) * 100
+  
+  const tradingVolumeCalculated = {
+    concentration: 1 - (tradingVolumeParams.concentration.topTradersVolume / tradingVolumeParams.concentration.totalVolume),
+    anomalousSpikes: 1 - (tradingVolumeParams.anomalousSpikes.spikes / tradingVolumeParams.anomalousSpikes.totalTradingDays),
+    timeStability: 1 - (tradingVolumeParams.timeStability.varianceCoefficient / tradingVolumeParams.timeStability.maxVarianceCoefficient)
+  };
+  const tradingVolumeCertainty = (0.4 * tradingVolumeCalculated.concentration + 
+                                 0.3 * tradingVolumeCalculated.anomalousSpikes + 
+                                 0.3 * tradingVolumeCalculated.timeStability) * 100
+  
+  // STEP 1: Calculate average certainty for data dimension (4 parameters)
+  const dataCertainty = (fundamentalCertainty + newsCertainty + timeSeriesCertainty + tradingVolumeCertainty) / 4
+  
+  // STEP 2: Calculate model certainty using ChatGPT Framework
+  const modelParams = getModelUncertaintyParams(stock)
+  
+  // Calculate the actual values using the calculation functions
+  const epistemicValue = 1 - (modelParams.epistemicUncertainty.predictionStdDev / (modelParams.epistemicUncertainty.meanPrediction + modelParams.epistemicUncertainty.epsilon))
+  const aleatoricValue = 1 - (modelParams.aleatoricUncertainty.meanPredictionVariance / modelParams.aleatoricUncertainty.maxExpectedVariance)
+  const overfittingValue = 1 - (Math.abs(modelParams.overfittingRisk.trainLoss - modelParams.overfittingRisk.testLoss) / (modelParams.overfittingRisk.trainLoss + modelParams.overfittingRisk.epsilon))
+  const robustnessValue = 1 - (modelParams.robustness.meanPerturbationChange / modelParams.robustness.baselinePrediction)
+  const explanationValue = (modelParams.explanationConsistency.featureImportanceCorrelation + 1) / 2
+  
+  const modelCertainty = (0.25 * epistemicValue + 
+                         0.15 * aleatoricValue + 
+                         0.20 * overfittingValue + 
+                         0.20 * robustnessValue + 
+                         0.20 * explanationValue) * 100
+  
+  // STEP 3: Calculate human certainty from static parameters (pure static data)
+  const humanParams = getHumanUncertaintyParams(stock)
+  const humanCalculated = calculateAllHumanUncertainty(humanParams)
+  
+  // Convert human uncertainty to certainty (weighted average of 4 dimensions)
+  const humanCertainty = (1 - (0.3 * humanCalculated.perceivedUncertainty + 
+                               0.25 * humanCalculated.epistemicUncertainty + 
+                               0.25 * humanCalculated.aleatoricUncertainty + 
+                               0.2 * humanCalculated.decisionStability)) * 100
+  
+  // STEP 4: Convert certainties to uncertainties (inversion)
+  const dataUncertaintyRaw = 100 - dataCertainty
+  const modelUncertaintyRaw = 100 - modelCertainty  
+  const humanUncertaintyRaw = 100 - humanCertainty
+  
+  // STEP 5: Calculate total uncertainty (sum divided by maximum possible = 300%)
+  const totalUncertaintyRaw = dataUncertaintyRaw + modelUncertaintyRaw + humanUncertaintyRaw
+  const totalUncertainty = Math.round((totalUncertaintyRaw / 300) * 100)
+  
+  // Get confidence level and recommendation
+  const getConfidenceLevel = (uncertainty: number) => {
+    if (uncertainty < 11) return "SEHR SICHER"
+    if (uncertainty < 21) return "SICHER"
+    if (uncertainty < 36) return "UNSICHER"
+    return "SEHR UNSICHER"
+  }
+  
+  const getRecommendation = (uncertainty: number, stock: string) => {
+    const stockAnalysis: Record<string, string> = {
+      AAPL: "BUY", MSFT: "BUY", GOOGL: "BUY", V: "BUY", MA: "BUY",
+      JNJ: "BUY", PG: "BUY", KO: "BUY", UNH: "BUY",
+      HD: "HOLD", JPM: "HOLD",
+      TSLA: "SELL", META: "HOLD", NVDA: "SELL", AMZN: "HOLD"
+    };
+    
+    const marketRecommendation = stockAnalysis[stock] || "HOLD";
+    if (uncertainty > 40) return "HOLD";
+    return marketRecommendation;
+  }
+
+  return {
+    totalUncertainty,
+    confidenceLevel: getConfidenceLevel(totalUncertainty),
+    recommendation: getRecommendation(totalUncertainty, stock)
+  }
+}
+
+export default function Dashboard() {
+  // Get uncertainty data for dashboard stocks (one per uncertainty category)
+  const vData = getDashboardStockData("V")        // SEHR SICHER (~8%)
+  const msftData = getDashboardStockData("MSFT")  // SICHER (~16%)
+  const aaplData = getDashboardStockData("AAPL")  // UNSICHER (~26%)
+  const tslaData = getDashboardStockData("TSLA")  // SEHR UNSICHER (~47%)
+
+  // Calculate aggregated portfolio uncertainty from all 4 dashboard stocks
+  const getPortfolioUncertainty = () => {
+    // Get detailed uncertainty breakdown for all stocks
+    const vBreakdown = getDetailedUncertaintyData("V")
+    const msftBreakdown = getDetailedUncertaintyData("MSFT")
+    const aaplBreakdown = getDetailedUncertaintyData("AAPL")
+    const tslaBreakdown = getDetailedUncertaintyData("TSLA")
+
+    // Calculate aggregated percentages (average of relative percentages)
+    const avgDataUncertainty = (vBreakdown.dataUncertainty + msftBreakdown.dataUncertainty + aaplBreakdown.dataUncertainty + tslaBreakdown.dataUncertainty) / 4
+    const avgModelUncertainty = (vBreakdown.modelUncertainty + msftBreakdown.modelUncertainty + aaplBreakdown.modelUncertainty + tslaBreakdown.modelUncertainty) / 4
+    const avgHumanUncertainty = (vBreakdown.humanUncertainty + msftBreakdown.humanUncertainty + aaplBreakdown.humanUncertainty + tslaBreakdown.humanUncertainty) / 4
+
+    // Calculate total uncertainty (average of all total uncertainties)
+    const avgTotalUncertainty = (vData.totalUncertainty + msftData.totalUncertainty + aaplData.totalUncertainty + tslaData.totalUncertainty) / 4
+
+    // Get confidence level for portfolio
+    const getConfidenceLevel = (uncertainty: number) => {
+      if (uncertainty < 11) return "SEHR SICHER"
+      if (uncertainty < 21) return "SICHER"
+      if (uncertainty < 36) return "UNSICHER"
+      return "SEHR UNSICHER"
+    }
+
+    return {
+      totalUncertainty: Math.round(avgTotalUncertainty),
+      dataUncertainty: Math.round(avgDataUncertainty * 10) / 10,
+      modelUncertainty: Math.round(avgModelUncertainty * 10) / 10,
+      humanUncertainty: Math.round(avgHumanUncertainty * 10) / 10,
+      confidenceLevel: getConfidenceLevel(avgTotalUncertainty)
+    }
+  }
+
+  // Helper function to get detailed uncertainty breakdown for a stock
+  const getDetailedUncertaintyData = (stock: string) => {
+    // Get calculated scores from parameter functions (stock-specific) - same logic as getDashboardStockData but returns breakdown
+    const fundamentalParams = getFundamentalDataParams(stock)
+    const newsParams = getNewsReliabilityParams(stock) 
+    const timeSeriesParams = getTimeSeriesIntegrityParams(stock)
+    const tradingVolumeParams = getTradingVolumeParams(stock)
+    
+    const fundamentalCalculated = {
+      completeness: 1 - (fundamentalParams.completeness.missingValues / fundamentalParams.completeness.totalValues),
+      timeliness: Math.max(0, 1 - (fundamentalParams.timeliness.daysOld / fundamentalParams.timeliness.maxAcceptableDays)),
+      consistency: 1 - (fundamentalParams.consistency.inconsistentEntries / fundamentalParams.consistency.totalEntries),
+      accuracy: fundamentalParams.accuracy.accurateReports / fundamentalParams.accuracy.totalReports,
+      stability: 1 - (fundamentalParams.stability.revisions / fundamentalParams.stability.totalDataPoints)
+    };
+    const fundamentalCertainty = (0.2 * fundamentalCalculated.completeness + 0.2 * fundamentalCalculated.timeliness + 0.2 * fundamentalCalculated.consistency + 0.2 * fundamentalCalculated.accuracy + 0.2 * fundamentalCalculated.stability) * 100
+    
+    const newsCalculated = {
+      sourceReliability: newsParams.sourceReliability.averageReliability,
+      reputationAccuracy: 1 - (newsParams.reputationAccuracy.falseNews / newsParams.reputationAccuracy.totalNews),
+      crossSourceConsensus: newsParams.crossSourceConsensus.confirmedNews / newsParams.crossSourceConsensus.totalNews,
+      biasCheck: 1 - (newsParams.biasCheck.biasIndex / newsParams.biasCheck.maxBiasValue)
+    };
+    const newsCertainty = (0.3 * newsCalculated.sourceReliability + 0.3 * newsCalculated.reputationAccuracy + 0.25 * newsCalculated.crossSourceConsensus + 0.15 * newsCalculated.biasCheck) * 100
+    
+    const timeSeriesCalculated = {
+      completeness: 1 - (timeSeriesParams.completeness.missingTimepoints / timeSeriesParams.completeness.expectedTimepoints),
+      outlierFreedom: 1 - (timeSeriesParams.outlierFreedom.outliers / timeSeriesParams.outlierFreedom.totalObservations),
+      revisionStability: 1 - (timeSeriesParams.revisionStability.revisedValues / timeSeriesParams.revisionStability.totalValues),
+      continuity: 1 - (timeSeriesParams.continuity.gaps / timeSeriesParams.continuity.totalIntervals)
+    };
+    const timeSeriesCertainty = (0.25 * timeSeriesCalculated.completeness + 0.25 * timeSeriesCalculated.outlierFreedom + 0.25 * timeSeriesCalculated.revisionStability + 0.25 * timeSeriesCalculated.continuity) * 100
+    
+    const tradingVolumeCalculated = {
+      concentration: 1 - (tradingVolumeParams.concentration.topTradersVolume / tradingVolumeParams.concentration.totalVolume),
+      anomalousSpikes: 1 - (tradingVolumeParams.anomalousSpikes.spikes / tradingVolumeParams.anomalousSpikes.totalTradingDays),
+      timeStability: 1 - (tradingVolumeParams.timeStability.varianceCoefficient / tradingVolumeParams.timeStability.maxVarianceCoefficient)
+    };
+    const tradingVolumeCertainty = (0.4 * tradingVolumeCalculated.concentration + 0.3 * tradingVolumeCalculated.anomalousSpikes + 0.3 * tradingVolumeCalculated.timeStability) * 100
+    
+    const dataCertainty = (fundamentalCertainty + newsCertainty + timeSeriesCertainty + tradingVolumeCertainty) / 4
+    
+    const modelParams = getModelUncertaintyParams(stock)
+    const epistemicValue = 1 - (modelParams.epistemicUncertainty.predictionStdDev / (modelParams.epistemicUncertainty.meanPrediction + modelParams.epistemicUncertainty.epsilon))
+    const aleatoricValue = 1 - (modelParams.aleatoricUncertainty.meanPredictionVariance / modelParams.aleatoricUncertainty.maxExpectedVariance)
+    const overfittingValue = 1 - (Math.abs(modelParams.overfittingRisk.trainLoss - modelParams.overfittingRisk.testLoss) / (modelParams.overfittingRisk.trainLoss + modelParams.overfittingRisk.epsilon))
+    const robustnessValue = 1 - (modelParams.robustness.meanPerturbationChange / modelParams.robustness.baselinePrediction)
+    const explanationValue = (modelParams.explanationConsistency.featureImportanceCorrelation + 1) / 2
+    const modelCertainty = (0.25 * epistemicValue + 0.15 * aleatoricValue + 0.20 * overfittingValue + 0.20 * robustnessValue + 0.20 * explanationValue) * 100
+    
+    const humanParams = getHumanUncertaintyParams(stock)
+    const humanCalculated = calculateAllHumanUncertainty(humanParams)
+    const humanCertainty = (1 - (0.3 * humanCalculated.perceivedUncertainty + 0.25 * humanCalculated.epistemicUncertainty + 0.25 * humanCalculated.aleatoricUncertainty + 0.2 * humanCalculated.decisionStability)) * 100
+    
+    const dataUncertaintyRaw = 100 - dataCertainty
+    const modelUncertaintyRaw = 100 - modelCertainty
+    const humanUncertaintyRaw = 100 - humanCertainty
+    const totalRawUncertainty = dataUncertaintyRaw + modelUncertaintyRaw + humanUncertaintyRaw
+    
+    return {
+      dataUncertainty: Math.round((dataUncertaintyRaw / totalRawUncertainty) * 100 * 10) / 10,
+      modelUncertainty: Math.round((modelUncertaintyRaw / totalRawUncertainty) * 100 * 10) / 10,
+      humanUncertainty: Math.round((humanUncertaintyRaw / totalRawUncertainty) * 100 * 10) / 10
+    }
+  }
+
+  const portfolioUncertainty = getPortfolioUncertainty()
+
+  // Helper function for uncertainty colors
+  const getUncertaintyColor = (confidenceLevel: string) => {
+    switch (confidenceLevel) {
+      case "SEHR SICHER": return "text-green-600 bg-green-500/10"
+      case "SICHER": return "text-blue-600 bg-blue-500/10"
+      case "UNSICHER": return "text-orange-600 bg-orange-500/10"
+      case "SEHR UNSICHER": return "text-red-600 bg-red-500/10"
+      default: return "text-gray-600 bg-gray-500/10"
+    }
+  }
+
+  // Helper function for recommendation colors
+  const getRecommendationColor = (recommendation: string) => {
+    switch (recommendation) {
+      case "BUY": return "text-green-600 bg-green-500/10"
+      case "SELL": return "text-red-600 bg-red-500/10" 
+      case "HOLD": return "text-blue-600 bg-blue-500/10"
+      default: return "text-gray-600 bg-gray-500/10"
+    }
+  }
 
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 px-4">
+        <header className="flex h-16 shrink-0 items-center gap-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b border-border/50 px-4">
           <div className="flex items-center gap-2">
-            <SidebarTrigger className="-ml-1" />
+            <SidebarTrigger className="-ml-1 violet-bloom-hover rounded-md p-2" />
             <Separator
               orientation="vertical"
               className="mr-2 data-[orientation=vertical]:h-4"
@@ -37,7 +284,7 @@ export default function Page() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
+                  <BreadcrumbLink href="/dashboard">
                     Dashboard
                   </BreadcrumbLink>
                 </BreadcrumbItem>
@@ -58,7 +305,7 @@ export default function Page() {
             <ThemeToggle />
           </div>
         </header>
-        <div ref={scrollbarRef} className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-auto violet-bloom-scrollbar">
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-hidden">
           {/* Top 4 Metric Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
             {/* Portfolio Wert */}
@@ -125,103 +372,164 @@ export default function Page() {
                 </div>
                 
                 <div className="space-y-2">
-                  {/* AAPL */}
+                  {/* V - SEHR SICHER */}
                   <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-bold">V</span>
+                      <span className={`text-sm px-2 py-1 rounded ${getUncertaintyColor(vData.confidenceLevel)}`}>
+                        {vData.totalUncertainty}% {vData.confidenceLevel}
+                      </span>
+                      <span className="text-muted-foreground">$284.52</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm px-2 py-1 rounded ${getRecommendationColor(vData.recommendation)}`}>
+                        {vData.recommendation === "BUY" ? "KAUFEN" : vData.recommendation === "SELL" ? "VERKAUFEN" : "HALTEN"}
+                      </span>
+                      <a 
+                        href={`/statistik/unsicherheits-analyse?stock=V`}
+                        className="text-primary hover:text-primary/80 text-sm cursor-pointer"
+                      >
+                        👁 Details
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* MSFT - SICHER */}
+                  <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-bold">MSFT</span>
+                      <span className={`text-sm px-2 py-1 rounded ${getUncertaintyColor(msftData.confidenceLevel)}`}>
+                        {msftData.totalUncertainty}% {msftData.confidenceLevel}
+                      </span>
+                      <span className="text-muted-foreground">$425.89</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm px-2 py-1 rounded ${getRecommendationColor(msftData.recommendation)}`}>
+                        {msftData.recommendation === "BUY" ? "KAUFEN" : msftData.recommendation === "SELL" ? "VERKAUFEN" : "HALTEN"}
+                      </span>
+                      <a 
+                        href={`/statistik/unsicherheits-analyse?stock=MSFT`}
+                        className="text-primary hover:text-primary/80 text-sm cursor-pointer"
+                      >
+                        👁 Details
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* AAPL - UNSICHER */}
+                  <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
+                    <div className="flex items-center gap-2">
                       <span className="font-mono font-bold">AAPL</span>
-                      <span className="bg-green-500/10 text-green-600 text-sm px-2 py-1 rounded">KAUFEN</span>
+                      <span className={`text-sm px-2 py-1 rounded ${getUncertaintyColor(aaplData.confidenceLevel)}`}>
+                        {aaplData.totalUncertainty}% {aaplData.confidenceLevel}
+                      </span>
                       <span className="text-muted-foreground">$178.32</span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="text-right">
-                        <p className="text-sm font-medium">92% Konfidenz</p>
-                        <p className="text-xs text-green-600">Niedrig Unsicherheit</p>
-                      </div>
-                      <button className="text-primary hover:text-primary/80 text-sm">👁 Details</button>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm px-2 py-1 rounded ${getRecommendationColor(aaplData.recommendation)}`}>
+                        {aaplData.recommendation === "BUY" ? "KAUFEN" : aaplData.recommendation === "SELL" ? "VERKAUFEN" : "HALTEN"}
+                      </span>
+                      <a 
+                        href={`/statistik/unsicherheits-analyse?stock=AAPL`}
+                        className="text-primary hover:text-primary/80 text-sm cursor-pointer"
+                      >
+                        👁 Details
+                      </a>
                     </div>
                   </div>
 
-                  {/* TSLA */}
+                  {/* TSLA - SEHR UNSICHER */}
                   <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
                       <span className="font-mono font-bold">TSLA</span>
-                      <span className="bg-red-500/10 text-red-600 text-sm px-2 py-1 rounded">VERKAUFEN</span>
+                      <span className={`text-sm px-2 py-1 rounded ${getUncertaintyColor(tslaData.confidenceLevel)}`}>
+                        {tslaData.totalUncertainty}% {tslaData.confidenceLevel}
+                      </span>
                       <span className="text-muted-foreground">$242.68</span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="text-right">
-                        <p className="text-sm font-medium">78% Konfidenz</p>
-                        <p className="text-xs text-yellow-600">Mittel Unsicherheit</p>
-                      </div>
-                      <button className="text-primary hover:text-primary/80 text-sm">👁 Details</button>
-                    </div>
-                  </div>
-
-                  {/* NVDA */}
-                  <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <span className="font-mono font-bold">NVDA</span>
-                      <span className="bg-blue-500/10 text-blue-600 text-sm px-2 py-1 rounded">HALTEN</span>
-                      <span className="text-muted-foreground">$459.12</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="text-right">
-                        <p className="text-sm font-medium">65% Konfidenz</p>
-                        <p className="text-xs text-red-600">Hoch Unsicherheit</p>
-                      </div>
-                      <button className="text-primary hover:text-primary/80 text-sm">👁 Details</button>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm px-2 py-1 rounded ${getRecommendationColor(tslaData.recommendation)}`}>
+                        {tslaData.recommendation === "BUY" ? "KAUFEN" : tslaData.recommendation === "SELL" ? "VERKAUFEN" : "HALTEN"}
+                      </span>
+                      <a 
+                        href={`/statistik/unsicherheits-analyse?stock=TSLA`}
+                        className="text-primary hover:text-primary/80 text-sm cursor-pointer"
+                      >
+                        👁 Details
+                      </a>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Unsicherheits-Quellen */}
-            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
-              <div className="space-y-4">
+            {/* Portfolio-Unsicherheitsanalyse */}
+            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card min-h-0">
+              <div className="space-y-3">
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-1">Unsicherheits-Quellen</h3>
-                  <p className="text-sm text-muted-foreground">Analyse der verschiedenen Unsicherheitsfaktoren</p>
+                  <h3 className="text-base font-semibold text-foreground mb-1">Portfolio-Unsicherheitsanalyse</h3>
+                  <p className="text-xs text-muted-foreground">Aggregierte Analyse aller Empfehlungen (V, MSFT, AAPL, TSLA)</p>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                    <span className="text-sm font-medium">Modell-Unsicherheit</span>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <span className="text-xs font-medium">Modell-Unsicherheit</span>
                     <div className="ml-auto">
-                      <div className="w-16 h-2 bg-blue-500/20 rounded-full">
-                        <div className="w-1/4 h-full bg-blue-500 rounded-full"></div>
+                      <div className="w-12 h-1.5 bg-blue-500/20 rounded-full">
+                        <div 
+                          className="h-full bg-blue-500 rounded-full" 
+                          style={{width: `${portfolioUncertainty.modelUncertainty}%`}}
+                        ></div>
                       </div>
-                      <span className="text-xs text-muted-foreground">25%</span>
+                      <span className="text-xs text-muted-foreground">{portfolioUncertainty.modelUncertainty}%</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                    <span className="text-sm font-medium">Daten-Unsicherheit</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                    <span className="text-xs font-medium">Daten-Unsicherheit</span>
                     <div className="ml-auto">
-                      <div className="w-16 h-2 bg-yellow-500/20 rounded-full">
-                        <div className="w-1/3 h-full bg-yellow-500 rounded-full"></div>
+                      <div className="w-12 h-1.5 bg-yellow-500/20 rounded-full">
+                        <div 
+                          className="h-full bg-yellow-500 rounded-full" 
+                          style={{width: `${portfolioUncertainty.dataUncertainty}%`}}
+                        ></div>
                       </div>
-                      <span className="text-xs text-muted-foreground">35%</span>
+                      <span className="text-xs text-muted-foreground">{portfolioUncertainty.dataUncertainty}%</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span className="text-sm font-medium">Experten-Einschätzung</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-xs font-medium">Menschliche Unsicherheit</span>
                     <div className="ml-auto">
-                      <div className="w-16 h-2 bg-green-500/20 rounded-full">
-                        <div className="w-2/12 h-full bg-green-500 rounded-full"></div>
+                      <div className="w-12 h-1.5 bg-green-500/20 rounded-full">
+                        <div 
+                          className="h-full bg-green-500 rounded-full" 
+                          style={{width: `${portfolioUncertainty.humanUncertainty}%`}}
+                        ></div>
                       </div>
-                      <span className="text-xs text-muted-foreground">15%</span>
+                      <span className="text-xs text-muted-foreground">{portfolioUncertainty.humanUncertainty}%</span>
                     </div>
                   </div>
 
-                  <div className="mt-4 p-3 bg-muted/50 rounded-lg">
-                    <p className="text-sm font-medium mb-2">Gesamt-Unsicherheit</p>
-                    <div className="w-full h-3 bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 rounded-full"></div>
-                    <p className="text-center text-sm text-muted-foreground mt-1">Mittel</p>
+                  <div className="mt-2 p-2 bg-muted/50 rounded-lg">
+                    <div className="flex justify-between items-center mb-1">
+                      <p className="text-xs font-medium">Gesamt-Unsicherheit</p>
+                      <span className={`text-xs font-medium ${getUncertaintyColor(portfolioUncertainty.confidenceLevel).split(' ')[0]}`}>
+                        {portfolioUncertainty.totalUncertainty}%
+                      </span>
+                    </div>
+                    <div className="w-full h-2 bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 rounded-full relative">
+                      <div 
+                        className="absolute top-0 left-0 w-1 h-2 bg-white border border-gray-400 rounded-full" 
+                        style={{left: `${portfolioUncertainty.totalUncertainty}%`}}
+                      ></div>
+                    </div>
+                    <p className={`text-center text-xs mt-1 ${getUncertaintyColor(portfolioUncertainty.confidenceLevel).split(' ')[0]}`}>
+                      {portfolioUncertainty.confidenceLevel}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -231,34 +539,34 @@ export default function Page() {
           {/* Bottom Row */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Risiko-Management */}
-            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
-              <div className="space-y-4">
+            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card">
+              <div className="space-y-3">
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-1">Risiko-Management</h3>
-                  <p className="text-sm text-muted-foreground">Aktuelle Warnungen und Empfehlungen</p>
+                  <h3 className="text-base font-semibold text-foreground mb-1">Risiko-Management</h3>
+                  <p className="text-xs text-muted-foreground">Aktuelle Warnungen und Empfehlungen</p>
                 </div>
 
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 bg-red-500/5 border border-red-500/20 rounded-lg">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 p-2 bg-red-500/5 border border-red-500/20 rounded-lg">
                     <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                     <div>
-                      <p className="text-sm font-medium">Hohe Volatilität erkannt</p>
+                      <p className="text-xs font-medium">Hohe Volatilität erkannt</p>
                       <p className="text-xs text-muted-foreground">TSLA zeigt ungewöhnliche Kursbewegungen</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 p-3 bg-yellow-500/5 border border-yellow-500/20 rounded-lg">
+                  <div className="flex items-center gap-2 p-2 bg-yellow-500/5 border border-yellow-500/20 rounded-lg">
                     <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
                     <div>
-                      <p className="text-sm font-medium">Datenqualität-Warnung</p>
+                      <p className="text-xs font-medium">Datenqualität-Warnung</p>
                       <p className="text-xs text-muted-foreground">Verzögerung bei Realtime-Daten für NVDA</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 p-3 bg-green-500/5 border border-green-500/20 rounded-lg">
+                  <div className="flex items-center gap-2 p-2 bg-green-500/5 border border-green-500/20 rounded-lg">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <div>
-                      <p className="text-sm font-medium">Portfolio ausbalanciert</p>
+                      <p className="text-xs font-medium">Portfolio ausbalanciert</p>
                       <p className="text-xs text-muted-foreground">Diversifikation innerhalb der Zielwerte</p>
                     </div>
                   </div>
@@ -267,42 +575,42 @@ export default function Page() {
             </div>
 
             {/* Aktivitäts-Feed */}
-            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-6 violet-bloom-card">
-              <div className="space-y-4">
+            <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card">
+              <div className="space-y-3">
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-1">Aktivitäts-Feed</h3>
-                  <p className="text-sm text-muted-foreground">Letzte Trading-Aktivitäten und KI-Updates</p>
+                  <h3 className="text-base font-semibold text-foreground mb-1">Aktivitäts-Feed</h3>
+                  <p className="text-xs text-muted-foreground">Letzte Trading-Aktivitäten und KI-Updates</p>
                 </div>
 
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <div>
-                      <p className="text-sm font-medium">AAPL Position eröffnet</p>
+                      <p className="text-xs font-medium">AAPL Position eröffnet</p>
                       <p className="text-xs text-muted-foreground">vor 15 Minuten • Kauforder ausgeführt</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                     <div>
-                      <p className="text-sm font-medium">KI-Modell aktualisiert</p>
+                      <p className="text-xs font-medium">KI-Modell aktualisiert</p>
                       <p className="text-xs text-muted-foreground">vor 32 Minuten • Neue Gewichtungen aktiv</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
                     <div>
-                      <p className="text-sm font-medium">Markt-Anomalie erkannt</p>
+                      <p className="text-xs font-medium">Markt-Anomalie erkannt</p>
                       <p className="text-xs text-muted-foreground">vor 1 Stunde • Erhöhte Überwachung aktiv</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                     <div>
-                      <p className="text-sm font-medium">Stop-Loss ausgelöst</p>
+                      <p className="text-xs font-medium">Stop-Loss ausgelöst</p>
                       <p className="text-xs text-muted-foreground">vor 2 Stunden • META Position geschlossen</p>
                     </div>
                   </div>
