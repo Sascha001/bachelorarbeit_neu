@@ -149,23 +149,45 @@ export default function Dashboard() {
   const aaplData = getDashboardStockData("AAPL")  // UNSICHER (~26%)
   const tslaData = getDashboardStockData("TSLA")  // SEHR UNSICHER (~47%)
 
-  // Calculate aggregated portfolio uncertainty from all 4 dashboard stocks
-  const getPortfolioUncertainty = () => {
-    // Get detailed uncertainty breakdown for all stocks
-    const vBreakdown = getDetailedUncertaintyData("V")
-    const msftBreakdown = getDetailedUncertaintyData("MSFT")
-    const aaplBreakdown = getDetailedUncertaintyData("AAPL")
-    const tslaBreakdown = getDetailedUncertaintyData("TSLA")
+  // Calculate average uncertainty across all 23 supported stocks
+  const getAllStocksUncertainty = () => {
+    // All 23 supported stocks in the system
+    const allStocks = [
+      // US Tech Giants (7)
+      "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NVDA",
+      // US Financial (4)
+      "JPM", "V", "MA", "BRK_B",
+      // US Healthcare/Consumer (4)
+      "JNJ", "UNH", "PG", "KO",
+      // US Retail (1)
+      "HD",
+      // European Stocks (7)
+      "ALV.DE", "NESN.SW", "SAP.DE", "SIE.DE", "ASML.AS", "BMW.DE", "BAS.DE"
+    ]
 
-    // Calculate aggregated percentages (average of relative percentages)
-    const avgDataUncertainty = (vBreakdown.dataUncertainty + msftBreakdown.dataUncertainty + aaplBreakdown.dataUncertainty + tslaBreakdown.dataUncertainty) / 4
-    const avgModelUncertainty = (vBreakdown.modelUncertainty + msftBreakdown.modelUncertainty + aaplBreakdown.modelUncertainty + tslaBreakdown.modelUncertainty) / 4
-    const avgHumanUncertainty = (vBreakdown.humanUncertainty + msftBreakdown.humanUncertainty + aaplBreakdown.humanUncertainty + tslaBreakdown.humanUncertainty) / 4
+    // Calculate uncertainty for each stock and get averages
+    let totalUncertaintySum = 0
+    let dataUncertaintySum = 0
+    let modelUncertaintySum = 0
+    let humanUncertaintySum = 0
 
-    // Calculate total uncertainty (average of all total uncertainties)
-    const avgTotalUncertainty = (vData.totalUncertainty + msftData.totalUncertainty + aaplData.totalUncertainty + tslaData.totalUncertainty) / 4
+    allStocks.forEach(stock => {
+      const stockData = getDashboardStockData(stock)
+      const stockBreakdown = getDetailedUncertaintyData(stock)
+      
+      totalUncertaintySum += stockData.totalUncertainty
+      dataUncertaintySum += stockBreakdown.dataUncertainty
+      modelUncertaintySum += stockBreakdown.modelUncertainty
+      humanUncertaintySum += stockBreakdown.humanUncertainty
+    })
 
-    // Get confidence level for portfolio
+    // Calculate simple averages across all 23 stocks
+    const avgTotalUncertainty = totalUncertaintySum / allStocks.length
+    const avgDataUncertainty = dataUncertaintySum / allStocks.length
+    const avgModelUncertainty = modelUncertaintySum / allStocks.length
+    const avgHumanUncertainty = humanUncertaintySum / allStocks.length
+
+    // Get confidence level for average uncertainty
     const getConfidenceLevel = (uncertainty: number) => {
       if (uncertainty < 11) return "SEHR SICHER"
       if (uncertainty < 21) return "SICHER"
@@ -248,7 +270,7 @@ export default function Dashboard() {
     }
   }
 
-  const portfolioUncertainty = getPortfolioUncertainty()
+  const allStocksUncertainty = getAllStocksUncertainty()
 
   // Helper function for uncertainty colors
   const getUncertaintyColor = (confidenceLevel: string) => {
@@ -464,12 +486,12 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Portfolio-Unsicherheitsanalyse */}
+            {/* Unsicherheits-Quellen */}
             <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card min-h-0">
               <div className="space-y-3">
                 <div>
-                  <h3 className="text-base font-semibold text-foreground mb-1">Portfolio-Unsicherheitsanalyse</h3>
-                  <p className="text-xs text-muted-foreground">Aggregierte Analyse aller Empfehlungen (V, MSFT, AAPL, TSLA)</p>
+                  <h3 className="text-base font-semibold text-foreground mb-1">Unsicherheits-Quellen</h3>
+                  <p className="text-xs text-muted-foreground">Durchschnittliche Unsicherheit aller 23 Wertpapiere im System</p>
                 </div>
 
                 <div className="space-y-2">
@@ -477,39 +499,39 @@ export default function Dashboard() {
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                       <span className="text-xs font-medium">Modell-Unsicherheit</span>
-                      <span className="text-xs text-muted-foreground ml-auto">{portfolioUncertainty.modelUncertainty}%</span>
+                      <span className="text-xs text-muted-foreground ml-auto">{allStocksUncertainty.modelUncertainty}%</span>
                     </div>
-                    <Progress value={portfolioUncertainty.modelUncertainty} className="w-full h-2" />
+                    <Progress value={allStocksUncertainty.modelUncertainty} className="w-full h-2" />
                   </div>
 
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
                       <span className="text-xs font-medium">Daten-Unsicherheit</span>
-                      <span className="text-xs text-muted-foreground ml-auto">{portfolioUncertainty.dataUncertainty}%</span>
+                      <span className="text-xs text-muted-foreground ml-auto">{allStocksUncertainty.dataUncertainty}%</span>
                     </div>
-                    <Progress value={portfolioUncertainty.dataUncertainty} className="w-full h-2" />
+                    <Progress value={allStocksUncertainty.dataUncertainty} className="w-full h-2" />
                   </div>
 
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                       <span className="text-xs font-medium">Menschliche Unsicherheit</span>
-                      <span className="text-xs text-muted-foreground ml-auto">{portfolioUncertainty.humanUncertainty}%</span>
+                      <span className="text-xs text-muted-foreground ml-auto">{allStocksUncertainty.humanUncertainty}%</span>
                     </div>
-                    <Progress value={portfolioUncertainty.humanUncertainty} className="w-full h-2" />
+                    <Progress value={allStocksUncertainty.humanUncertainty} className="w-full h-2" />
                   </div>
 
                   <div className="mt-3 p-3 bg-muted/50 rounded-lg space-y-2">
                     <div className="flex justify-between items-center">
                       <p className="text-xs font-medium">Gesamt-Unsicherheit</p>
-                      <span className={`text-xs font-medium ${getUncertaintyColor(portfolioUncertainty.confidenceLevel).split(' ')[0]}`}>
-                        {portfolioUncertainty.totalUncertainty}%
+                      <span className={`text-xs font-medium ${getUncertaintyColor(allStocksUncertainty.confidenceLevel).split(' ')[0]}`}>
+                        {allStocksUncertainty.totalUncertainty}%
                       </span>
                     </div>
-                    <Progress value={portfolioUncertainty.totalUncertainty} className="w-full h-2" />
-                    <p className={`text-center text-xs ${getUncertaintyColor(portfolioUncertainty.confidenceLevel).split(' ')[0]}`}>
-                      {portfolioUncertainty.confidenceLevel}
+                    <Progress value={allStocksUncertainty.totalUncertainty} className="w-full h-2" />
+                    <p className={`text-center text-xs ${getUncertaintyColor(allStocksUncertainty.confidenceLevel).split(' ')[0]}`}>
+                      {allStocksUncertainty.confidenceLevel}
                     </p>
                   </div>
                 </div>
