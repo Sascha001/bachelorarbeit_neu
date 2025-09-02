@@ -488,49 +488,49 @@ export default function Dashboard() {
 
             {/* Unsicherheits-Quellen */}
             <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card min-h-0">
-              <div className="space-y-3">
+              <div className="space-y-5">
                 <div>
                   <h3 className="text-base font-semibold text-foreground mb-1">Unsicherheits-Quellen</h3>
                   <p className="text-xs text-muted-foreground">Durchschnittliche Unsicherheit aller 23 Wertpapiere im System</p>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-4">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      <span className="text-xs font-medium">Modell-Unsicherheit</span>
-                      <span className="text-xs text-muted-foreground ml-auto">{allStocksUncertainty.modelUncertainty}%</span>
+                      <span className="text-sm font-medium">Modell-Unsicherheit</span>
+                      <span className="text-sm text-muted-foreground ml-auto">{allStocksUncertainty.modelUncertainty}%</span>
                     </div>
-                    <Progress value={allStocksUncertainty.modelUncertainty} className="w-full h-2" />
+                    <Progress value={allStocksUncertainty.modelUncertainty} className="w-full h-3" />
                   </div>
 
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                      <span className="text-xs font-medium">Daten-Unsicherheit</span>
-                      <span className="text-xs text-muted-foreground ml-auto">{allStocksUncertainty.dataUncertainty}%</span>
+                      <span className="text-sm font-medium">Daten-Unsicherheit</span>
+                      <span className="text-sm text-muted-foreground ml-auto">{allStocksUncertainty.dataUncertainty}%</span>
                     </div>
-                    <Progress value={allStocksUncertainty.dataUncertainty} className="w-full h-2" />
+                    <Progress value={allStocksUncertainty.dataUncertainty} className="w-full h-3" />
                   </div>
 
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span className="text-xs font-medium">Menschliche Unsicherheit</span>
-                      <span className="text-xs text-muted-foreground ml-auto">{allStocksUncertainty.humanUncertainty}%</span>
+                      <span className="text-sm font-medium">Menschliche Unsicherheit</span>
+                      <span className="text-sm text-muted-foreground ml-auto">{allStocksUncertainty.humanUncertainty}%</span>
                     </div>
-                    <Progress value={allStocksUncertainty.humanUncertainty} className="w-full h-2" />
+                    <Progress value={allStocksUncertainty.humanUncertainty} className="w-full h-3" />
                   </div>
 
-                  <div className="mt-3 p-3 bg-muted/50 rounded-lg space-y-2">
+                  <div className="mt-6 p-4 bg-muted/50 rounded-lg space-y-3">
                     <div className="flex justify-between items-center">
-                      <p className="text-xs font-medium">Gesamt-Unsicherheit</p>
-                      <span className={`text-xs font-medium ${getUncertaintyColor(allStocksUncertainty.confidenceLevel).split(' ')[0]}`}>
+                      <p className="text-sm font-medium">Gesamt-Unsicherheit</p>
+                      <span className={`text-sm font-medium ${getUncertaintyColor(allStocksUncertainty.confidenceLevel).split(' ')[0]}`}>
                         {allStocksUncertainty.totalUncertainty}%
                       </span>
                     </div>
-                    <Progress value={allStocksUncertainty.totalUncertainty} className="w-full h-2" />
-                    <p className={`text-center text-xs ${getUncertaintyColor(allStocksUncertainty.confidenceLevel).split(' ')[0]}`}>
+                    <Progress value={allStocksUncertainty.totalUncertainty} className="w-full h-3" />
+                    <p className={`text-center text-sm font-medium ${getUncertaintyColor(allStocksUncertainty.confidenceLevel).split(' ')[0]}`}>
                       {allStocksUncertainty.confidenceLevel}
                     </p>
                   </div>
