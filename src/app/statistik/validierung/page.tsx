@@ -19,6 +19,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
@@ -443,19 +444,20 @@ export default function ValidierungPage() {
             ))}
           </div>
 
-          {/* Feedback Modal Simulation */}
-          {selectedValidation && (
-            <Card className="fixed inset-4 z-50 bg-background border shadow-lg overflow-auto">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+          {/* Feedback Dialog */}
+          <Dialog open={selectedValidation !== null} onOpenChange={() => setSelectedValidation(null)}>
+            <DialogContent className="sm:max-w-2xl violet-bloom-card">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
                   <MessageSquare className="h-5 w-5" />
                   Bewertung für {mockValidations.find(v => v.id === selectedValidation)?.stock}
-                </CardTitle>
-                <CardDescription>
+                </DialogTitle>
+                <DialogDescription>
                   Helfen Sie uns, unsere KI-Empfehlungen zu verbessern
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="space-y-4">
                 <div>
                   <Label>Wie bewerten Sie diese Empfehlung?</Label>
                   <div className="flex gap-1 mt-2">
@@ -482,20 +484,23 @@ export default function ValidierungPage() {
                     className="mt-2"
                   />
                 </div>
-                <div className="flex gap-2 justify-end">
-                  <Button variant="outline" onClick={() => setSelectedValidation(null)}>
-                    Abbrechen
-                  </Button>
-                  <Button 
-                    onClick={() => submitFeedback(selectedValidation)}
-                    disabled={feedbackRating === 0}
-                  >
-                    Feedback senden
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+              </div>
+
+              <DialogFooter className="gap-2">
+                <Button variant="outline" onClick={() => setSelectedValidation(null)}>
+                  Abbrechen
+                </Button>
+                <Button 
+                  onClick={() => submitFeedback(selectedValidation!)}
+                  disabled={feedbackRating === 0}
+                  className="violet-bloom-button"
+                >
+                  <Star className="h-4 w-4 mr-2" />
+                  Feedback senden
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </SidebarInset>
     </SidebarProvider>
