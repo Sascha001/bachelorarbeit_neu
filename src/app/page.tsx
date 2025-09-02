@@ -17,7 +17,156 @@ import { StockSearch } from "@/components/stock-search"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { NotificationButton } from "@/components/notification-button"
 
+// Import uncertainty calculation functions
+import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams, getModelUncertaintyParams, calculateAllHumanUncertainty, getHumanUncertaintyParams } from "@/components/technical-analysis-tab"
+
+// Calculate uncertainty data for dashboard stocks
+const getDashboardStockData = (stock: string) => {
+  // Get calculated scores from parameter functions (stock-specific)
+  const fundamentalParams = getFundamentalDataParams(stock)
+  const newsParams = getNewsReliabilityParams(stock) 
+  const timeSeriesParams = getTimeSeriesIntegrityParams(stock)
+  const tradingVolumeParams = getTradingVolumeParams(stock)
+  
+  // Calculate individual dimension certainties using calculation functions (higher score = lower uncertainty)
+  const fundamentalCalculated = {
+    completeness: 1 - (fundamentalParams.completeness.missingValues / fundamentalParams.completeness.totalValues),
+    timeliness: Math.max(0, 1 - (fundamentalParams.timeliness.daysOld / fundamentalParams.timeliness.maxAcceptableDays)),
+    consistency: 1 - (fundamentalParams.consistency.inconsistentEntries / fundamentalParams.consistency.totalEntries),
+    accuracy: fundamentalParams.accuracy.accurateReports / fundamentalParams.accuracy.totalReports,
+    stability: 1 - (fundamentalParams.stability.revisions / fundamentalParams.stability.totalDataPoints)
+  };
+  const fundamentalCertainty = (0.2 * fundamentalCalculated.completeness + 
+                               0.2 * fundamentalCalculated.timeliness + 
+                               0.2 * fundamentalCalculated.consistency + 
+                               0.2 * fundamentalCalculated.accuracy + 
+                               0.2 * fundamentalCalculated.stability) * 100
+  
+  const newsCalculated = {
+    sourceReliability: newsParams.sourceReliability.averageReliability,
+    reputationAccuracy: 1 - (newsParams.reputationAccuracy.falseNews / newsParams.reputationAccuracy.totalNews),
+    crossSourceConsensus: newsParams.crossSourceConsensus.confirmedNews / newsParams.crossSourceConsensus.totalNews,
+    biasCheck: 1 - (newsParams.biasCheck.biasIndex / newsParams.biasCheck.maxBiasValue)
+  };
+  const newsCertainty = (0.3 * newsCalculated.sourceReliability + 
+                        0.3 * newsCalculated.reputationAccuracy + 
+                        0.25 * newsCalculated.crossSourceConsensus + 
+                        0.15 * newsCalculated.biasCheck) * 100
+  
+  const timeSeriesCalculated = {
+    completeness: 1 - (timeSeriesParams.completeness.missingTimepoints / timeSeriesParams.completeness.expectedTimepoints),
+    outlierFreedom: 1 - (timeSeriesParams.outlierFreedom.outliers / timeSeriesParams.outlierFreedom.totalObservations),
+    revisionStability: 1 - (timeSeriesParams.revisionStability.revisedValues / timeSeriesParams.revisionStability.totalValues),
+    continuity: 1 - (timeSeriesParams.continuity.gaps / timeSeriesParams.continuity.totalIntervals)
+  };
+  const timeSeriesCertainty = (0.25 * timeSeriesCalculated.completeness + 
+                              0.25 * timeSeriesCalculated.outlierFreedom + 
+                              0.25 * timeSeriesCalculated.revisionStability + 
+                              0.25 * timeSeriesCalculated.continuity) * 100
+  
+  const tradingVolumeCalculated = {
+    concentration: 1 - (tradingVolumeParams.concentration.topTradersVolume / tradingVolumeParams.concentration.totalVolume),
+    anomalousSpikes: 1 - (tradingVolumeParams.anomalousSpikes.spikes / tradingVolumeParams.anomalousSpikes.totalTradingDays),
+    timeStability: 1 - (tradingVolumeParams.timeStability.varianceCoefficient / tradingVolumeParams.timeStability.maxVarianceCoefficient)
+  };
+  const tradingVolumeCertainty = (0.4 * tradingVolumeCalculated.concentration + 
+                                 0.3 * tradingVolumeCalculated.anomalousSpikes + 
+                                 0.3 * tradingVolumeCalculated.timeStability) * 100
+  
+  // STEP 1: Calculate average certainty for data dimension (4 parameters)
+  const dataCertainty = (fundamentalCertainty + newsCertainty + timeSeriesCertainty + tradingVolumeCertainty) / 4
+  
+  // STEP 2: Calculate model certainty using ChatGPT Framework
+  const modelParams = getModelUncertaintyParams(stock)
+  
+  // Calculate the actual values using the calculation functions
+  const epistemicValue = 1 - (modelParams.epistemicUncertainty.predictionStdDev / (modelParams.epistemicUncertainty.meanPrediction + modelParams.epistemicUncertainty.epsilon))
+  const aleatoricValue = 1 - (modelParams.aleatoricUncertainty.meanPredictionVariance / modelParams.aleatoricUncertainty.maxExpectedVariance)
+  const overfittingValue = 1 - (Math.abs(modelParams.overfittingRisk.trainLoss - modelParams.overfittingRisk.testLoss) / (modelParams.overfittingRisk.trainLoss + modelParams.overfittingRisk.epsilon))
+  const robustnessValue = 1 - (modelParams.robustness.meanPerturbationChange / modelParams.robustness.baselinePrediction)
+  const explanationValue = (modelParams.explanationConsistency.featureImportanceCorrelation + 1) / 2
+  
+  const modelCertainty = (0.25 * epistemicValue + 
+                         0.15 * aleatoricValue + 
+                         0.20 * overfittingValue + 
+                         0.20 * robustnessValue + 
+                         0.20 * explanationValue) * 100
+  
+  // STEP 3: Calculate human certainty from static parameters (pure static data)
+  const humanParams = getHumanUncertaintyParams(stock)
+  const humanCalculated = calculateAllHumanUncertainty(humanParams)
+  
+  // Convert human uncertainty to certainty (weighted average of 4 dimensions)
+  const humanCertainty = (1 - (0.3 * humanCalculated.perceivedUncertainty + 
+                               0.25 * humanCalculated.epistemicUncertainty + 
+                               0.25 * humanCalculated.aleatoricUncertainty + 
+                               0.2 * humanCalculated.decisionStability)) * 100
+  
+  // STEP 4: Convert certainties to uncertainties (inversion)
+  const dataUncertaintyRaw = 100 - dataCertainty
+  const modelUncertaintyRaw = 100 - modelCertainty  
+  const humanUncertaintyRaw = 100 - humanCertainty
+  
+  // STEP 5: Calculate total uncertainty (sum divided by maximum possible = 300%)
+  const totalUncertaintyRaw = dataUncertaintyRaw + modelUncertaintyRaw + humanUncertaintyRaw
+  const totalUncertainty = Math.round((totalUncertaintyRaw / 300) * 100)
+  
+  // Get confidence level and recommendation
+  const getConfidenceLevel = (uncertainty: number) => {
+    if (uncertainty < 11) return "SEHR SICHER"
+    if (uncertainty < 21) return "SICHER"
+    if (uncertainty < 36) return "UNSICHER"
+    return "SEHR UNSICHER"
+  }
+  
+  const getRecommendation = (uncertainty: number, stock: string) => {
+    const stockAnalysis: Record<string, string> = {
+      AAPL: "BUY", MSFT: "BUY", GOOGL: "BUY", V: "BUY", MA: "BUY",
+      JNJ: "BUY", PG: "BUY", KO: "BUY", UNH: "BUY",
+      HD: "HOLD", JPM: "HOLD",
+      TSLA: "SELL", META: "HOLD", NVDA: "SELL", AMZN: "HOLD"
+    };
+    
+    const marketRecommendation = stockAnalysis[stock] || "HOLD";
+    if (uncertainty > 40) return "HOLD";
+    return marketRecommendation;
+  }
+
+  return {
+    totalUncertainty,
+    confidenceLevel: getConfidenceLevel(totalUncertainty),
+    recommendation: getRecommendation(totalUncertainty, stock)
+  }
+}
+
 export default function Home() {
+  // Get uncertainty data for dashboard stocks (one per uncertainty category)
+  const vData = getDashboardStockData("V")        // SEHR SICHER (~8%)
+  const msftData = getDashboardStockData("MSFT")  // SICHER (~16%)
+  const aaplData = getDashboardStockData("AAPL")  // UNSICHER (~26%)
+  const tslaData = getDashboardStockData("TSLA")  // SEHR UNSICHER (~47%)
+
+  // Helper function for uncertainty colors
+  const getUncertaintyColor = (confidenceLevel: string) => {
+    switch (confidenceLevel) {
+      case "SEHR SICHER": return "text-green-600 bg-green-500/10"
+      case "SICHER": return "text-blue-600 bg-blue-500/10"
+      case "UNSICHER": return "text-orange-600 bg-orange-500/10"
+      case "SEHR UNSICHER": return "text-red-600 bg-red-500/10"
+      default: return "text-gray-600 bg-gray-500/10"
+    }
+  }
+
+  // Helper function for recommendation colors
+  const getRecommendationColor = (recommendation: string) => {
+    switch (recommendation) {
+      case "BUY": return "text-green-600 bg-green-500/10"
+      case "SELL": return "text-red-600 bg-red-500/10" 
+      case "HOLD": return "text-blue-600 bg-blue-500/10"
+      default: return "text-gray-600 bg-gray-500/10"
+    }
+  }
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -120,51 +269,91 @@ export default function Home() {
                 </div>
                 
                 <div className="space-y-2">
-                  {/* AAPL */}
+                  {/* V - SEHR SICHER */}
+                  <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-bold">V</span>
+                      <span className={`text-sm px-2 py-1 rounded ${getUncertaintyColor(vData.confidenceLevel)}`}>
+                        {vData.totalUncertainty}% {vData.confidenceLevel}
+                      </span>
+                      <span className="text-muted-foreground">$284.52</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm px-2 py-1 rounded ${getRecommendationColor(vData.recommendation)}`}>
+                        {vData.recommendation === "BUY" ? "KAUFEN" : vData.recommendation === "SELL" ? "VERKAUFEN" : "HALTEN"}
+                      </span>
+                      <a 
+                        href={`/statistik/unsicherheits-analyse?stock=V`}
+                        className="text-primary hover:text-primary/80 text-sm cursor-pointer"
+                      >
+                        👁 Details
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* MSFT - SICHER */}
+                  <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-bold">MSFT</span>
+                      <span className={`text-sm px-2 py-1 rounded ${getUncertaintyColor(msftData.confidenceLevel)}`}>
+                        {msftData.totalUncertainty}% {msftData.confidenceLevel}
+                      </span>
+                      <span className="text-muted-foreground">$425.89</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm px-2 py-1 rounded ${getRecommendationColor(msftData.recommendation)}`}>
+                        {msftData.recommendation === "BUY" ? "KAUFEN" : msftData.recommendation === "SELL" ? "VERKAUFEN" : "HALTEN"}
+                      </span>
+                      <a 
+                        href={`/statistik/unsicherheits-analyse?stock=MSFT`}
+                        className="text-primary hover:text-primary/80 text-sm cursor-pointer"
+                      >
+                        👁 Details
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* AAPL - UNSICHER */}
                   <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
                     <div className="flex items-center gap-2">
                       <span className="font-mono font-bold">AAPL</span>
-                      <span className="bg-green-500/10 text-green-600 text-sm px-2 py-1 rounded">KAUFEN</span>
+                      <span className={`text-sm px-2 py-1 rounded ${getUncertaintyColor(aaplData.confidenceLevel)}`}>
+                        {aaplData.totalUncertainty}% {aaplData.confidenceLevel}
+                      </span>
                       <span className="text-muted-foreground">$178.32</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="text-right">
-                        <p className="text-sm font-medium">92% Konfidenz</p>
-                        <p className="text-xs text-green-600">Niedrig Unsicherheit</p>
-                      </div>
-                      <button className="text-primary hover:text-primary/80 text-sm">👁 Details</button>
+                      <span className={`text-sm px-2 py-1 rounded ${getRecommendationColor(aaplData.recommendation)}`}>
+                        {aaplData.recommendation === "BUY" ? "KAUFEN" : aaplData.recommendation === "SELL" ? "VERKAUFEN" : "HALTEN"}
+                      </span>
+                      <a 
+                        href={`/statistik/unsicherheits-analyse?stock=AAPL`}
+                        className="text-primary hover:text-primary/80 text-sm cursor-pointer"
+                      >
+                        👁 Details
+                      </a>
                     </div>
                   </div>
 
-                  {/* TSLA */}
+                  {/* TSLA - SEHR UNSICHER */}
                   <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
                     <div className="flex items-center gap-2">
                       <span className="font-mono font-bold">TSLA</span>
-                      <span className="bg-red-500/10 text-red-600 text-sm px-2 py-1 rounded">VERKAUFEN</span>
+                      <span className={`text-sm px-2 py-1 rounded ${getUncertaintyColor(tslaData.confidenceLevel)}`}>
+                        {tslaData.totalUncertainty}% {tslaData.confidenceLevel}
+                      </span>
                       <span className="text-muted-foreground">$242.68</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="text-right">
-                        <p className="text-sm font-medium">78% Konfidenz</p>
-                        <p className="text-xs text-yellow-600">Mittel Unsicherheit</p>
-                      </div>
-                      <button className="text-primary hover:text-primary/80 text-sm">👁 Details</button>
-                    </div>
-                  </div>
-
-                  {/* NVDA */}
-                  <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold">NVDA</span>
-                      <span className="bg-blue-500/10 text-blue-600 text-sm px-2 py-1 rounded">HALTEN</span>
-                      <span className="text-muted-foreground">$459.12</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="text-right">
-                        <p className="text-sm font-medium">65% Konfidenz</p>
-                        <p className="text-xs text-red-600">Hoch Unsicherheit</p>
-                      </div>
-                      <button className="text-primary hover:text-primary/80 text-sm">👁 Details</button>
+                      <span className={`text-sm px-2 py-1 rounded ${getRecommendationColor(tslaData.recommendation)}`}>
+                        {tslaData.recommendation === "BUY" ? "KAUFEN" : tslaData.recommendation === "SELL" ? "VERKAUFEN" : "HALTEN"}
+                      </span>
+                      <a 
+                        href={`/statistik/unsicherheits-analyse?stock=TSLA`}
+                        className="text-primary hover:text-primary/80 text-sm cursor-pointer"
+                      >
+                        👁 Details
+                      </a>
                     </div>
                   </div>
                 </div>
