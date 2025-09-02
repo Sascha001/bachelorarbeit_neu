@@ -429,10 +429,9 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                 )}
               </div>
 
-{data.recommendation !== "HOLD" && (
-                /* Custom Amount Input */
-                <div className="space-y-2">
-                  <Label htmlFor="purchase-amount">Ihr gewünschter Betrag</Label>
+{/* Custom Amount Input - jetzt auch für HOLD verfügbar */}
+              <div className="space-y-2">
+                <Label htmlFor="purchase-amount">Ihr gewünschter Betrag</Label>
                   <div className="flex items-center gap-2">
                     <Input
                       id="purchase-amount"
@@ -452,10 +451,10 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                     </div>
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
 
-            {/* Portfolio Impact */}
+            {/* Portfolio Impact - nur bei BUY/SELL, nicht bei HOLD */}
+            {data.recommendation !== "HOLD" && (
             <div className="space-y-4">
               <h4 className="font-medium flex items-center gap-2">
                 <Calculator className="h-4 w-4" />
@@ -540,9 +539,9 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                 </div>
               </div>
             </div>
+            )}
 
-{data.recommendation !== "HOLD" && (
-              /* Purchase/Sell Buttons */
+{/* Purchase/Sell Buttons - jetzt auch für HOLD verfügbar */}
               <div className="flex justify-center gap-4 pt-4">
                 <Dialog open={isTransactionModalOpen} onOpenChange={setIsTransactionModalOpen}>
                   <DialogTrigger asChild>
@@ -618,7 +617,6 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                 </DialogContent>
               </Dialog>
             </div>
-            )}
           </div>
         </CardContent>
       </Card>
