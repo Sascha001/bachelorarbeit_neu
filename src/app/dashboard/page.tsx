@@ -18,6 +18,7 @@ import {
 import { StockSearch } from "@/components/stock-search"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { NotificationButton } from "@/components/notification-button"
+import { Progress } from "@/components/ui/progress"
 
 // Import uncertainty calculation functions
 import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams, getModelUncertaintyParams, calculateAllHumanUncertainty, getHumanUncertaintyParams } from "@/components/technical-analysis-tab"
@@ -472,62 +473,42 @@ export default function Dashboard() {
                 </div>
 
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span className="text-xs font-medium">Modell-Unsicherheit</span>
-                    <div className="ml-auto">
-                      <div className="w-12 h-1.5 bg-blue-500/20 rounded-full">
-                        <div 
-                          className="h-full bg-blue-500 rounded-full" 
-                          style={{width: `${portfolioUncertainty.modelUncertainty}%`}}
-                        ></div>
-                      </div>
-                      <span className="text-xs text-muted-foreground">{portfolioUncertainty.modelUncertainty}%</span>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <span className="text-xs font-medium">Modell-Unsicherheit</span>
+                      <span className="text-xs text-muted-foreground ml-auto">{portfolioUncertainty.modelUncertainty}%</span>
                     </div>
+                    <Progress value={portfolioUncertainty.modelUncertainty} className="w-full h-2" />
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                    <span className="text-xs font-medium">Daten-Unsicherheit</span>
-                    <div className="ml-auto">
-                      <div className="w-12 h-1.5 bg-yellow-500/20 rounded-full">
-                        <div 
-                          className="h-full bg-yellow-500 rounded-full" 
-                          style={{width: `${portfolioUncertainty.dataUncertainty}%`}}
-                        ></div>
-                      </div>
-                      <span className="text-xs text-muted-foreground">{portfolioUncertainty.dataUncertainty}%</span>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                      <span className="text-xs font-medium">Daten-Unsicherheit</span>
+                      <span className="text-xs text-muted-foreground ml-auto">{portfolioUncertainty.dataUncertainty}%</span>
                     </div>
+                    <Progress value={portfolioUncertainty.dataUncertainty} className="w-full h-2" />
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-xs font-medium">Menschliche Unsicherheit</span>
-                    <div className="ml-auto">
-                      <div className="w-12 h-1.5 bg-green-500/20 rounded-full">
-                        <div 
-                          className="h-full bg-green-500 rounded-full" 
-                          style={{width: `${portfolioUncertainty.humanUncertainty}%`}}
-                        ></div>
-                      </div>
-                      <span className="text-xs text-muted-foreground">{portfolioUncertainty.humanUncertainty}%</span>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span className="text-xs font-medium">Menschliche Unsicherheit</span>
+                      <span className="text-xs text-muted-foreground ml-auto">{portfolioUncertainty.humanUncertainty}%</span>
                     </div>
+                    <Progress value={portfolioUncertainty.humanUncertainty} className="w-full h-2" />
                   </div>
 
-                  <div className="mt-2 p-2 bg-muted/50 rounded-lg">
-                    <div className="flex justify-between items-center mb-1">
+                  <div className="mt-3 p-3 bg-muted/50 rounded-lg space-y-2">
+                    <div className="flex justify-between items-center">
                       <p className="text-xs font-medium">Gesamt-Unsicherheit</p>
                       <span className={`text-xs font-medium ${getUncertaintyColor(portfolioUncertainty.confidenceLevel).split(' ')[0]}`}>
                         {portfolioUncertainty.totalUncertainty}%
                       </span>
                     </div>
-                    <div className="w-full h-2 bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 rounded-full relative">
-                      <div 
-                        className="absolute top-0 left-0 w-1 h-2 bg-white border border-gray-400 rounded-full" 
-                        style={{left: `${portfolioUncertainty.totalUncertainty}%`}}
-                      ></div>
-                    </div>
-                    <p className={`text-center text-xs mt-1 ${getUncertaintyColor(portfolioUncertainty.confidenceLevel).split(' ')[0]}`}>
+                    <Progress value={portfolioUncertainty.totalUncertainty} className="w-full h-2" />
+                    <p className={`text-center text-xs ${getUncertaintyColor(portfolioUncertainty.confidenceLevel).split(' ')[0]}`}>
                       {portfolioUncertainty.confidenceLevel}
                     </p>
                   </div>
