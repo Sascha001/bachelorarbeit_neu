@@ -10,7 +10,7 @@ interface UncertaintyOverviewProps {
 }
 
 // Import parameter functions from technical analysis
-import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams, getModelUncertaintyParams, calculateAllHumanUncertainty, computeHumanUncertaintyFromTradingData } from "./technical-analysis-tab"
+import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams, getModelUncertaintyParams, calculateAllHumanUncertainty, getHumanUncertaintyParams } from "./technical-analysis-tab"
 import { TradingUncertaintyData, UncertaintyAnalytics } from "@/hooks/use-trading-uncertainty"
 
 // Calculate uncertainty data from actual parameters - now receives human uncertainty data
@@ -85,8 +85,8 @@ const getUncertaintyData = (stock: string, stockData: TradingUncertaintyData[], 
                          0.20 * robustnessValue + 
                          0.20 * explanationValue) * 100
   
-  // STEP 3: Calculate human certainty from real trading data
-  const humanParams = computeHumanUncertaintyFromTradingData(stockData, analytics)
+  // STEP 3: Calculate human certainty from static parameters (pure static data)
+  const humanParams = getHumanUncertaintyParams(stock)
   const humanCalculated = calculateAllHumanUncertainty(humanParams)
   
   // Convert human uncertainty to certainty (weighted average of 4 dimensions)

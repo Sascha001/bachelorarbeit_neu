@@ -38,7 +38,7 @@ interface PurchaseRecommendationProps {
 }
 
 // Import parameter functions and mock stock prices
-import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams, getModelUncertaintyParams, computeHumanUncertaintyFromTradingData, calculateAllHumanUncertainty } from "./technical-analysis-tab"
+import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams, getModelUncertaintyParams, getHumanUncertaintyParams, calculateAllHumanUncertainty } from "./technical-analysis-tab"
 import { COMPREHENSIVE_MOCK_DATA } from "../data/mockStockData"
 import { TradingConfirmationDialog } from "./trading-confirmation-dialog"
 import { useTradingUncertainty, TradingUncertaintyData, UncertaintyAnalytics } from "@/hooks/use-trading-uncertainty"
@@ -135,10 +135,8 @@ const getPurchaseData = (stock: string): PurchaseData => {
                          0.20 * robustnessValue + 
                          0.20 * explanationValue) * 100
   
-  // STEP 3: Calculate human certainty from real trading data (using empty arrays like uncertainty-overview)
-  const emptyStockData: TradingUncertaintyData[] = []
-  const emptyAnalytics: UncertaintyAnalytics | null = null
-  const humanParams = computeHumanUncertaintyFromTradingData(emptyStockData, emptyAnalytics)
+  // STEP 3: Calculate human certainty from static parameters (pure static data)
+  const humanParams = getHumanUncertaintyParams(stock)
   const humanCalculated = calculateAllHumanUncertainty(humanParams)
   
   // Convert human uncertainty to certainty (weighted average of 4 dimensions)
