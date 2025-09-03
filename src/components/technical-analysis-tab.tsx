@@ -328,11 +328,26 @@ const getTechnicalData = (stock: string): TechnicalData => {
   }
 }
 
+// Einheitliche Unsicherheits-Farbkodierung (wie Gesamtunsicherheit)
+const getUncertaintyColor = (level: number) => {
+  if (level < 11) return "text-green-600"    // SEHR SICHER = green (0-10%)
+  if (level < 21) return "text-blue-600"     // SICHER = blue (11-20%)
+  if (level < 36) return "text-orange-600"   // UNSICHER = orange (21-35%)
+  return "text-red-600"                      // SEHR UNSICHER = red (36%+)
+}
+
+const getUncertaintyBgColor = (level: number) => {
+  if (level < 11) return "bg-green-500/10"    // SEHR SICHER
+  if (level < 21) return "bg-blue-500/10"     // SICHER
+  if (level < 36) return "bg-orange-500/10"   // UNSICHER
+  return "bg-red-500/10"                      // SEHR UNSICHER
+}
+
 const getStatusColor = (status: string) => {
   switch (status) {
     case "excellent": return "text-green-600 bg-green-500/10"
     case "good": return "text-blue-600 bg-blue-500/10"
-    case "fair": return "text-yellow-600 bg-yellow-500/10"
+    case "fair": return "text-orange-600 bg-orange-500/10"
     case "poor": return "text-red-600 bg-red-500/10"
     default: return "text-gray-600 bg-gray-500/10"
   }
@@ -342,26 +357,26 @@ const getStatusIcon = (status: string) => {
   switch (status) {
     case "excellent": return <CheckCircle className="h-4 w-4 text-green-600" />
     case "good": return <CheckCircle className="h-4 w-4 text-blue-600" />
-    case "fair": return <AlertCircle className="h-4 w-4 text-yellow-600" />
+    case "fair": return <AlertCircle className="h-4 w-4 text-orange-600" />
     case "poor": return <XCircle className="h-4 w-4 text-red-600" />
     default: return <Clock className="h-4 w-4 text-gray-600" />
   }
 }
 
-// Human Uncertainty Status Mapping (inverted: lower uncertainty = better status)
+// Human Uncertainty Status Mapping (angepasst an Gesamtunsicherheits-Logik)
 const getHumanUncertaintyStatus = (uncertaintyPercentage: number): string => {
-  if (uncertaintyPercentage <= 20) return "excellent"
-  if (uncertaintyPercentage <= 40) return "good"  
-  if (uncertaintyPercentage <= 60) return "fair"
-  return "poor"
+  if (uncertaintyPercentage < 11) return "excellent"  // SEHR SICHER (0-10%)
+  if (uncertaintyPercentage < 21) return "good"       // SICHER (11-20%)
+  if (uncertaintyPercentage < 36) return "fair"       // UNSICHER (21-35%)
+  return "poor"                                        // SEHR UNSICHER (36%+)
 }
 
-// Model Uncertainty Status Mapping (inverted: lower uncertainty = better status)
+// Model Uncertainty Status Mapping (angepasst an Gesamtunsicherheits-Logik)
 const getModelUncertaintyStatus = (uncertaintyPercentage: number): string => {
-  if (uncertaintyPercentage <= 20) return "excellent"  // 80-100% Sicherheit
-  if (uncertaintyPercentage <= 40) return "good"       // 60-80% Sicherheit  
-  if (uncertaintyPercentage <= 60) return "fair"       // 40-60% Sicherheit
-  return "poor"                                         // <40% Sicherheit
+  if (uncertaintyPercentage < 11) return "excellent"  // SEHR SICHER (0-10%)
+  if (uncertaintyPercentage < 21) return "good"       // SICHER (11-20%)
+  if (uncertaintyPercentage < 36) return "fair"       // UNSICHER (21-35%)
+  return "poor"                                        // SEHR UNSICHER (36%+)
 }
 
 // Data Uncertainty Interface Definitions
@@ -3725,11 +3740,13 @@ export function TechnicalAnalysisTab({ selectedStock }: TechnicalAnalysisTabProp
                       const overallScoreNum = (w1 * calculatedValues.concentration + w2 * calculatedValues.anomalousSpikes + w3 * calculatedValues.timeStability) * 100
                       const overallScore = overallScoreNum.toFixed(1)
                       
-                      // Farblogik für Score-Qualität
+                      // Einheitliche Unsicherheits-Farblogik (Score zu Unsicherheit umgekehrt)
                       const getScoreColor = (score: number) => {
-                        if (score >= 90) return { bg: 'bg-green-500/5', border: 'border-green-500/20', text: 'text-green-700' }
-                        if (score >= 70) return { bg: 'bg-yellow-500/5', border: 'border-yellow-500/20', text: 'text-yellow-700' }
-                        return { bg: 'bg-red-500/5', border: 'border-red-500/20', text: 'text-red-700' }
+                        const uncertainty = 100 - score  // Score umkehren zu Unsicherheit
+                        if (uncertainty < 11) return { bg: 'bg-green-500/5', border: 'border-green-500/20', text: 'text-green-700' }      // SEHR SICHER
+                        if (uncertainty < 21) return { bg: 'bg-blue-500/5', border: 'border-blue-500/20', text: 'text-blue-700' }        // SICHER  
+                        if (uncertainty < 36) return { bg: 'bg-orange-500/5', border: 'border-orange-500/20', text: 'text-orange-700' }  // UNSICHER
+                        return { bg: 'bg-red-500/5', border: 'border-red-500/20', text: 'text-red-700' }                                // SEHR UNSICHER
                       }
                       
                       const scoreColors = getScoreColor(overallScoreNum)
