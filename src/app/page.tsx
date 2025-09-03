@@ -163,12 +163,26 @@ export default function Home() {
     const uncertainStocks = ["GOOGL", "HD", "AMZN", "AAPL", "BRK_B", "ASML.AS", "BMW.DE", "BAS.DE"];
     const veryUncertainStocks = ["TSLA", "META", "NVDA"];
     
-    // Random selection from each category
+    // Filter out currently displayed stocks to ensure different selections
+    const availableVerySecure = verySecureStocks.filter(stock => stock !== currentRecommendations.verySecure);
+    const availableSecure = secureStocks.filter(stock => stock !== currentRecommendations.secure);
+    const availableUncertain = uncertainStocks.filter(stock => stock !== currentRecommendations.uncertain);
+    const availableVeryUncertain = veryUncertainStocks.filter(stock => stock !== currentRecommendations.veryUncertain);
+    
+    // Random selection from filtered pools (fallback to original if empty, though shouldn't happen)
     setCurrentRecommendations({
-      verySecure: verySecureStocks[Math.floor(Math.random() * verySecureStocks.length)],
-      secure: secureStocks[Math.floor(Math.random() * secureStocks.length)],
-      uncertain: uncertainStocks[Math.floor(Math.random() * uncertainStocks.length)],
-      veryUncertain: veryUncertainStocks[Math.floor(Math.random() * veryUncertainStocks.length)]
+      verySecure: availableVerySecure.length > 0 
+        ? availableVerySecure[Math.floor(Math.random() * availableVerySecure.length)]
+        : verySecureStocks[Math.floor(Math.random() * verySecureStocks.length)],
+      secure: availableSecure.length > 0
+        ? availableSecure[Math.floor(Math.random() * availableSecure.length)]
+        : secureStocks[Math.floor(Math.random() * secureStocks.length)],
+      uncertain: availableUncertain.length > 0
+        ? availableUncertain[Math.floor(Math.random() * availableUncertain.length)]
+        : uncertainStocks[Math.floor(Math.random() * uncertainStocks.length)],
+      veryUncertain: availableVeryUncertain.length > 0
+        ? availableVeryUncertain[Math.floor(Math.random() * availableVeryUncertain.length)]
+        : veryUncertainStocks[Math.floor(Math.random() * veryUncertainStocks.length)]
     });
   };
 
