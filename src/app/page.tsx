@@ -128,10 +128,10 @@ const getDashboardStockData = (stock: string) => {
   
   const getRecommendation = (uncertainty: number, stock: string) => {
     const stockAnalysis: Record<string, string> = {
-      AAPL: "BUY", MSFT: "BUY", GOOGL: "BUY", V: "BUY", MA: "BUY",
-      JNJ: "BUY", PG: "BUY", KO: "BUY", UNH: "BUY",
-      HD: "HOLD", JPM: "HOLD",
-      TSLA: "SELL", META: "HOLD", NVDA: "SELL", AMZN: "HOLD"
+      MSFT: "BUY", JNJ: "BUY", PG: "BUY", UNH: "BUY", 
+      "ALV.DE": "BUY", "NESN.SW": "BUY", "SIE.DE": "BUY", HD: "BUY", AMZN: "BUY", "BRK.B": "BUY", "ASML.AS": "BUY",
+      V: "HOLD", GOOGL: "HOLD", AAPL: "HOLD", META: "HOLD",
+      MA: "SELL", KO: "SELL", JPM: "SELL", "SAP.DE": "SELL", "BMW.DE": "SELL", "BAS.DE": "SELL", TSLA: "SELL", NVDA: "SELL"
     };
     
     const marketRecommendation = stockAnalysis[stock] || "HOLD";

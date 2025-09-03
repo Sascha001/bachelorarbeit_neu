@@ -160,14 +160,13 @@ const getPurchaseData = (stock: string): PurchaseData => {
   const getRecommendation = (uncertainty: number, stock: string) => {
     // STEP 1: Market-based fundamental recommendation
     const stockAnalysis: Record<string, string> = {
-      // Growth stocks with strong fundamentals
-      AAPL: "BUY", MSFT: "BUY", GOOGL: "BUY", V: "BUY", MA: "BUY",
-      // Stable value stocks  
-      JNJ: "BUY", PG: "BUY", KO: "BUY", UNH: "BUY",
-      // Mixed signals / mature markets
-      HD: "HOLD", JPM: "HOLD",
-      // High volatility / risk concerns
-      TSLA: "SELL", META: "HOLD", NVDA: "SELL", AMZN: "HOLD"
+      // Strong fundamentals - BUY recommendations
+      MSFT: "BUY", JNJ: "BUY", PG: "BUY", UNH: "BUY", 
+      "ALV.DE": "BUY", "NESN.SW": "BUY", "SIE.DE": "BUY", HD: "BUY", AMZN: "BUY", "BRK.B": "BUY", "ASML.AS": "BUY",
+      // Mixed signals / regulatory challenges - HOLD recommendations  
+      V: "HOLD", GOOGL: "HOLD", AAPL: "HOLD", META: "HOLD",
+      // Overvaluation / sector concerns - SELL recommendations
+      MA: "SELL", KO: "SELL", JPM: "SELL", "SAP.DE": "SELL", "BMW.DE": "SELL", "BAS.DE": "SELL", TSLA: "SELL", NVDA: "SELL"
     };
     
     const marketRecommendation = stockAnalysis[stock] || "HOLD";

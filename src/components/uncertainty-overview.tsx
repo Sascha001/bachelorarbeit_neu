@@ -118,28 +118,15 @@ const getUncertaintyData = (stock: string, stockData: TradingUncertaintyData[], 
     
     // Analyze stock characteristics for market recommendation
     const stockAnalysis: Record<string, string> = {
-      // Growth stocks with strong fundamentals
-      AAPL: "BUY",   // Strong tech fundamentals
-      MSFT: "BUY",   // Cloud growth leader  
-      GOOGL: "BUY",  // Search dominance + AI
-      V: "BUY",      // Payment processing growth
-      MA: "BUY",     // Payment processing growth
+      // Strong fundamentals - BUY recommendations
+      MSFT: "BUY", JNJ: "BUY", PG: "BUY", UNH: "BUY", 
+      "ALV.DE": "BUY", "NESN.SW": "BUY", "SIE.DE": "BUY", HD: "BUY", AMZN: "BUY", "BRK.B": "BUY", "ASML.AS": "BUY",
       
-      // Stable value stocks
-      JNJ: "BUY",    // Healthcare stability
-      PG: "BUY",     // Consumer staples
-      KO: "BUY",     // Dividend aristocrat
-      UNH: "BUY",    // Healthcare growth
+      // Mixed signals / regulatory challenges - HOLD recommendations  
+      V: "HOLD", GOOGL: "HOLD", AAPL: "HOLD", META: "HOLD",
       
-      // Mixed signals / mature markets
-      HD: "HOLD",    // Cyclical retail
-      JPM: "HOLD",   // Banking sector challenges
-      
-      // High volatility / risk concerns
-      TSLA: "SELL",  // Overvaluation concerns
-      META: "HOLD",  // Regulatory challenges  
-      NVDA: "SELL",  // AI bubble concerns
-      AMZN: "HOLD"   // Mixed business segments
+      // Overvaluation / sector concerns - SELL recommendations
+      MA: "SELL", KO: "SELL", JPM: "SELL", "SAP.DE": "SELL", "BMW.DE": "SELL", "BAS.DE": "SELL", TSLA: "SELL", NVDA: "SELL"
     };
     
     marketRecommendation = stockAnalysis[stock] || "HOLD";
