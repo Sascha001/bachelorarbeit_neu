@@ -29,7 +29,8 @@ import {
   MessageSquare,
   Star,
   ThumbsUp,
-  Info
+  Info,
+  Minus
 } from "lucide-react"
 import { useState } from "react"
 
@@ -258,6 +259,19 @@ const getRecommendationColor = (rec: string) => {
   }
 }
 
+const getRecommendationIcon = (recommendation: string) => {
+  switch (recommendation) {
+    case "BUY":
+      return <TrendingUp className="h-6 w-6 text-green-600" />
+    case "SELL": 
+      return <TrendingDown className="h-6 w-6 text-red-600" />
+    case "HOLD":
+      return <Minus className="h-6 w-6 text-blue-600" />
+    default:
+      return <TrendingUp className="h-6 w-6 text-green-600" />
+  }
+}
+
 export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendationProps) {
   const data = getPurchaseData(selectedStock)
   const { addUncertaintyData } = useTradingUncertainty()
@@ -371,11 +385,7 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
                   Erwartete Rendite: {data.expectedReturn > 0 ? '+' : ''}{data.expectedReturn}% in {data.timeHorizon}
                 </p>
               </div>
-              {data.expectedReturn > 0 ? (
-                <TrendingUp className="h-6 w-6 text-green-600" />
-              ) : (
-                <AlertTriangle className="h-6 w-6 text-red-600" />
-              )}
+              {getRecommendationIcon(data.recommendation)}
             </div>
 
             {/* Amount Recommendation */}
