@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { AppSidebar } from "@/components/app-sidebar"
 import {
   Breadcrumb,
@@ -19,6 +20,9 @@ import { StockSearch } from "@/components/stock-search"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { NotificationButton } from "@/components/notification-button"
 import { Progress } from "@/components/ui/progress"
+import { Button } from "@/components/ui/button"
+import { RotateCcw } from "lucide-react"
+import { COMPREHENSIVE_MOCK_DATA } from "@/data/mockStockData"
 
 // Import uncertainty calculation functions
 import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams, getModelUncertaintyParams, calculateAllHumanUncertainty, getHumanUncertaintyParams } from "@/components/technical-analysis-tab"
@@ -143,11 +147,36 @@ const getDashboardStockData = (stock: string) => {
 }
 
 export default function Dashboard() {
-  // Get uncertainty data for dashboard stocks (one per uncertainty category)
-  const vData = getDashboardStockData("V")        // SEHR SICHER (~8%)
-  const msftData = getDashboardStockData("MSFT")  // SICHER (~16%)
-  const aaplData = getDashboardStockData("AAPL")  // UNSICHER (~26%)
-  const tslaData = getDashboardStockData("TSLA")  // SEHR UNSICHER (~47%)
+  // State for current recommendations (one per uncertainty category)
+  const [currentRecommendations, setCurrentRecommendations] = useState({
+    verySecure: "V",      // SEHR SICHER
+    secure: "MSFT",       // SICHER  
+    uncertain: "AAPL",    // UNSICHER
+    veryUncertain: "TSLA" // SEHR UNSICHER
+  });
+  
+  // Function to generate new random recommendations
+  const generateNewRecommendations = () => {
+    // Define stock categories by uncertainty level
+    const verySecureStocks = ["V", "MA", "JNJ", "PG"];
+    const secureStocks = ["KO", "UNH", "MSFT", "JPM", "ALV.DE", "NESN.SW", "SAP.DE", "SIE.DE"];
+    const uncertainStocks = ["GOOGL", "HD", "AMZN", "AAPL", "BRK_B", "ASML.AS", "BMW.DE", "BAS.DE"];
+    const veryUncertainStocks = ["TSLA", "META", "NVDA"];
+    
+    // Random selection from each category
+    setCurrentRecommendations({
+      verySecure: verySecureStocks[Math.floor(Math.random() * verySecureStocks.length)],
+      secure: secureStocks[Math.floor(Math.random() * secureStocks.length)],
+      uncertain: uncertainStocks[Math.floor(Math.random() * uncertainStocks.length)],
+      veryUncertain: veryUncertainStocks[Math.floor(Math.random() * veryUncertainStocks.length)]
+    });
+  };
+
+  // Get uncertainty data for dashboard stocks dynamically
+  const verySecureData = getDashboardStockData(currentRecommendations.verySecure)
+  const secureData = getDashboardStockData(currentRecommendations.secure)
+  const uncertainData = getDashboardStockData(currentRecommendations.uncertain)
+  const veryUncertainData = getDashboardStockData(currentRecommendations.veryUncertain)
 
   // Calculate average uncertainty across all 23 supported stocks
   const getAllStocksUncertainty = () => {
@@ -389,27 +418,40 @@ export default function Dashboard() {
             {/* Aktuelle KI-Empfehlungen */}
             <div className="lg:col-span-2 bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl p-4 violet-bloom-card min-h-0">
               <div className="space-y-3">
-                <div>
-                  <h3 className="text-base font-semibold text-foreground mb-1">Aktuelle KI-Empfehlungen</h3>
-                  <p className="text-xs text-muted-foreground">Neueste Trading-Signale mit Unsicherheitsanalyse</p>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-base font-semibold text-foreground mb-1">Aktuelle KI-Empfehlungen</h3>
+                    <p className="text-xs text-muted-foreground">Neueste Trading-Signale mit Unsicherheitsanalyse</p>
+                  </div>
+                  <Button
+                    onClick={generateNewRecommendations}
+                    variant="outline"
+                    size="sm"
+                    className="violet-bloom-hover border-primary/30 hover:border-primary/50"
+                    title="Neue Empfehlungen generieren"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                  </Button>
                 </div>
                 
                 <div className="space-y-2">
-                  {/* V - SEHR SICHER */}
+                  {/* SEHR SICHER */}
                   <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold">V</span>
-                      <span className={`text-sm px-2 py-1 rounded ${getUncertaintyColor(vData.confidenceLevel)}`}>
-                        {vData.totalUncertainty}% {vData.confidenceLevel}
+                      <span className="font-mono font-bold">{currentRecommendations.verySecure}</span>
+                      <span className={`text-sm px-2 py-1 rounded ${getUncertaintyColor(verySecureData.confidenceLevel)}`}>
+                        {verySecureData.totalUncertainty}% {verySecureData.confidenceLevel}
                       </span>
-                      <span className="text-muted-foreground">$284.52</span>
+                      <span className="text-muted-foreground">
+                        ${COMPREHENSIVE_MOCK_DATA[currentRecommendations.verySecure]?.price.toFixed(2)}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-sm px-2 py-1 rounded ${getRecommendationColor(vData.recommendation)}`}>
-                        {vData.recommendation === "BUY" ? "KAUFEN" : vData.recommendation === "SELL" ? "VERKAUFEN" : "HALTEN"}
+                      <span className={`text-sm px-2 py-1 rounded ${getRecommendationColor(verySecureData.recommendation)}`}>
+                        {verySecureData.recommendation === "BUY" ? "KAUFEN" : verySecureData.recommendation === "SELL" ? "VERKAUFEN" : "HALTEN"}
                       </span>
                       <a 
-                        href={`/statistik/unsicherheits-analyse?stock=V`}
+                        href={`/statistik/unsicherheits-analyse?stock=${currentRecommendations.verySecure}`}
                         className="text-primary hover:text-primary/80 text-sm cursor-pointer"
                       >
                         👁 Details
@@ -417,21 +459,23 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  {/* MSFT - SICHER */}
+                  {/* SICHER */}
                   <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold">MSFT</span>
-                      <span className={`text-sm px-2 py-1 rounded ${getUncertaintyColor(msftData.confidenceLevel)}`}>
-                        {msftData.totalUncertainty}% {msftData.confidenceLevel}
+                      <span className="font-mono font-bold">{currentRecommendations.secure}</span>
+                      <span className={`text-sm px-2 py-1 rounded ${getUncertaintyColor(secureData.confidenceLevel)}`}>
+                        {secureData.totalUncertainty}% {secureData.confidenceLevel}
                       </span>
-                      <span className="text-muted-foreground">$425.89</span>
+                      <span className="text-muted-foreground">
+                        ${COMPREHENSIVE_MOCK_DATA[currentRecommendations.secure]?.price.toFixed(2)}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-sm px-2 py-1 rounded ${getRecommendationColor(msftData.recommendation)}`}>
-                        {msftData.recommendation === "BUY" ? "KAUFEN" : msftData.recommendation === "SELL" ? "VERKAUFEN" : "HALTEN"}
+                      <span className={`text-sm px-2 py-1 rounded ${getRecommendationColor(secureData.recommendation)}`}>
+                        {secureData.recommendation === "BUY" ? "KAUFEN" : secureData.recommendation === "SELL" ? "VERKAUFEN" : "HALTEN"}
                       </span>
                       <a 
-                        href={`/statistik/unsicherheits-analyse?stock=MSFT`}
+                        href={`/statistik/unsicherheits-analyse?stock=${currentRecommendations.secure}`}
                         className="text-primary hover:text-primary/80 text-sm cursor-pointer"
                       >
                         👁 Details
@@ -439,21 +483,23 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  {/* AAPL - UNSICHER */}
+                  {/* UNSICHER */}
                   <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold">AAPL</span>
-                      <span className={`text-sm px-2 py-1 rounded ${getUncertaintyColor(aaplData.confidenceLevel)}`}>
-                        {aaplData.totalUncertainty}% {aaplData.confidenceLevel}
+                      <span className="font-mono font-bold">{currentRecommendations.uncertain}</span>
+                      <span className={`text-sm px-2 py-1 rounded ${getUncertaintyColor(uncertainData.confidenceLevel)}`}>
+                        {uncertainData.totalUncertainty}% {uncertainData.confidenceLevel}
                       </span>
-                      <span className="text-muted-foreground">$178.32</span>
+                      <span className="text-muted-foreground">
+                        ${COMPREHENSIVE_MOCK_DATA[currentRecommendations.uncertain]?.price.toFixed(2)}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-sm px-2 py-1 rounded ${getRecommendationColor(aaplData.recommendation)}`}>
-                        {aaplData.recommendation === "BUY" ? "KAUFEN" : aaplData.recommendation === "SELL" ? "VERKAUFEN" : "HALTEN"}
+                      <span className={`text-sm px-2 py-1 rounded ${getRecommendationColor(uncertainData.recommendation)}`}>
+                        {uncertainData.recommendation === "BUY" ? "KAUFEN" : uncertainData.recommendation === "SELL" ? "VERKAUFEN" : "HALTEN"}
                       </span>
                       <a 
-                        href={`/statistik/unsicherheits-analyse?stock=AAPL`}
+                        href={`/statistik/unsicherheits-analyse?stock=${currentRecommendations.uncertain}`}
                         className="text-primary hover:text-primary/80 text-sm cursor-pointer"
                       >
                         👁 Details
@@ -461,21 +507,23 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  {/* TSLA - SEHR UNSICHER */}
+                  {/* SEHR UNSICHER */}
                   <div className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-primary/30 transition-colors">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold">TSLA</span>
-                      <span className={`text-sm px-2 py-1 rounded ${getUncertaintyColor(tslaData.confidenceLevel)}`}>
-                        {tslaData.totalUncertainty}% {tslaData.confidenceLevel}
+                      <span className="font-mono font-bold">{currentRecommendations.veryUncertain}</span>
+                      <span className={`text-sm px-2 py-1 rounded ${getUncertaintyColor(veryUncertainData.confidenceLevel)}`}>
+                        {veryUncertainData.totalUncertainty}% {veryUncertainData.confidenceLevel}
                       </span>
-                      <span className="text-muted-foreground">$242.68</span>
+                      <span className="text-muted-foreground">
+                        ${COMPREHENSIVE_MOCK_DATA[currentRecommendations.veryUncertain]?.price.toFixed(2)}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-sm px-2 py-1 rounded ${getRecommendationColor(tslaData.recommendation)}`}>
-                        {tslaData.recommendation === "BUY" ? "KAUFEN" : tslaData.recommendation === "SELL" ? "VERKAUFEN" : "HALTEN"}
+                      <span className={`text-sm px-2 py-1 rounded ${getRecommendationColor(veryUncertainData.recommendation)}`}>
+                        {veryUncertainData.recommendation === "BUY" ? "KAUFEN" : veryUncertainData.recommendation === "SELL" ? "VERKAUFEN" : "HALTEN"}
                       </span>
                       <a 
-                        href={`/statistik/unsicherheits-analyse?stock=TSLA`}
+                        href={`/statistik/unsicherheits-analyse?stock=${currentRecommendations.veryUncertain}`}
                         className="text-primary hover:text-primary/80 text-sm cursor-pointer"
                       >
                         👁 Details
