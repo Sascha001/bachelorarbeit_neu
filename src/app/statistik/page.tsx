@@ -27,7 +27,7 @@ function StatistikContent() {
   const scrollbarRef = useCoolScrollbar()
 
   return (
-    <div ref={scrollbarRef} className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0 overflow-auto">
+    <div ref={scrollbarRef} className="flex flex-1 flex-col gap-4 p-4 pt-16 min-h-0 overflow-auto">
       {stock ? (
         <div className="space-y-4 h-full flex flex-col">
           <div className="text-center">
@@ -95,6 +95,14 @@ function StatistikContent() {
 export default function StatistikPage() {
   return (
     <SidebarProvider>
+      <StatistikPageContent />
+    </SidebarProvider>
+  )
+}
+
+function StatistikPageContent() {
+  return (
+    <>
       <AppSidebar />
       <SidebarInset>
         <header className="fixed-header flex h-16 shrink-0 items-center transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b border-border/50 px-4 relative">
@@ -131,6 +139,6 @@ export default function StatistikPage() {
           <StatistikContent />
         </Suspense>
       </SidebarInset>
-    </SidebarProvider>
+    </>
   )
 }
