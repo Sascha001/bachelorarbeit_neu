@@ -97,7 +97,7 @@ export default function StatistikPage() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b border-border/50 px-4 relative">
+        <header className="fixed-header flex h-16 shrink-0 items-center transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b border-border/50 px-4 relative">
           <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1 violet-bloom-hover rounded-md p-2" />
             <Separator

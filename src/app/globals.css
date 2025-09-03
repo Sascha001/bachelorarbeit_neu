@@ -515,6 +515,16 @@ body::-webkit-scrollbar {
 }
 
 @layer components {
+  /* Fixed Header Styling */
+  .fixed-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(8px);
+    background: hsl(var(--background) / 0.95);
+    border-bottom: 1px solid hsl(var(--border) / 0.5);
+  }
+
   .violet-bloom-hover {
     @apply transition-all duration-300 hover:bg-primary/10 hover:text-primary hover:border-primary/30;
   }
