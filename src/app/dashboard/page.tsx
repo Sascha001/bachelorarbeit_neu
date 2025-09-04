@@ -159,8 +159,8 @@ export default function Dashboard() {
   const generateNewRecommendations = () => {
     // Define stock categories by uncertainty level
     const verySecureStocks = ["V", "MA", "JNJ", "PG"];
-    const secureStocks = ["KO", "UNH", "MSFT", "JPM", "ALV.DE", "NESN.SW", "SAP.DE", "SIE.DE"];
-    const uncertainStocks = ["GOOGL", "HD", "AMZN", "AAPL", "BRK_B", "ASML.AS", "BMW.DE", "BAS.DE"];
+    const secureStocks = ["KO", "UNH", "MSFT", "JPM", "ALV.DE", "NESN.SW", "SIE.DE"];
+    const uncertainStocks = ["GOOGL", "HD", "AMZN", "AAPL", "BRK_B", "ASML.AS", "BMW.DE", "BAS.DE", "SAP.DE"];
     const veryUncertainStocks = ["TSLA", "META", "NVDA"];
     
     // Filter out currently displayed stocks to ensure different selections
