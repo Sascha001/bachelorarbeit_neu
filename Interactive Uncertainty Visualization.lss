@@ -1,0 +1,853 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+ <LimeSurveyDocType>Survey</LimeSurveyDocType>
+ <DBVersion>616</DBVersion>
+ <languages>
+  <language>de</language>
+ </languages>
+ <groups>
+  <fields>
+   <fieldname>gid</fieldname>
+   <fieldname>sid</fieldname>
+   <fieldname>group_name</fieldname>
+   <fieldname>group_order</fieldname>
+   <fieldname>description</fieldname>
+   <fieldname>language</fieldname>
+   <fieldname>randomization_group</fieldname>
+   <fieldname>grelevance</fieldname>
+  </fields>
+  <rows>
+   <row>
+    <gid>1</gid>
+    <sid>123456</sid>
+    <group_name>Teil A: Vorab-Einschätzung zu Unsicherheit</group_name>
+    <group_order>1</group_order>
+    <description>&lt;p&gt;&lt;strong&gt;Teil A: Vorab-Einschätzung zu Unsicherheit&lt;/strong&gt;&lt;/p&gt;</description>
+    <language>de</language>
+    <randomization_group></randomization_group>
+    <grelevance></grelevance>
+   </row>
+   <row>
+    <gid>2</gid>
+    <sid>123456</sid>
+    <group_name>Teil B: Erste Unsicherheits-Wahrnehmung</group_name>
+    <group_order>2</group_order>
+    <description>&lt;p&gt;&lt;strong&gt;Teil B: Erste Unsicherheits-Wahrnehmung&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Nach der ersten Betrachtung der Unsicherheits-Overview&lt;/em&gt;&lt;/p&gt;</description>
+    <language>de</language>
+    <randomization_group></randomization_group>
+    <grelevance></grelevance>
+   </row>
+   <row>
+    <gid>3</gid>
+    <sid>123456</sid>
+    <group_name>Teil C: Detailanalyse der Unsicherheitsdimensionen</group_name>
+    <group_order>3</group_order>
+    <description>&lt;p&gt;&lt;strong&gt;Teil C: Detailanalyse der Unsicherheitsdimensionen&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Nach der Exploration der technischen Analyse&lt;/em&gt;&lt;/p&gt;</description>
+    <language>de</language>
+    <randomization_group></randomization_group>
+    <grelevance></grelevance>
+   </row>
+   <row>
+    <gid>4</gid>
+    <sid>123456</sid>
+    <group_name>Teil D: Kognitive Verarbeitung mathematischer Formeln</group_name>
+    <group_order>4</group_order>
+    <description>&lt;p&gt;&lt;strong&gt;Teil D: Kognitive Verarbeitung mathematischer Formeln&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Evaluation der KaTeX-Formeln und Transparenz&lt;/em&gt;&lt;/p&gt;</description>
+    <language>de</language>
+    <randomization_group></randomization_group>
+    <grelevance></grelevance>
+   </row>
+   <row>
+    <gid>5</gid>
+    <sid>123456</sid>
+    <group_name>Teil E: Stock-spezifische Unsicherheitsanalyse</group_name>
+    <group_order>5</group_order>
+    <description>&lt;p&gt;&lt;strong&gt;Teil E: Stock-spezifische Unsicherheitsanalyse&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Analyse verschiedener Aktien und deren Unsicherheitsmuster&lt;/em&gt;&lt;/p&gt;</description>
+    <language>de</language>
+    <randomization_group></randomization_group>
+    <grelevance></grelevance>
+   </row>
+   <row>
+    <gid>6</gid>
+    <sid>123456</sid>
+    <group_name>Teil F: Dashboard Randomisierung und Integration</group_name>
+    <group_order>6</group_order>
+    <description>&lt;p&gt;&lt;strong&gt;Teil F: Dashboard Randomisierung und Integration&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Bewertung der Dashboard-Features und KI-Empfehlungen&lt;/em&gt;&lt;/p&gt;</description>
+    <language>de</language>
+    <randomization_group></randomization_group>
+    <grelevance></grelevance>
+   </row>
+   <row>
+    <gid>7</gid>
+    <sid>123456</sid>
+    <group_name>Teil G: Depot und Validierung</group_name>
+    <group_order>7</group_order>
+    <description>&lt;p&gt;&lt;strong&gt;Teil G: Depot und Validierung&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Integration von Unsicherheit in Portfolio-Management und Feedback-Loops&lt;/em&gt;&lt;/p&gt;</description>
+    <language>de</language>
+    <randomization_group></randomization_group>
+    <grelevance></grelevance>
+   </row>
+   <row>
+    <gid>8</gid>
+    <sid>123456</sid>
+    <group_name>Teil H: Vereinfachte Analyse</group_name>
+    <group_order>8</group_order>
+    <description>&lt;p&gt;&lt;strong&gt;Teil H: Vereinfachte Analyse&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Bewertung der "Vereinfachte Analyse" Tab-Funktionalität&lt;/em&gt;&lt;/p&gt;</description>
+    <language>de</language>
+    <randomization_group></randomization_group>
+    <grelevance></grelevance>
+   </row>
+   <row>
+    <gid>9</gid>
+    <sid>123456</sid>
+    <group_name>Teil I: Navigation und Bedienbarkeit</group_name>
+    <group_order>9</group_order>
+    <description>&lt;p&gt;&lt;strong&gt;Teil I: Navigation und Bedienbarkeit&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Sidebar, Breadcrumbs und allgemeine Benutzerführung&lt;/em&gt;&lt;/p&gt;</description>
+    <language>de</language>
+    <randomization_group></randomization_group>
+    <grelevance></grelevance>
+   </row>
+   <row>
+    <gid>10</gid>
+    <sid>123456</sid>
+    <group_name>Teil J: Gesamtbewertung und Entscheidungseinfluss</group_name>
+    <group_order>10</group_order>
+    <description>&lt;p&gt;&lt;strong&gt;Teil J: Gesamtbewertung und Entscheidungseinfluss&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Übergreifende Evaluation der Anwendung&lt;/em&gt;&lt;/p&gt;</description>
+    <language>de</language>
+    <randomization_group></randomization_group>
+    <grelevance></grelevance>
+   </row>
+   <row>
+    <gid>11</gid>
+    <sid>123456</sid>
+    <group_name>Teil K: Abschließende Bewertung</group_name>
+    <group_order>11</group_order>
+    <description>&lt;p&gt;&lt;strong&gt;Teil K: Abschließende Bewertung&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Finale Einschätzungen und Verbesserungsvorschläge&lt;/em&gt;&lt;/p&gt;</description>
+    <language>de</language>
+    <randomization_group></randomization_group>
+    <grelevance></grelevance>
+   </row>
+  </rows>
+ </groups>
+ <questions>
+  <fields>
+   <fieldname>qid</fieldname>
+   <fieldname>parent_qid</fieldname>
+   <fieldname>sid</fieldname>
+   <fieldname>gid</fieldname>
+   <fieldname>type</fieldname>
+   <fieldname>title</fieldname>
+   <fieldname>question</fieldname>
+   <fieldname>preg</fieldname>
+   <fieldname>help</fieldname>
+   <fieldname>other</fieldname>
+   <fieldname>mandatory</fieldname>
+   <fieldname>question_order</fieldname>
+   <fieldname>language</fieldname>
+   <fieldname>scale_id</fieldname>
+   <fieldname>same_default</fieldname>
+   <fieldname>relevance</fieldname>
+   <fieldname>modulename</fieldname>
+  </fields>
+  <rows>
+   <!-- Teil A Fragen -->
+   <row>
+    <qid>1</qid>
+    <parent_qid>0</parent_qid>
+    <sid>123456</sid>
+    <gid>1</gid>
+    <type>M</type>
+    <title>A1</title>
+    <question>Wie gehen Sie normalerweise mit Unsicherheit in Trading-Entscheidungen um?</question>
+    <preg></preg>
+    <help></help>
+    <other>N</other>
+    <mandatory>N</mandatory>
+    <question_order>1</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+    <same_default>0</same_default>
+    <relevance>1</relevance>
+    <modulename></modulename>
+   </row>
+   <row>
+    <qid>2</qid>
+    <parent_qid>0</parent_qid>
+    <sid>123456</sid>
+    <gid>1</gid>
+    <type>M</type>
+    <title>A2</title>
+    <question>Welche Art von Unsicherheitsinformation ist für Sie am wertvollsten?</question>
+    <preg></preg>
+    <help></help>
+    <other>N</other>
+    <mandatory>N</mandatory>
+    <question_order>2</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+    <same_default>0</same_default>
+    <relevance>1</relevance>
+    <modulename></modulename>
+   </row>
+   <row>
+    <qid>3</qid>
+    <parent_qid>0</parent_qid>
+    <sid>123456</sid>
+    <gid>1</gid>
+    <type>1</type>
+    <title>A3</title>
+    <question>Wie wichtig ist Transparenz von KI-Empfehlungen für Ihr Vertrauen?&lt;br&gt;&lt;em&gt;Skala: 1 = gar nicht wichtig, 5 = extrem wichtig&lt;/em&gt;</question>
+    <preg></preg>
+    <help></help>
+    <other>N</other>
+    <mandatory>N</mandatory>
+    <question_order>3</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+    <same_default>0</same_default>
+    <relevance>1</relevance>
+    <modulename></modulename>
+   </row>
+   <row>
+    <qid>4</qid>
+    <parent_qid>0</parent_qid>
+    <sid>123456</sid>
+    <gid>1</gid>
+    <type>T</type>
+    <title>A3_comment</title>
+    <question>Kommentar zur Transparenz-Wichtigkeit:</question>
+    <preg></preg>
+    <help></help>
+    <other>N</other>
+    <mandatory>N</mandatory>
+    <question_order>4</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+    <same_default>0</same_default>
+    <relevance>1</relevance>
+    <modulename></modulename>
+   </row>
+   
+   <!-- Teil B Fragen -->
+   <row>
+    <qid>5</qid>
+    <parent_qid>0</parent_qid>
+    <sid>123456</sid>
+    <gid>2</gid>
+    <type>T</type>
+    <title>B1</title>
+    <question>Was war Ihr erster Gedanke beim Anblick der Gesamtunsicherheit?</question>
+    <preg></preg>
+    <help></help>
+    <other>N</other>
+    <mandatory>N</mandatory>
+    <question_order>1</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+    <same_default>0</same_default>
+    <relevance>1</relevance>
+    <modulename></modulename>
+   </row>
+   <row>
+    <qid>6</qid>
+    <parent_qid>0</parent_qid>
+    <sid>123456</sid>
+    <gid>2</gid>
+    <type>1</type>
+    <title>B2</title>
+    <question>Wie intuitiv fanden Sie die Darstellung der drei Unsicherheitsdimensionen?&lt;br&gt;&lt;em&gt;1 = sehr verwirrend, 5 = sehr intuitiv&lt;/em&gt;</question>
+    <preg></preg>
+    <help></help>
+    <other>N</other>
+    <mandatory>N</mandatory>
+    <question_order>2</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+    <same_default>0</same_default>
+    <relevance>1</relevance>
+    <modulename></modulename>
+   </row>
+   <row>
+    <qid>7</qid>
+    <parent_qid>0</parent_qid>
+    <sid>123456</sid>
+    <gid>2</gid>
+    <type>R</type>
+    <title>B3</title>
+    <question>Priorisieren Sie die drei Dimensionen nach persönlicher Relevanz für Trading-Entscheidungen:</question>
+    <preg></preg>
+    <help></help>
+    <other>N</other>
+    <mandatory>N</mandatory>
+    <question_order>3</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+    <same_default>0</same_default>
+    <relevance>1</relevance>
+    <modulename></modulename>
+   </row>
+   <row>
+    <qid>8</qid>
+    <parent_qid>0</parent_qid>
+    <sid>123456</sid>
+    <gid>2</gid>
+    <type>1</type>
+    <title>B4</title>
+    <question>Wie vertrauenswürdig finden Sie eine KI-Empfehlung bei der angezeigten Unsicherheit?&lt;br&gt;&lt;em&gt;1 = gar nicht vertrauenswürdig, 5 = sehr vertrauenswürdig&lt;/em&gt;</question>
+    <preg></preg>
+    <help></help>
+    <other>N</other>
+    <mandatory>N</mandatory>
+    <question_order>4</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+    <same_default>0</same_default>
+    <relevance>1</relevance>
+    <modulename></modulename>
+   </row>
+   
+   <!-- Teil C Fragen -->
+   <row>
+    <qid>9</qid>
+    <parent_qid>0</parent_qid>
+    <sid>123456</sid>
+    <gid>3</gid>
+    <type>1</type>
+    <title>C1</title>
+    <question>Wie hilfreich fanden Sie die Aufschlüsselung der Datenunsicherheit in vier Kategorien?&lt;br&gt;&lt;em&gt;1 = nicht hilfreich, 5 = sehr hilfreich&lt;/em&gt;</question>
+    <preg></preg>
+    <help></help>
+    <other>N</other>
+    <mandatory>N</mandatory>
+    <question_order>1</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+    <same_default>0</same_default>
+    <relevance>1</relevance>
+    <modulename></modulename>
+   </row>
+   <row>
+    <qid>10</qid>
+    <parent_qid>0</parent_qid>
+    <sid>123456</sid>
+    <gid>3</gid>
+    <type>M</type>
+    <title>C2</title>
+    <question>Welche Datenqualitäts-Dimensionen sind für Sie am wichtigsten?</question>
+    <preg></preg>
+    <help></help>
+    <other>N</other>
+    <mandatory>N</mandatory>
+    <question_order>2</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+    <same_default>0</same_default>
+    <relevance>1</relevance>
+    <modulename></modulename>
+   </row>
+   <row>
+    <qid>11</qid>
+    <parent_qid>0</parent_qid>
+    <sid>123456</sid>
+    <gid>3</gid>
+    <type>1</type>
+    <title>C3</title>
+    <question>Wie gut verstehen Sie die fünf Modellunsicherheits-Dimensionen?&lt;br&gt;&lt;em&gt;1 = gar nicht verstanden, 5 = vollständig verstanden&lt;/em&gt;</question>
+    <preg></preg>
+    <help></help>
+    <other>N</other>
+    <mandatory>N</mandatory>
+    <question_order>3</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+    <same_default>0</same_default>
+    <relevance>1</relevance>
+    <modulename></modulename>
+   </row>
+   <row>
+    <qid>12</qid>
+    <parent_qid>0</parent_qid>
+    <sid>123456</sid>
+    <gid>3</gid>
+    <type>S</type>
+    <title>C4</title>
+    <question>Welche Modellunsicherheits-Dimension finden Sie am schwierigsten zu interpretieren?</question>
+    <preg></preg>
+    <help></help>
+    <other>N</other>
+    <mandatory>N</mandatory>
+    <question_order>4</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+    <same_default>0</same_default>
+    <relevance>1</relevance>
+    <modulename></modulename>
+   </row>
+   <row>
+    <qid>13</qid>
+    <parent_qid>0</parent_qid>
+    <sid>123456</sid>
+    <gid>3</gid>
+    <type>1</type>
+    <title>C5</title>
+    <question>Wie relevant ist die menschliche Unsicherheits-Dimension für Ihre Trading-Entscheidungen?&lt;br&gt;&lt;em&gt;1 = irrelevant, 5 = sehr relevant&lt;/em&gt;</question>
+    <preg></preg>
+    <help></help>
+    <other>N</other>
+    <mandatory>N</mandatory>
+    <question_order>5</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+    <same_default>0</same_default>
+    <relevance>1</relevance>
+    <modulename></modulename>
+   </row>
+   
+   <!-- Weitere Fragen für Teile D-K würden hier folgen... -->
+   
+  </rows>
+ </questions>
+ <subquestions>
+  <fields>
+   <fieldname>qid</fieldname>
+   <fieldname>parent_qid</fieldname>
+   <fieldname>sid</fieldname>
+   <fieldname>gid</fieldname>
+   <fieldname>type</fieldname>
+   <fieldname>title</fieldname>
+   <fieldname>question</fieldname>
+   <fieldname>other</fieldname>
+   <fieldname>question_order</fieldname>
+   <fieldname>language</fieldname>
+   <fieldname>scale_id</fieldname>
+  </fields>
+  <rows>
+   <!-- Subquestions für Multiple Choice Fragen -->
+   <row>
+    <qid>101</qid>
+    <parent_qid>1</parent_qid>
+    <sid>123456</sid>
+    <gid>1</gid>
+    <type>T</type>
+    <title>SQ001</title>
+    <question>Ich vermeide unsichere Positionen komplett</question>
+    <other>N</other>
+    <question_order>1</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+   </row>
+   <row>
+    <qid>102</qid>
+    <parent_qid>1</parent_qid>
+    <sid>123456</sid>
+    <gid>1</gid>
+    <type>T</type>
+    <title>SQ002</title>
+    <question>Ich reduziere Positionsgrößen bei Unsicherheit</question>
+    <other>N</other>
+    <question_order>2</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+   </row>
+   <row>
+    <qid>103</qid>
+    <parent_qid>1</parent_qid>
+    <sid>123456</sid>
+    <gid>1</gid>
+    <type>T</type>
+    <title>SQ003</title>
+    <question>Ich nutze Unsicherheit als zusätzliche Information</question>
+    <other>N</other>
+    <question_order>3</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+   </row>
+   <row>
+    <qid>104</qid>
+    <parent_qid>1</parent_qid>
+    <sid>123456</sid>
+    <gid>1</gid>
+    <type>T</type>
+    <title>SQ004</title>
+    <question>Ich ignoriere Unsicherheit und fokussiere auf Rendite</question>
+    <other>N</other>
+    <question_order>4</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+   </row>
+   <row>
+    <qid>105</qid>
+    <parent_qid>1</parent_qid>
+    <sid>123456</sid>
+    <gid>1</gid>
+    <type>T</type>
+    <title>SQ005</title>
+    <question>Ich hedge gezielt gegen identifizierte Unsicherheiten</question>
+    <other>N</other>
+    <question_order>5</question_order>
+    <language>de</language>
+    <scale_id>0</scale_id>
+   </row>
+  </rows>
+ </subquestions>
+ <answers>
+  <fields>
+   <fieldname>qid</fieldname>
+   <fieldname>code</fieldname>
+   <fieldname>answer</fieldname>
+   <fieldname>sortorder</fieldname>
+   <fieldname>language</fieldname>
+   <fieldname>assessment_value</fieldname>
+   <fieldname>scale_id</fieldname>
+  </fields>
+  <rows>
+   <!-- Antworten für Likert-Skalen -->
+   <row>
+    <qid>3</qid>
+    <code>1</code>
+    <answer>1 - Gar nicht wichtig</answer>
+    <sortorder>1</sortorder>
+    <language>de</language>
+    <assessment_value>1</assessment_value>
+    <scale_id>0</scale_id>
+   </row>
+   <row>
+    <qid>3</qid>
+    <code>2</code>
+    <answer>2</answer>
+    <sortorder>2</sortorder>
+    <language>de</language>
+    <assessment_value>2</assessment_value>
+    <scale_id>0</scale_id>
+   </row>
+   <row>
+    <qid>3</qid>
+    <code>3</code>
+    <answer>3</answer>
+    <sortorder>3</sortorder>
+    <language>de</language>
+    <assessment_value>3</assessment_value>
+    <scale_id>0</scale_id>
+   </row>
+   <row>
+    <qid>3</qid>
+    <code>4</code>
+    <answer>4</answer>
+    <sortorder>4</sortorder>
+    <language>de</language>
+    <assessment_value>4</assessment_value>
+    <scale_id>0</scale_id>
+   </row>
+   <row>
+    <qid>3</qid>
+    <code>5</code>
+    <answer>5 - Extrem wichtig</answer>
+    <sortorder>5</sortorder>
+    <language>de</language>
+    <assessment_value>5</assessment_value>
+    <scale_id>0</scale_id>
+   </row>
+  </rows>
+ </answers>
+ <surveys>
+  <fields>
+   <fieldname>sid</fieldname>
+   <fieldname>gsid</fieldname>
+   <fieldname>admin</fieldname>
+   <fieldname>expires</fieldname>
+   <fieldname>startdate</fieldname>
+   <fieldname>adminemail</fieldname>
+   <fieldname>anonymized</fieldname>
+   <fieldname>faxto</fieldname>
+   <fieldname>format</fieldname>
+   <fieldname>savetimings</fieldname>
+   <fieldname>template</fieldname>
+   <fieldname>language</fieldname>
+   <fieldname>additional_languages</fieldname>
+   <fieldname>datestamp</fieldname>
+   <fieldname>usecookie</fieldname>
+   <fieldname>allowregister</fieldname>
+   <fieldname>allowsave</fieldname>
+   <fieldname>autonumber_start</fieldname>
+   <fieldname>autoredirect</fieldname>
+   <fieldname>allowprev</fieldname>
+   <fieldname>printanswers</fieldname>
+   <fieldname>ipaddr</fieldname>
+   <fieldname>refurl</fieldname>
+   <fieldname>showsurveypolicynotice</fieldname>
+   <fieldname>publicstatistics</fieldname>
+   <fieldname>publicgraphs</fieldname>
+   <fieldname>listpublic</fieldname>
+   <fieldname>htmlemail</fieldname>
+   <fieldname>sendconfirmation</fieldname>
+   <fieldname>tokenanswerspersistence</fieldname>
+   <fieldname>assessments</fieldname>
+   <fieldname>usecaptcha</fieldname>
+   <fieldname>usetokens</fieldname>
+   <fieldname>bounce_email</fieldname>
+   <fieldname>attributedescriptions</fieldname>
+   <fieldname>emailresponseto</fieldname>
+   <fieldname>emailnotificationto</fieldname>
+   <fieldname>tokenlength</fieldname>
+   <fieldname>showxquestions</fieldname>
+   <fieldname>showgroupinfo</fieldname>
+   <fieldname>shownoanswer</fieldname>
+   <fieldname>showqnumcode</fieldname>
+   <fieldname>bouncetime</fieldname>
+   <fieldname>bounceprocessing</fieldname>
+   <fieldname>bounceaccounttype</fieldname>
+   <fieldname>bounceaccounthost</fieldname>
+   <fieldname>bounceaccountpass</fieldname>
+   <fieldname>bounceaccountencryption</fieldname>
+   <fieldname>bounceaccountuser</fieldname>
+   <fieldname>showwelcome</fieldname>
+   <fieldname>showprogress</fieldname>
+   <fieldname>allowjumps</fieldname>
+   <fieldname>navigationdelay</fieldname>
+   <fieldname>nokeyboard</fieldname>
+   <fieldname>alloweditaftercompletion</fieldname>
+   <fieldname>googleanalyticsstyle</fieldname>
+   <fieldname>googleanalyticsapikey</fieldname>
+  </fields>
+  <rows>
+   <row>
+    <sid>123456</sid>
+    <gsid>1</gsid>
+    <admin>Sascha Cristul</admin>
+    <expires></expires>
+    <startdate></startdate>
+    <adminemail>saschacristul@BA.com</adminemail>
+    <anonymized>Y</anonymized>
+    <faxto></faxto>
+    <format>G</format>
+    <savetimings>N</savetimings>
+    <template>vanilla</template>
+    <language>de</language>
+    <additional_languages></additional_languages>
+    <datestamp>Y</datestamp>
+    <usecookie>N</usecookie>
+    <allowregister>N</allowregister>
+    <allowsave>Y</allowsave>
+    <autonumber_start>1</autonumber_start>
+    <autoredirect>Y</autoredirect>
+    <allowprev>Y</allowprev>
+    <printanswers>Y</printanswers>
+    <ipaddr>N</ipaddr>
+    <refurl>Y</refurl>
+    <showsurveypolicynotice>0</showsurveypolicynotice>
+    <publicstatistics>N</publicstatistics>
+    <publicgraphs>N</publicgraphs>
+    <listpublic>N</listpublic>
+    <htmlemail>Y</htmlemail>
+    <sendconfirmation>Y</sendconfirmation>
+    <tokenanswerspersistence>N</tokenanswerspersistence>
+    <assessments>N</assessments>
+    <usecaptcha>N</usecaptcha>
+    <usetokens>N</usetokens>
+    <bounce_email></bounce_email>
+    <attributedescriptions></attributedescriptions>
+    <emailresponseto></emailresponseto>
+    <emailnotificationto></emailnotificationto>
+    <tokenlength>15</tokenlength>
+    <showxquestions>Y</showxquestions>
+    <showgroupinfo>B</showgroupinfo>
+    <shownoanswer>Y</shownoanswer>
+    <showqnumcode>X</showqnumcode>
+    <bouncetime></bouncetime>
+    <bounceprocessing>N</bounceprocessing>
+    <bounceaccounttype></bounceaccounttype>
+    <bounceaccounthost></bounceaccounthost>
+    <bounceaccountpass></bounceaccountpass>
+    <bounceaccountencryption></bounceaccountencryption>
+    <bounceaccountuser></bounceaccountuser>
+    <showwelcome>Y</showwelcome>
+    <showprogress>Y</showprogress>
+    <allowjumps>N</allowjumps>
+    <navigationdelay>0</navigationdelay>
+    <nokeyboard>N</nokeyboard>
+    <alloweditaftercompletion>N</alloweditaftercompletion>
+    <googleanalyticsstyle></googleanalyticsstyle>
+    <googleanalyticsapikey></googleanalyticsapikey>
+   </row>
+  </rows>
+ </surveys>
+ <surveys_languagesettings>
+  <fields>
+   <fieldname>surveyls_survey_id</fieldname>
+   <fieldname>surveyls_language</fieldname>
+   <fieldname>surveyls_title</fieldname>
+   <fieldname>surveyls_description</fieldname>
+   <fieldname>surveyls_welcometext</fieldname>
+   <fieldname>surveyls_endtext</fieldname>
+   <fieldname>surveyls_policy_notice</fieldname>
+   <fieldname>surveyls_policy_error</fieldname>
+   <fieldname>surveyls_policy_notice_label</fieldname>
+   <fieldname>surveyls_url</fieldname>
+   <fieldname>surveyls_urldescription</fieldname>
+   <fieldname>surveyls_email_invite_subj</fieldname>
+   <fieldname>surveyls_email_invite</fieldname>
+   <fieldname>surveyls_email_remind_subj</fieldname>
+   <fieldname>surveyls_email_remind</fieldname>
+   <fieldname>surveyls_email_register_subj</fieldname>
+   <fieldname>surveyls_email_register</fieldname>
+   <fieldname>surveyls_email_confirm_subj</fieldname>
+   <fieldname>surveyls_email_confirm</fieldname>
+   <fieldname>surveyls_dateformat</fieldname>
+   <fieldname>surveyls_attributecaptions</fieldname>
+   <fieldname>email_admin_notification_subj</fieldname>
+   <fieldname>email_admin_notification</fieldname>
+   <fieldname>email_admin_responses_subj</fieldname>
+   <fieldname>email_admin_responses</fieldname>
+   <fieldname>surveyls_numberformat</fieldname>
+   <fieldname>attachments</fieldname>
+  </fields>
+  <rows>
+   <row>
+    <surveyls_survey_id>123456</surveyls_survey_id>
+    <surveyls_language>de</surveyls_language>
+    <surveyls_title>Interactive Uncertainty Visualization</surveyls_title>
+    <surveyls_description>Detaillierte Evaluation der Unsicherheitsvisualisierung in KI-Trading-Systemen - Bachelorarbeit Studie</surveyls_description>
+    <surveyls_welcometext>&lt;h2&gt;Hinweis zur Teilnahme&lt;/h2&gt;
+
+&lt;p&gt;Vielen Dank, dass Sie an dieser Evaluation teilnehmen.&lt;/p&gt;
+
+&lt;p&gt;Ihre Angaben werden ausschließlich im Rahmen meiner Bachelorarbeit an der [Name der Hochschule] verwendet.&lt;/p&gt;
+
+&lt;p&gt;Die Teilnahme ist freiwillig, die Daten werden anonym erhoben und nicht an Dritte weitergegeben.&lt;/p&gt;
+
+&lt;p&gt;Sie können die Befragung jederzeit ohne Angabe von Gründen abbrechen.&lt;/p&gt;
+
+&lt;p&gt;Mit Ihrer Teilnahme erklären Sie sich einverstanden, dass Ihre Antworten in die Analyse meiner Bachelorarbeit einfließen.&lt;/p&gt;
+
+&lt;h2&gt;Informationen zum Artefakt&lt;/h2&gt;
+
+&lt;p&gt;Das in dieser Arbeit entwickelte Artefakt dient der Visualisierung von KI-Handelsempfehlungen. Ziel ist es, die verborgenen Unsicherheiten hinter den Empfehlungen darzustellen und den Nutzern dadurch eine reflektiertere Entscheidungsfindung zu ermöglichen.&lt;/p&gt;
+
+&lt;p&gt;Dabei werden drei Dimensionen der Unsicherheit verdeutlicht:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Datenunsicherheit&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Modellunsicherheit&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Menschliche Unsicherheit&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;🔎 &lt;strong&gt;Hinweis:&lt;/strong&gt; Alle im Prototyp verwendeten Daten sind Dummy-Daten. Sie können also Werte enthalten, die in der Realität nicht auftreten würden. Das ist bewusst so gewählt, da hier nicht die realen Börsendaten, sondern die Darstellung von Unsicherheit im Vordergrund steht.&lt;/p&gt;
+
+&lt;p&gt;Das Artefakt umfasst vier Seiten:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Dashboard&lt;/li&gt;
+&lt;li&gt;Depotübersicht &amp;amp; Performance&lt;/li&gt;
+&lt;li&gt;Validierung markierter Trades&lt;/li&gt;
+&lt;li&gt;Unsicherheitsanalyse (Kernstück)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Leitfaden zur Nutzung&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Info-Icons:&lt;/strong&gt; Bei Hover oder Klick erscheinen Zusatzinformationen.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Zugänge zur Unsicherheitsanalyse (drei Wege):&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Über die Suchleiste im Header&lt;/li&gt;
+&lt;li&gt;Über die aktuelle KI-Empfehlung im Dashboard&lt;/li&gt;
+&lt;li&gt;Über Statistik → Unsicherheitsanalyse&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Innerhalb der Unsicherheitsanalyse können Sie sowohl eine technische Analyse als auch eine vereinfachte Analyse betrachten.&lt;/p&gt;
+
+&lt;p&gt;Am Ende der Seite haben Sie die Möglichkeit, eine Aktie zu kaufen oder zu verkaufen – bitte probieren Sie diese Funktion ebenfalls aus.&lt;/p&gt;
+
+&lt;p&gt;Im Anschluss möchte ich Sie bitten, den Fragebogen auszufüllen, um das Frontend-Design und die Nutzerfreundlichkeit des Artefakts zu bewerten.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Vielen Dank für Ihre Unterstützung!&lt;/strong&gt; 🙏&lt;/p&gt;</surveyls_welcometext>
+    <surveyls_endtext>&lt;h2&gt;Vielen Dank für Ihre Teilnahme!&lt;/h2&gt;
+
+&lt;p&gt;Ihre Antworten sind sehr wertvoll für die Entwicklung besserer Unsicherheitsvisualisierungen in KI-Trading-Systemen.&lt;/p&gt;
+
+&lt;p&gt;Bei Fragen zur Studie können Sie sich gerne an saschacristul@BA.com wenden.&lt;/p&gt;</surveyls_endtext>
+    <surveyls_policy_notice></surveyls_policy_notice>
+    <surveyls_policy_error></surveyls_policy_error>
+    <surveyls_policy_notice_label></surveyls_policy_notice_label>
+    <surveyls_url></surveyls_url>
+    <surveyls_urldescription></surveyls_urldescription>
+    <surveyls_email_invite_subj>Einladung zur Teilnahme an Umfrage</surveyls_email_invite_subj>
+    <surveyls_email_invite>Hallo,
+
+Sie wurden eingeladen, an einer Umfrage teilzunehmen.
+
+Die Umfrage trägt den Titel:
+"Interactive Uncertainty Visualization"
+
+Klicken Sie auf den folgenden Link, um die Umfrage zu starten:
+{SURVEYURL}
+
+Vielen Dank für Ihre Zeit.</surveyls_email_invite>
+    <surveyls_email_remind_subj>Erinnerung zur Teilnahme an Umfrage</surveyls_email_remind_subj>
+    <surveyls_email_remind>Hallo,
+
+vor kurzem wurden Sie eingeladen, an einer Umfrage teilzunehmen.
+
+Wir bemerken, dass Sie diese noch nicht abgeschlossen haben und möchten Sie daran erinnern.
+
+Die Umfrage trägt den Titel:
+"Interactive Uncertainty Visualization"
+
+Klicken Sie auf den folgenden Link, um die Umfrage zu starten:
+{SURVEYURL}
+
+Vielen Dank für Ihre Zeit.</surveyls_email_remind>
+    <surveyls_email_register_subj>Umfrageregistrierung bestätigt</surveyls_email_register_subj>
+    <surveyls_email_register>Hallo,
+
+Sie haben sich für die Teilnahme an einer Umfrage registriert.
+
+Die Umfrage trägt den Titel:
+"Interactive Uncertainty Visualization"
+
+Um an dieser Umfrage teilzunehmen, klicken Sie auf den folgenden Link:
+{SURVEYURL}
+
+Vielen Dank für Ihre Zeit.</surveyls_email_register>
+    <surveyls_email_confirm_subj>Bestätigung Ihrer Teilnahme an unserer Umfrage</surveyls_email_confirm_subj>
+    <surveyls_email_confirm>Hallo,
+
+dieser Text bestätigt, dass Sie die Umfrage abgeschlossen haben.
+
+Die Umfrage trägt den Titel:
+"Interactive Uncertainty Visualization"
+
+Vielen Dank für Ihre Zeit.</surveyls_email_confirm>
+    <surveyls_dateformat>1</surveyls_dateformat>
+    <surveyls_attributecaptions></surveyls_attributecaptions>
+    <email_admin_notification_subj>Antwort für Umfrage "Interactive Uncertainty Visualization"</email_admin_notification_subj>
+    <email_admin_notification>Hallo,
+
+eine neue Antwort wurde für Ihre Umfrage "Interactive Uncertainty Visualization" eingereicht.
+
+Klicken Sie auf den folgenden Link, um die Umfrage zu bearbeiten:
+{SURVEYURL}
+
+Klicken Sie auf den folgenden Link, um die Antworten zu betrachten:
+{RESULTSURL}</email_admin_notification>
+    <email_admin_responses_subj>Antwort für Umfrage "Interactive Uncertainty Visualization"</email_admin_responses_subj>
+    <email_admin_responses>Hallo,
+
+eine Antwort für Ihre Umfrage "Interactive Uncertainty Visualization" wurde eingereicht.
+
+Die Antworten finden Sie im Anhang.</email_admin_responses>
+    <surveyls_numberformat>0</surveyls_numberformat>
+    <attachments></attachments>
+   </row>
+  </rows>
+ </surveys_languagesettings>
+</document>
