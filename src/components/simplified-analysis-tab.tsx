@@ -21,7 +21,7 @@ interface SimplifiedAnalysisTabProps {
 }
 
 // Import parameter functions and uncertainty calculation
-import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams } from "./technical-analysis-tab"
+import { getFundamentalDataParams, getNewsReliabilityParams, getTimeSeriesIntegrityParams, getTradingVolumeParams, getModelUncertaintyParams, calculateAllModelUncertainty, getHumanUncertaintyParams, calculateAllHumanUncertainty } from "./technical-analysis-tab"
 
 // Mock simplified data
 interface ConcernData {
@@ -34,9 +34,13 @@ interface ConcernData {
 interface SimplifiedData {
   overallMessage: string;
   confidenceLevel: number;
+  modelConfidenceLevel: number;
+  humanConfidenceLevel: number;
   mainConcerns: ConcernData[];
   recommendations: string[];
   riskLevel: string;
+  modelRiskLevel: string;
+  humanRiskLevel: string;
 }
 
 const getSimplifiedData = (stock: string): SimplifiedData => {
@@ -94,6 +98,25 @@ const getSimplifiedData = (stock: string): SimplifiedData => {
   const dataCertainty = (fundamentalCertainty + newsCertainty + timeSeriesCertainty + tradingVolumeCertainty) / 4
   const confidenceLevel = Math.round(dataCertainty)
   
+  // STEP 2: Calculate model certainty using ChatGPT Framework
+  const modelParams = getModelUncertaintyParams(stock)
+  const modelCalculated = calculateAllModelUncertainty(modelParams)
+  const modelCertainty = (1 - (0.25 * modelCalculated.epistemicUncertainty + 
+                               0.15 * modelCalculated.aleatoricUncertainty + 
+                               0.20 * modelCalculated.overfittingRisk + 
+                               0.20 * modelCalculated.robustness + 
+                               0.20 * modelCalculated.explanationConsistency)) * 100
+  const modelConfidenceLevel = Math.round(modelCertainty)
+  
+  // STEP 3: Calculate human certainty from static parameters
+  const humanParams = getHumanUncertaintyParams(stock)
+  const humanCalculated = calculateAllHumanUncertainty(humanParams)
+  const humanCertainty = (1 - (0.3 * humanCalculated.perceivedUncertainty + 
+                               0.25 * humanCalculated.epistemicUncertainty + 
+                               0.25 * humanCalculated.aleatoricUncertainty + 
+                               0.2 * humanCalculated.decisionStability)) * 100
+  const humanConfidenceLevel = Math.round(humanCertainty)
+  
   // Generate dynamic explanations based on scores
   const getOverallMessage = (confidence: number, stockSymbol: string) => {
     if (confidence >= 90) return `Die KI-Empfehlung für ${stockSymbol} ist sehr verlässlich mit hochwertigen Daten und geringer Unsicherheit.`
@@ -137,35 +160,34 @@ const getSimplifiedData = (stock: string): SimplifiedData => {
     }
   }
   
-  const getModelConcern = (timeSeriesCert: number, tradingCert: number) => {
-    const avgModelData = (timeSeriesCert + tradingCert) / 2
-    if (avgModelData >= 90) {
+  const getModelConcern = (modelCert: number, modelCalc: any) => {
+    if (modelCert >= 90) {
       return {
         category: "KI-Modell",
-        explanation: `Unser KI-System funktioniert sehr gut für ${stock} mit stabilen Zeitreihen (${timeSeriesCert.toFixed(1)}%) und vorhersagbaren Handelsmustern (${tradingCert.toFixed(1)}%).`,
+        explanation: `Unser KI-System zeigt hohe Vertrauenswürdigkeit für ${stock} mit niedriger epistemischer Unsicherheit (${(modelCalc.epistemicUncertainty * 100).toFixed(1)}%) und stabilen Vorhersagen (Robustheit: ${((1 - modelCalc.robustness) * 100).toFixed(1)}%).`,
         impact: "niedrig",
-        userAction: "Das Modell liefert zuverlässige Prognosen für die nächsten 1-3 Monate."
+        userAction: "Das Modell liefert sehr zuverlässige Empfehlungen. Sie können den Prognosen vertrauen."
       }
-    } else if (avgModelData >= 75) {
+    } else if (modelCert >= 75) {
       return {
         category: "KI-Modell",
-        explanation: `Unser Modell arbeitet ordentlich für ${stock}, aber volatilere Handelsmuster (${tradingCert.toFixed(1)}%) können die Vorhersagen beeinträchtigen.`,
+        explanation: `Unser Modell arbeitet solide für ${stock}, zeigt aber moderate Unsicherheit bei der Vorhersagegenauigkeit (epistemische Unsicherheit: ${(modelCalc.epistemicUncertainty * 100).toFixed(1)}%) und hat leichte Overfitting-Risiken (${(modelCalc.overfittingRisk * 100).toFixed(1)}%).`,
         impact: "mittel",
-        userAction: "Fokussieren Sie sich auf längerfristige Trends statt kurzfristige Prognosen."
+        userAction: "Die Empfehlungen sind verlässlich, aber berücksichtigen Sie zusätzliche Marktfaktoren."
       }
     } else {
       return {
         category: "KI-Modell",
-        explanation: `Unser Modell hat Schwierigkeiten mit ${stock} aufgrund unvorhersagbarer Zeitreihen (${timeSeriesCert.toFixed(1)}%) und volatiler Handelsmuster (${tradingCert.toFixed(1)}%).`,
+        explanation: `Unser Modell zeigt erhöhte Unsicherheit für ${stock} mit hoher epistemischer Unsicherheit (${(modelCalc.epistemicUncertainty * 100).toFixed(1)}%) und schwankender Erklärungskonsistenz (${(modelCalc.explanationConsistency * 100).toFixed(1)}%). Die aleatorische Unsicherheit (${(modelCalc.aleatoricUncertainty * 100).toFixed(1)}%) deutet auf hohe Marktvolatilität hin.`,
         impact: "hoch",
-        userAction: "Nutzen Sie unsere Empfehlungen nur als einen von vielen Faktoren."
+        userAction: "Nutzen Sie die KI-Empfehlung nur als einen von mehreren Entscheidungsfaktoren."
       }
     }
   }
   
   const mainConcerns = [
     getDataQualityConcern(fundamentalCertainty, newsCertainty),
-    getModelConcern(timeSeriesCertainty, tradingVolumeCertainty),
+    getModelConcern(modelCertainty, modelCalculated),
     {
       category: "Marktmeinung",
       explanation: `Expertenmeinungen zu ${stock} variieren basierend auf der aktuellen Nachrichtenlage (Verlässlichkeit: ${newsCertainty.toFixed(1)}%).`,
@@ -175,18 +197,22 @@ const getSimplifiedData = (stock: string): SimplifiedData => {
   ]
   
   const recommendations = [
-    `${stock} zeigt ${confidenceLevel >= 80 ? 'gute' : confidenceLevel >= 70 ? 'moderate' : 'schwache'} Datenqualität für KI-basierte Entscheidungen`,
-    `Zeitreihen-Integrität: ${timeSeriesCertainty.toFixed(1)}% - ${timeSeriesCertainty >= 90 ? 'sehr stabil' : timeSeriesCertainty >= 80 ? 'stabil' : 'volatil'}`,
-    `Handelsvolumen-Analyse: ${tradingVolumeCertainty.toFixed(1)}% - ${tradingVolumeCertainty >= 85 ? 'vorhersagbare Muster' : 'unregelmäßige Muster'}`,
-    confidenceLevel >= 80 ? `Empfehlungen für ${stock} sind verlässlich` : `Seien Sie bei ${stock}-Entscheidungen besonders vorsichtig`
+    `${stock} Datenqualität: ${confidenceLevel >= 80 ? 'gut geeignet' : confidenceLevel >= 70 ? 'moderat geeignet' : 'begrenzt geeignet'} für KI-basierte Entscheidungen`,
+    `KI-Modell Vertrauen: ${modelConfidenceLevel.toFixed(1)}% - ${modelConfidenceLevel >= 90 ? 'sehr zuverlässige Prognosen' : modelConfidenceLevel >= 80 ? 'verlässliche Prognosen' : 'vorsichtige Interpretation empfohlen'}`,
+    `Menschliche Einschätzung: ${humanConfidenceLevel.toFixed(1)}% - ${humanConfidenceLevel >= 85 ? 'breiter Expertenkonsens' : 'unterschiedliche Marktmeinungen'}`,
+    confidenceLevel >= 80 && modelConfidenceLevel >= 80 ? `Empfehlungen für ${stock} sind sehr verlässlich` : `Bei ${stock}-Entscheidungen zusätzliche Quellen berücksichtigen`
   ]
   
   return {
     overallMessage: getOverallMessage(confidenceLevel, stock),
     confidenceLevel,
+    modelConfidenceLevel,
+    humanConfidenceLevel,
     mainConcerns,
     recommendations,
-    riskLevel: getRiskLevel(confidenceLevel)
+    riskLevel: getRiskLevel(confidenceLevel),
+    modelRiskLevel: getRiskLevel(modelConfidenceLevel),
+    humanRiskLevel: getRiskLevel(humanConfidenceLevel)
   }
 }
 
@@ -334,10 +360,44 @@ export function SimplifiedAnalysisTab({ selectedStock }: SimplifiedAnalysisTabPr
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Brain className="h-5 w-5 text-purple-600" />
-                KI-Modell Erklärung für {selectedStock}
+                KI-Modell Vertrauen für {selectedStock}
               </CardTitle>
               <CardDescription>
-                Wie unser KI-System zu dieser Empfehlung kommt
+                Wie vertrauenswürdig sind die Vorhersagen unseres KI-Modells
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <p className="text-base leading-relaxed">
+                      Unser KI-Modell zeigt {data.modelConfidenceLevel >= 90 ? 'sehr hohe' : data.modelConfidenceLevel >= 80 ? 'hohe' : data.modelConfidenceLevel >= 70 ? 'moderate' : 'begrenzte'} Vertrauenswürdigkeit bei {selectedStock}-Vorhersagen.
+                    </p>
+                  </div>
+                  <div className="text-center ml-6">
+                    <div className="text-3xl font-bold text-purple-600 mb-1">
+                      {100 - data.modelConfidenceLevel}%
+                    </div>
+                    <p className="text-sm text-muted-foreground">Modell-Unsicherheit</p>
+                    <Badge className={getRiskColor(data.modelRiskLevel)} variant="outline">
+                      {data.modelRiskLevel} Risiko
+                    </Badge>
+                  </div>
+                </div>
+                <Progress value={100 - data.modelConfidenceLevel} className="w-full h-3" />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Model Quality Concerns */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Brain className="h-5 w-5 text-purple-600" />
+                KI-Modell Aspekte
+              </CardTitle>
+              <CardDescription>
+                Verständliche Erklärung der Modellvertrauenswürdigkeit für {selectedStock}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -419,6 +479,40 @@ export function SimplifiedAnalysisTab({ selectedStock }: SimplifiedAnalysisTabPr
               </CardTitle>
               <CardDescription>
                 Was Experten und der Markt über diese Aktie denken
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <p className="text-base leading-relaxed">
+                      Die menschliche Einschätzung zu {selectedStock} zeigt {data.humanConfidenceLevel >= 90 ? 'sehr hohes' : data.humanConfidenceLevel >= 80 ? 'hohes' : data.humanConfidenceLevel >= 70 ? 'moderates' : 'begrenztes'} Vertrauen bei Experten und Anlegern.
+                    </p>
+                  </div>
+                  <div className="text-center ml-6">
+                    <div className="text-3xl font-bold text-green-600 mb-1">
+                      {100 - data.humanConfidenceLevel}%
+                    </div>
+                    <p className="text-sm text-muted-foreground">Human-Unsicherheit</p>
+                    <Badge className={getRiskColor(data.humanRiskLevel)} variant="outline">
+                      {data.humanRiskLevel} Risiko
+                    </Badge>
+                  </div>
+                </div>
+                <Progress value={100 - data.humanConfidenceLevel} className="w-full h-3" />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Human Factors Details */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5 text-green-600" />
+                Markt- und Expertenmeinungen
+              </CardTitle>
+              <CardDescription>
+                Analyse der menschlichen Wahrnehmung und Bewertung von {selectedStock}
               </CardDescription>
             </CardHeader>
             <CardContent>
