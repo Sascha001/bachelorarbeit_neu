@@ -160,7 +160,13 @@ const getSimplifiedData = (stock: string): SimplifiedData => {
     }
   }
   
-  const getModelConcern = (modelCert: number, modelCalc: any) => {
+  const getModelConcern = (modelCert: number, modelCalc: {
+    epistemicUncertainty: number;
+    aleatoricUncertainty: number;
+    overfittingRisk: number;
+    robustness: number;
+    explanationConsistency: number;
+  }) => {
     if (modelCert >= 90) {
       return {
         category: "KI-Modell",
