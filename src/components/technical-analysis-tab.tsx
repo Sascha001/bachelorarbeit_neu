@@ -110,7 +110,7 @@ const calculateExplanationConsistency = (params: ModelUncertaintyParams['explana
 };
 
 // Combined calculation function for all model uncertainty dimensions
-const calculateAllModelUncertainty = (params: ModelUncertaintyParams) => {
+export const calculateAllModelUncertainty = (params: ModelUncertaintyParams) => {
   return {
     epistemicUncertainty: calculateEpistemicUncertainty(params.epistemicUncertainty),
     aleatoricUncertainty: calculateAleatoricUncertainty(params.aleatoricUncertainty),
