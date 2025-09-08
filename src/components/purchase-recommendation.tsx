@@ -33,6 +33,7 @@ import {
   Minus
 } from "lucide-react"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 interface PurchaseRecommendationProps {
   selectedStock: string
@@ -275,6 +276,7 @@ const getRecommendationIcon = (recommendation: string) => {
 export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendationProps) {
   const data = getPurchaseData(selectedStock)
   const { addUncertaintyData } = useTradingUncertainty()
+  const router = useRouter()
   
   const [purchaseAmount, setPurchaseAmount] = useState(0)
   const [isRecommendedSelected, setIsRecommendedSelected] = useState(false)
@@ -355,6 +357,11 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
     setFeedbackText("")
     setTransactionCompleted(true) // Show transaction success only after feedback
     setScheduleForValidation(false)
+    
+    // Redirect to dashboard after feedback submission
+    setTimeout(() => {
+      router.push('/dashboard')
+    }, 1000) // Small delay to show success message briefly
   }
 
   return (
@@ -715,6 +722,10 @@ export function PurchaseRecommendation({ selectedStock }: PurchaseRecommendation
             <Button variant="outline" onClick={() => {
               setIsFeedbackModalOpen(false)
               setTransactionCompleted(true) // Show transaction success also when skipping
+              // Redirect to dashboard after skipping feedback
+              setTimeout(() => {
+                router.push('/dashboard')
+              }, 1000) // Small delay to show success message briefly
             }}>
               Überspringen
             </Button>
