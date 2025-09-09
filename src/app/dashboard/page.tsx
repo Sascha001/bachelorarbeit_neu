@@ -441,7 +441,7 @@ export default function Dashboard() {
                     onClick={generateNewRecommendations}
                     variant="outline"
                     size="sm"
-                    className="violet-bloom-hover border-primary/30 hover:border-primary/50"
+                    className="violet-bloom-hover violet-bloom-active border-primary/30 hover:border-primary/50 transition-all duration-200 hover:shadow-lg"
                     title="Neue Empfehlungen generieren"
                   >
                     <RotateCcw className="h-4 w-4" />
