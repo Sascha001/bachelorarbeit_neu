@@ -21,6 +21,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { NotificationButton } from "@/components/notification-button"
 import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { RotateCcw } from "lucide-react"
 import { COMPREHENSIVE_MOCK_DATA } from "@/data/mockStockData"
 
@@ -437,13 +438,21 @@ export default function Dashboard() {
                     <h3 className="text-base font-semibold text-foreground mb-1">Aktuelle KI-Empfehlungen</h3>
                     <p className="text-xs text-muted-foreground">Neueste Trading-Signale mit Unsicherheitsanalyse</p>
                   </div>
-                  <button
-                    onClick={generateNewRecommendations}
-                    className="p-1 rounded-full hover:bg-muted/50 transition-colors border border-primary/30 hover:border-primary/50"
-                    title="Neue Empfehlungen generieren"
-                  >
-                    <RotateCcw className="h-4 w-4 text-muted-foreground" />
-                  </button>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        onClick={generateNewRecommendations}
+                        variant="outline"
+                        size="sm"
+                        className="violet-bloom-hover violet-bloom-active border-primary/30 hover:border-primary/50 hover:bg-muted/50 transition-all duration-200 hover:shadow-lg rounded-full p-2"
+                      >
+                        <RotateCcw className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <span>Neue Empfehlungen generieren</span>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
                 
                 <div className="space-y-2">
