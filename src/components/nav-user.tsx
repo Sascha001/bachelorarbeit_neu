@@ -36,10 +36,19 @@ export function NavUser({
   user: {
     name: string
     email: string
-    avatar: string
+    avatar?: string
   }
 }) {
   const { isMobile } = useSidebar()
+  
+  // Generate initials from name
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase())
+      .join('')
+      .slice(0, 2) // Take only first 2 initials
+  }
 
   return (
     <SidebarMenu>
@@ -52,7 +61,9 @@ export function NavUser({
             >
               <Avatar className="h-8 w-8 rounded-lg ring-2 ring-primary/20 hover:ring-primary/40 transition-all">
                 <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg bg-primary/10 text-primary font-semibold">SC</AvatarFallback>
+                <AvatarFallback className="rounded-lg bg-primary/10 text-primary font-semibold">
+                  {getInitials(user.name)}
+                </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
@@ -71,7 +82,9 @@ export function NavUser({
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg ring-2 ring-primary/30">
                   <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg bg-primary/10 text-primary font-semibold">SC</AvatarFallback>
+                  <AvatarFallback className="rounded-lg bg-primary/10 text-primary font-semibold">
+                    {getInitials(user.name)}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
