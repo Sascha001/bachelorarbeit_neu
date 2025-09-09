@@ -160,7 +160,7 @@ export default function Home() {
     // Define stock categories by uncertainty level
     const verySecureStocks = ["V", "MA", "JNJ", "PG"];
     const secureStocks = ["KO", "UNH", "MSFT", "JPM", "ALV.DE", "NESN.SW", "SIE.DE"];
-    const uncertainStocks = ["GOOGL", "HD", "AMZN", "AAPL", "BRK_B", "ASML.AS", "BMW.DE", "BAS.DE"];
+    const uncertainStocks = ["GOOGL", "HD", "AMZN", "AAPL", "BRK_B", "ASML.AS", "BMW.DE", "BAS.DE", "SAP.DE"];
     const veryUncertainStocks = ["TSLA", "META", "NVDA"];
     
     // Filter out currently displayed stocks to ensure different selections
@@ -437,15 +437,13 @@ export default function Home() {
                     <h3 className="text-base font-semibold text-foreground mb-1">Aktuelle KI-Empfehlungen</h3>
                     <p className="text-xs text-muted-foreground">Neueste Trading-Signale mit Unsicherheitsanalyse</p>
                   </div>
-                  <Button
+                  <button
                     onClick={generateNewRecommendations}
-                    variant="outline"
-                    size="sm"
-                    className="violet-bloom-hover border-primary/30 hover:border-primary/50"
+                    className="p-1 rounded-full hover:bg-muted/50 transition-colors border border-primary/30 hover:border-primary/50"
                     title="Neue Empfehlungen generieren"
                   >
-                    <RotateCcw className="h-4 w-4" />
-                  </Button>
+                    <RotateCcw className="h-4 w-4 text-muted-foreground" />
+                  </button>
                 </div>
                 
                 <div className="space-y-2">

@@ -437,15 +437,13 @@ export default function Dashboard() {
                     <h3 className="text-base font-semibold text-foreground mb-1">Aktuelle KI-Empfehlungen</h3>
                     <p className="text-xs text-muted-foreground">Neueste Trading-Signale mit Unsicherheitsanalyse</p>
                   </div>
-                  <Button
+                  <button
                     onClick={generateNewRecommendations}
-                    variant="outline"
-                    size="sm"
-                    className="violet-bloom-hover violet-bloom-active border-primary/30 hover:border-primary/50 hover:bg-muted/50 transition-all duration-200 hover:shadow-lg rounded-full p-2"
+                    className="p-1 rounded-full hover:bg-muted/50 transition-colors border border-primary/30 hover:border-primary/50"
                     title="Neue Empfehlungen generieren"
                   >
-                    <RotateCcw className="h-4 w-4" />
-                  </Button>
+                    <RotateCcw className="h-4 w-4 text-muted-foreground" />
+                  </button>
                 </div>
                 
                 <div className="space-y-2">
